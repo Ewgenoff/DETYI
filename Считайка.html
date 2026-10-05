@@ -1,0 +1,2470 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Считай-ка: Весёлая математика для детей</title>
+  
+  <!-- Асинхронная загрузка шрифтов: страница открывается мгновенно на системных шрифтах -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@700&family=Comfortaa:wght@700&family=Lora:ital,wght@0,600;0,700;1,600&family=Nunito:wght@700;800;900&family=PT+Serif:wght@700&family=Rubik:wght@700;900&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@700&family=Comfortaa:wght@700&family=Lora:ital,wght@0,600;0,700;1,600&family=Nunito:wght@700;800;900&family=PT+Serif:wght@700&family=Rubik:wght@700;900&display=swap" media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@700&family=Comfortaa:wght@700&family=Lora:ital,wght@0,600;0,700;1,600&family=Nunito:wght@700;800;900&family=PT+Serif:wght@700&family=Rubik:wght@700;900&display=swap">
+  </noscript>
+  
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 50%, #fce7f3 100%);
+      --card-bg: #ffffff;
+      --num-blue: #1e3a8a;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --accent-primary: #2563eb;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PT Serif", "Century Schoolbook", serif;
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
+
+    body.font-schoolbook { font-family: "Century Schoolbook", "Школьная", "PT Serif", "Lora", serif; }
+    body.font-comfortaa { font-family: 'Comfortaa', cursive, sans-serif; }
+    body.font-nunito { font-family: 'Nunito', sans-serif; }
+    body.font-balsamiq { font-family: 'Balsamiq Sans', cursive, sans-serif; }
+    body.font-rubik { font-family: 'Rubik', sans-serif; }
+
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 2px solid var(--border-color);
+      padding: 8px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon { font-size: 26px; }
+
+    .brand-title {
+      font-size: 22px;
+      font-weight: 900;
+      background: linear-gradient(90deg, #2563eb, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stats-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .stat-badge {
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-weight: 900;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: #ffffff;
+      border: 1.5px solid var(--border-color);
+      color: var(--text-main);
+    }
+
+    .stat-badge.star { background: #fef3c7; border-color: #fde047; color: #b45309; }
+    .stat-badge.wrong-badge { background: #fee2e2; border-color: #fca5a5; color: #b91c1c; }
+    .stat-badge.speed { background: #ecfdf5; border-color: #a7f3d0; color: #047857; }
+    .stat-badge.speed.paused { background: #f1f5f9; border-color: #cbd5e1; color: #64748b; }
+    .stat-badge.time { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; }
+
+    .btn-icon-header {
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      height: 36px;
+      padding: 0 10px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+
+    .btn-icon-header:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+
+    .btn-toggle-panel {
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      padding: 6px 14px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-toggle-panel:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+    }
+
+    .app-layout {
+      flex: 1;
+      display: flex;
+      height: calc(100vh - 56px);
+      position: relative;
+    }
+
+    /* Боковая панель */
+    .settings-panel {
+      width: 360px;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(12px);
+      border-right: 2px solid var(--border-color);
+      padding: 16px;
+      overflow-y: auto;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      z-index: 50;
+    }
+
+    .settings-panel.collapsed {
+      transform: translateX(-100%);
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+    }
+
+    .panel-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-title {
+      font-size: 18px;
+      font-weight: 900;
+      color: #0f172a;
+    }
+
+    .panel-close-btn {
+      display: none;
+      background: #f1f5f9;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      font-size: 18px;
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--text-muted);
+    }
+
+    .clean-box {
+      background: #f8fafc;
+      border: 1.5px solid var(--border-color);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .clean-box-header {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .training-toggle-btns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .training-btn {
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 10px 6px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 900;
+      color: #334155;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      transition: all 0.15s ease;
+    }
+
+    .training-btn .btn-sub {
+      font-size: 11px;
+      font-weight: 700;
+      color: #64748b;
+    }
+
+    .training-btn.active {
+      background: #2563eb;
+      border-color: #1d4ed8;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .training-btn.active .btn-sub {
+      color: #dbeafe;
+    }
+
+    .range-pills-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .range-pill-btn {
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      padding: 8px 4px;
+      border-radius: 9px;
+      font-weight: 900;
+      font-size: 13.5px;
+      color: #334155;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+
+    .range-pill-btn.active {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #1d4ed8;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+    }
+
+    .btn-toggle-all-mults {
+      background: #ffffff;
+      border: 1px solid #94a3b8;
+      color: #1e3a8a;
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-toggle-all-mults:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .multipliers-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .mult-item {
+      position: relative;
+    }
+
+    .mult-item input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .mult-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 38px;
+      border-radius: 9px;
+      background: #ffffff;
+      border: 2px solid var(--border-color);
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+      color: #2563eb;
+      transition: all 0.12s ease;
+    }
+
+    .mult-item input:checked ~ .mult-label {
+      background: #dbeafe;
+      border-color: #3b82f6;
+      color: #1d4ed8;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .select-wrap select {
+      width: 100%;
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text-main);
+      cursor: pointer;
+      outline: none;
+    }
+
+    /* Основная сцена */
+    .stage {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px 20px 20px;
+      position: relative;
+      overflow-y: auto;
+    }
+
+    .modes-categories-wrapper {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      max-width: 1100px;
+      margin-bottom: 8px;
+    }
+
+    .mode-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      padding: 6px 10px;
+      border-radius: 14px;
+      border: 1.5px solid var(--border-color);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      flex: 1 1 auto;
+    }
+
+    .mode-group-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .mode-buttons-row {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .mode-tab {
+      flex: 1;
+      border: 1.5px solid #cbd5e1;
+      background: #ffffff;
+      padding: 7px 11px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .mode-tab:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+
+    .mode-tab.active {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #1d4ed8;
+      box-shadow: 0 3px 10px rgba(37, 99, 235, 0.3);
+    }
+
+    /* Карточка с примером */
+    .card-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      max-width: 820px;
+      width: 100%;
+      margin: auto 0;
+    }
+
+    .math-card {
+      width: 100%;
+      min-height: 250px;
+      background: var(--card-bg);
+      border-radius: 36px;
+      border: 4px solid #ffffff;
+      box-shadow: 0 20px 45px -10px rgba(37, 99, 235, 0.15), 0 0 0 4px #e0e7ff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      padding: 24px 20px;
+      transition: box-shadow 0.2s ease, transform 0.08s ease, border-color 0.2s;
+    }
+
+    .math-card:hover {
+      box-shadow: 0 26px 55px -10px rgba(37, 99, 235, 0.2), 0 0 0 4px #c7d2fe;
+    }
+
+    .math-card:active { transform: scale(0.99); }
+
+    .math-card.correct-flash {
+      border-color: #86efac;
+      box-shadow: 0 0 0 4px #bbf7d0, 0 20px 40px rgba(34, 197, 94, 0.2);
+    }
+
+    .math-card.shake {
+      animation: shakeAnim 0.35s ease-in-out;
+    }
+
+    @keyframes shakeAnim {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-10px); }
+      40%, 80% { transform: translateX(10px); }
+    }
+
+    .card-fade {
+      animation: calmFade 0.18s ease-out;
+    }
+
+    @keyframes calmFade {
+      0% { opacity: 0.3; transform: scale(0.97); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .math-expression {
+      font-size: 80px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      text-align: center;
+      line-height: 1.1;
+    }
+
+    .math-expression.text-medium { font-size: 60px; gap: 12px; }
+    .math-expression.text-long { font-size: 44px; gap: 8px; }
+
+    .elem-num { color: #1e293b; }
+    .elem-op { color: #d97706; padding: 0 4px; }
+    .elem-equal { color: #64748b; }
+    .elem-question { 
+      color: #2563eb; 
+      background: #eff6ff; 
+      border: 3px dashed #93c5fd; 
+      border-radius: 18px; 
+      padding: 0 18px; 
+      min-width: 65px; 
+      display: inline-flex; 
+      justify-content: center;
+    }
+    .elem-answer { 
+      color: #059669; 
+      background: #ecfdf5; 
+      border: 3px solid #6ee7b7; 
+      border-radius: 18px; 
+      padding: 0 16px;
+      animation: popAnswer 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popAnswer {
+      0% { transform: scale(0.7); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .card-subtext {
+      margin-top: 14px;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .choices-container {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+      max-width: 680px;
+      justify-content: center;
+      margin-top: -4px;
+    }
+
+    .choice-btn {
+      flex: 1;
+      min-height: 68px;
+      background: #ffffff;
+      border: 2.5px solid #cbd5e1;
+      border-radius: 18px;
+      font-family: inherit;
+      font-size: 34px;
+      font-weight: 900;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+      transition: all 0.15s ease;
+    }
+
+    .choice-btn:hover {
+      background: #f8fafc;
+      border-color: #3b82f6;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.15);
+    }
+
+    .choice-btn.correct {
+      background: #dcfce7 !important;
+      border-color: #22c55e !important;
+      color: #15803d !important;
+      transform: scale(1.03);
+    }
+
+    .choice-btn.wrong {
+      background: #fee2e2 !important;
+      border-color: #ef4444 !important;
+      color: #b91c1c !important;
+      opacity: 0.6;
+    }
+
+    .controls-row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-nav-arrow {
+      background: #ffffff;
+      border: 2px solid var(--border-color);
+      border-radius: 20px;
+      height: 52px;
+      min-width: 130px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+      transition: all 0.15s ease;
+      color: #64748b;
+      opacity: 0.85;
+    }
+
+    .btn-nav-arrow:hover {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+      transform: translateY(-1px);
+      color: #1e293b;
+    }
+
+    .btn-nav-arrow:disabled {
+      opacity: 0.25;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .arrow-icon {
+      font-size: 26px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .hint-bar {
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      opacity: 0.85;
+    }
+
+    .kbd-chip {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 2px 7px;
+      font-family: monospace;
+      font-weight: 800;
+      box-shadow: 0 2px 0 #94a3b8;
+    }
+
+    /* Таблицы */
+    .table-view-container {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: 900px;
+      margin: auto 0;
+      padding: 8px 0;
+    }
+
+    .table-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 16px;
+      border: 2px solid var(--border-color);
+      padding: 8px 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    .table-toolbar-title {
+      font-size: 15px;
+      font-weight: 900;
+      color: var(--text-main);
+    }
+
+    .table-toggle-group {
+      display: flex;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 3px;
+      gap: 4px;
+    }
+
+    .table-sort-btn {
+      border: none;
+      background: transparent;
+      padding: 6px 14px;
+      border-radius: 9px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .table-sort-btn.active {
+      background: #2563eb;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+    }
+
+    .table-card-container {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(8px);
+      border-radius: 20px;
+      border: 2px solid var(--border-color);
+      padding: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .table-info-bubble {
+      font-size: 16px;
+      font-weight: 800;
+      color: #1e293b;
+      background: #f8fafc;
+      padding: 8px 20px;
+      border-radius: 999px;
+      border: 1.5px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-height: 44px;
+    }
+
+    .info-tag {
+      background: #2563eb;
+      color: #ffffff;
+      padding: 2px 10px;
+      border-radius: 6px;
+      font-weight: 900;
+    }
+
+    .info-desc {
+      color: #0f172a;
+      font-weight: 800;
+    }
+
+    /* Таблица Пифагора */
+    .pythagoras-grid {
+      display: grid;
+      grid-template-columns: repeat(10, minmax(0, 1fr));
+      gap: 4px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .pythagoras-cell {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 900;
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.12s ease;
+      color: #1e293b;
+    }
+
+    .pythagoras-cell:hover {
+      transform: scale(1.08);
+      z-index: 5;
+    }
+
+    .pythagoras-cell.header-cell {
+      background: #dbeafe;
+      border-color: #93c5fd;
+      color: #1e40af;
+      font-weight: 900;
+    }
+
+    .pythagoras-cell.cross-highlight {
+      background: #fed7aa !important;
+      border-color: #f97316 !important;
+      color: #9a3412 !important;
+      font-weight: 900;
+    }
+
+    .pythagoras-cell.target-cell {
+      background: #22c55e !important;
+      border-color: #15803d !important;
+      color: #ffffff !important;
+      transform: scale(1.1);
+      z-index: 10;
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+    }
+
+    /* ТАБЛИЦА СОТНИ ПО МЕТОДИКЕ НИКИТИНЫХ */
+    .nikitin-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #fffdf8;
+      border: 2px solid #854d0e;
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+      width: 100%;
+      max-width: 660px;
+    }
+
+    .nikitin-title-block {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .nikitin-title {
+      font-size: 20px;
+      font-weight: 900;
+      color: #166534;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .nikitin-sub {
+      font-size: 11px;
+      color: #b91c1c;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .nikitin-scroll-wrap {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      display: flex;
+      justify-content: center;
+      padding-bottom: 4px;
+    }
+
+    .nikitin-board {
+      display: grid;
+      grid-template-columns: 38px repeat(10, minmax(0, 1fr));
+      grid-template-rows: repeat(10, 1fr) 52px;
+      border: 2px solid #1e3a8a;
+      background: #ffffff;
+      width: 100%;
+    }
+
+    .nikitin-cell {
+      border: 1px solid #94a3b8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 900;
+      color: #1e3a8a;
+      cursor: pointer;
+      position: relative;
+      background: #ffffff;
+      min-height: 38px;
+      transition: background 0.15s;
+    }
+
+    .nikitin-cell.round-ten {
+      color: #dc2626 !important;
+      font-weight: 900;
+    }
+
+    .nikitin-cell:hover {
+      background: #fef08a;
+    }
+
+    .nikitin-cell.selected {
+      background: #fde047 !important;
+      box-shadow: inset 0 0 0 2.5px #ca8a04;
+      z-index: 2;
+    }
+
+    .nikitin-unit-cell {
+      border: 1px solid #94a3b8;
+      background: #f0fdf4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px;
+      border-right: 2px solid #1e3a8a;
+    }
+
+    .nikitin-unit-cell.active-unit {
+      background: #bbf7d0;
+      border-color: #16a34a;
+    }
+
+    .dot-pattern {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .n-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #15803d;
+    }
+
+    .nikitin-ten-cell {
+      border: 1px solid #94a3b8;
+      background: #f0fdf4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3px 1px;
+      border-top: 2px solid #1e3a8a;
+    }
+
+    .nikitin-ten-cell.active-ten {
+      background: #bbf7d0;
+      border-color: #16a34a;
+    }
+
+    .nikitin-corner-cell {
+      border: 1px solid #94a3b8;
+      background: #f0fdf4;
+      border-right: 2px solid #1e3a8a;
+      border-top: 2px solid #1e3a8a;
+    }
+
+    .tens-bars {
+      display: flex;
+      gap: 2px;
+      align-items: flex-end;
+      height: 100%;
+      justify-content: center;
+    }
+
+    .ten-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5px;
+    }
+
+    .ten-dot {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: #1e3a8a;
+    }
+
+    .ten-dot.base-dot {
+      background: #dc2626;
+    }
+
+    /* Модальное окно справки */
+    .help-modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .help-modal-backdrop.open {
+      display: flex;
+    }
+
+    .help-modal-card {
+      background: #ffffff;
+      border-radius: 24px;
+      max-width: 680px;
+      width: 100%;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      border: 3px solid var(--border-color);
+      overflow: hidden;
+      animation: modalPop 0.2s ease-out;
+    }
+
+    @keyframes modalPop {
+      0% { transform: scale(0.95); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .help-modal-header {
+      padding: 16px 20px;
+      background: #f8fafc;
+      border-bottom: 2px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .help-modal-title {
+      font-size: 18px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-main);
+    }
+
+    .help-modal-close-btn {
+      background: transparent;
+      border: none;
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 8px;
+    }
+
+    .help-modal-close-btn:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .help-modal-body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PT Serif", "Century Schoolbook", serif;
+      padding: 20px;
+      overflow-y: auto;
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: #334155;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .help-card-section {
+      background: #f8fafc;
+      border: 1.5px solid var(--border-color);
+      border-radius: 12px;
+      padding: 12px 16px;
+    }
+
+    .help-card-section h3 {
+      font-size: 15px;
+      font-weight: 900;
+      color: #1e3a8a;
+      margin-bottom: 6px;
+    }
+
+    .help-card-section ul {
+      padding-left: 20px;
+    }
+
+    .help-card-section li {
+      margin-bottom: 4px;
+    }
+
+    /* Адаптивность для мобильных телефонов и планшетов */
+    @media (max-width: 900px) {
+      header { padding: 6px 10px; }
+      .brand-title { display: none; }
+      .app-layout { height: auto; min-height: calc(100vh - 50px); flex-direction: column; }
+      .settings-panel {
+        position: fixed;
+        top: 0; bottom: 0; left: 0;
+        width: 85%;
+        max-width: 330px;
+        box-shadow: 10px 0 30px rgba(0,0,0,0.25);
+        transform: translateX(-100%);
+      }
+      .settings-panel.open { transform: translateX(0); }
+      .panel-close-btn { display: block; }
+      .stage { padding: 10px 8px 18px 8px; }
+      .math-expression { font-size: 50px; }
+      .choice-btn { min-height: 56px; font-size: 26px; }
+      .btn-nav-arrow { min-width: 100px; height: 46px; }
+      
+      /* Таблицы на мобильных экранах */
+      .table-card-container { padding: 10px 6px; }
+      .table-toolbar { flex-direction: column; gap: 8px; align-items: stretch; text-align: center; padding: 8px 10px; }
+      .table-toggle-group { width: 100%; }
+      .table-sort-btn { flex: 1; text-align: center; padding: 6px 8px; font-size: 12px; }
+      .table-info-bubble { font-size: 13px; padding: 6px 12px; gap: 8px; width: 100%; justify-content: center; text-align: center; min-height: auto; border-radius: 14px; }
+      .table-info-bubble .info-tag { font-size: 12px; padding: 2px 6px; }
+      
+      /* Таблица сотни Никитина */
+      .nikitin-container { padding: 6px; width: 100%; border-width: 1.5px; }
+      .nikitin-title { font-size: 16px; letter-spacing: 1px; }
+      .nikitin-sub { font-size: 10px; }
+      .nikitin-board {
+        min-width: 330px;
+        grid-template-columns: 28px repeat(10, minmax(0, 1fr));
+        grid-template-rows: repeat(10, 1fr) 46px;
+      }
+      .nikitin-cell { font-size: 12px; min-height: 28px; }
+      .nikitin-unit-cell { padding: 1px; }
+      .n-dot { width: 3px; height: 3px; }
+      .tens-bars { gap: 1px; }
+      .ten-bar { gap: 1px; }
+      .ten-dot { width: 2px; height: 2px; }
+      
+      /* Таблица Пифагора */
+      .pythagoras-grid { gap: 2px; }
+      .pythagoras-cell { font-size: 12px; border-radius: 5px; border-width: 1px; }
+    }
+  
+    .panel-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 45;
+    }
+    .panel-backdrop.active {
+      display: block;
+    }
+  </style>
+</head>
+<body class="font-schoolbook">
+
+  <div class="panel-backdrop" id="panel-backdrop" onclick="closeSettingsPanel()"></div>
+
+  <!-- Модальное окно справки -->
+  <div class="help-modal-backdrop" id="help-modal" onclick="onHelpBackdropClick(event)">
+    <div class="help-modal-card">
+      <div class="help-modal-header">
+        <div class="help-modal-title">Справка по программе «Считай-ка»</div>
+        <button class="help-modal-close-btn" onclick="closeHelpModal()">✕</button>
+      </div>
+      <div class="help-modal-body">
+        
+        <div class="help-card-section">
+          <h3>Режимы тренировки</h3>
+          <ul>
+            <li><b>Карточки (самопроверка):</b> ребёнок решает пример в уме, нажимает на карточку (или стрелку ⟶) — открывается правильный ответ. Следующий клик показывает новый пример.</li>
+            <li><b>Тест (с вариантами):</b> внизу появляются крупные кнопки для выбора мышкой или пальцем на экране планшета/телефона. При правильном ответе загорается зелёный цвет и пример перелистывается; при ошибке кнопка подсвечивается красным, а вверху обновляется счётчик ошибок ❌.</li>
+          </ul>
+        </div>
+
+        <div class="help-card-section">
+          <h3>Арифметика и мультивыбор</h3>
+          <ul>
+            <li>Кнопки <b>Сложение</b>, <b>Вычитание</b>, <b>Умножение</b> и <b>Деление</b> работают с мультивыбором («залипают»). Можно комбинировать любые операции в одной тренировке (например, одновременно сложение и вычитание).</li>
+            <li><b>Сравнение:</b> разделено на два удобных формата: <i>«Просто числа»</i> (сравнение двух величин) и <i>«С примерами»</i> (сложение и вычитание выражений). Сравнение строго учитывает выбранный диапазон.</li>
+          </ul>
+        </div>
+
+        <div class="help-card-section">
+          <h3>Наглядные интерактивные таблицы</h3>
+          <ul>
+            <li><b>Таблица Пифагора:</b> наглядное умножение с контрастным цветным перекрестием для быстрого визуального запоминания таблицы умножения.</li>
+            <li><b>Таблица Сотни по методике Никитиных:</b> числа расположены столбцами сверху вниз (1–10, 11–20 ... 91–100), круглые десятки выделены красным. Слева показаны единичные точки Никитина, а снизу — вертикальные полоски десятков. При выборе число остаётся подсвеченным и выводится его подробная расшифровка десятков и единиц.</li>
+          </ul>
+        </div>
+
+        <div class="help-card-section">
+          <h3>Параметры и настройки (боковая панель)</h3>
+          <ul>
+            <li><b>Диапазон чисел:</b> задаёт максимальную границу счёта (до 10, 20, 50 или 100) для сложения, вычитания и сравнений.</li>
+            <li><b>Множители:</b> по умолчанию включены все множители (от 2 до 9). Мини-кнопка «Все / Только ×2» позволяет в один клик переключаться между полной таблицей и изучением только умножения на 2.</li>
+            <li><b>Шрифт и звук:</b> возможность настроить визуальный стиль цифр (включая классический школьный учебник) и приятные звуки при кликах.</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <div class="brand">
+      <span class="brand-icon">🔢</span>
+      <h1 class="brand-title">Считай-ка!</h1>
+    </div>
+
+    <div class="stats-bar">
+      <!-- 1. Счетчик решенных заданий -->
+      <div class="stat-badge star" title="Правильно решено">
+        <span>⭐</span>
+        <span id="star-count">0</span>
+      </div>
+
+      <!-- 2. Счетчик ошибок в тесте -->
+      <div class="stat-badge wrong-badge" id="wrong-badge" style="display: none;" title="Ошибок в режиме тест">
+        <span>❌</span>
+        <span id="wrong-count">0</span>
+      </div>
+
+      <!-- 3. Темп решения -->
+      <div class="stat-badge speed" id="speed-badge" title="Темп: примеров в минуту">
+        <span>⚡</span>
+        <span id="speed-count">0</span>
+        <span style="font-size: 11px; opacity: 0.85;">/мин</span>
+      </div>
+
+      <!-- 4. Время занятия -->
+      <div class="stat-badge time" title="Общее время занятия">
+        <span>⏱</span>
+        <span id="session-time">00:00</span>
+      </div>
+
+      <!-- 5. Кнопка звука -->
+      <button class="btn-icon-header" id="sound-mute-btn" onclick="toggleSoundMute()" title="Включить / отключить звук">
+        <span id="sound-mute-icon">🔊</span>
+      </button>
+
+      <!-- 6. Кнопка вызова справки (справа в шапке) -->
+      <button class="btn-icon-header" onclick="openHelpModal()" title="Справка по программе">
+        <span>❓</span>
+      </button>
+
+      <!-- 7. Кнопка боковой панели настроек -->
+      <button class="btn-toggle-panel" id="toggle-panel-btn" onclick="toggleSettingsPanel()">
+        <span>⚙</span>
+        <span id="panel-btn-label">Параметры</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="app-layout">
+    
+    <!-- БОКОВАЯ ПАНЕЛЬ НАСТРОЕК -->
+    <aside class="settings-panel collapsed" id="settings-panel">
+      <div class="panel-header-row">
+        <div class="panel-title">Параметры счёта</div>
+        <button class="panel-close-btn" onclick="closeSettingsPanel()">✕</button>
+      </div>
+
+      <!-- РАЗДЕЛ ТРЕНИРОВКА -->
+      <div class="clean-box">
+        <div class="clean-box-header">
+          <span>Тренировка</span>
+        </div>
+        <div class="training-toggle-btns">
+          <button class="training-btn active" id="btn-mode-cards" onclick="setTrainingMode(false)">
+            <span>💡 Карточки</span>
+            <span class="btn-sub">Самопроверка</span>
+          </button>
+          <button class="training-btn" id="btn-mode-quiz" onclick="setTrainingMode(true)">
+            <span>🎯 Тест</span>
+            <span class="btn-sub">С вариантами</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ДИАПАЗОН ЧИСЕЛ ДО -->
+      <div class="clean-box">
+        <div class="clean-box-header">
+          <span>Диапазон чисел до (для ➕, ➖ и ⚖️)</span>
+        </div>
+        <div class="range-pills-row">
+          <button class="range-pill-btn active" data-range="10" onclick="setMaxRange(10)">10</button>
+          <button class="range-pill-btn" data-range="20" onclick="setMaxRange(20)">20</button>
+          <button class="range-pill-btn" data-range="50" onclick="setMaxRange(50)">50</button>
+          <button class="range-pill-btn" data-range="100" onclick="setMaxRange(100)">100</button>
+        </div>
+      </div>
+
+      <!-- МНОЖИТЕЛИ ДЛЯ УМНОЖЕНИЯ И ДЕЛЕНИЯ -->
+      <div class="clean-box">
+        <div class="clean-box-header">
+          <span>Множители (для ✖️ и ➗)</span>
+          <button class="btn-toggle-all-mults" id="btn-toggle-mults" onclick="toggleAllOrMinMultipliers()" title="Переключить: все множители или только ×2">
+            Все / ×2
+          </button>
+        </div>
+        <div class="multipliers-grid" id="multipliers-grid"></div>
+      </div>
+
+      <!-- ШРИФТ -->
+      <div class="clean-box">
+        <div class="clean-box-header">
+          <span>Шрифт текста</span>
+        </div>
+        <div class="select-wrap">
+          <select id="font-select" onchange="changeFont(this.value)">
+            <option value="schoolbook" selected>Школьная (PT Serif / Lora)</option>
+            <option value="comfortaa">Comfortaa (округлый)</option>
+            <option value="nunito">Nunito (гротеск)</option>
+            <option value="balsamiq">Balsamiq Sans (детский)</option>
+            <option value="rubik">Rubik (четкий)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- ЗВУК -->
+      <div class="clean-box">
+        <div class="clean-box-header">
+          <span>Звук нажатия</span>
+        </div>
+        <div class="select-wrap">
+          <select id="sound-select" onchange="changeSoundEffect(this.value)">
+            <option value="softping" selected>Мягкий пинг</option>
+            <option value="popit">Pop-it (пупырка)</option>
+            <option value="bell">Колокольчик</option>
+            <option value="xylophone">Ксилофон</option>
+            <option value="marimba">Маримба</option>
+          </select>
+        </div>
+      </div>
+
+    </aside>
+
+    <main class="stage">
+      
+      <!-- ВЕРХНЯЯ ПАНЕЛЬ ОПЕРАЦИЙ -->
+      <div class="modes-categories-wrapper">
+        
+        <div class="mode-group" style="flex: 0 0 auto;">
+          <div class="mode-group-title">Наглядность</div>
+          <div class="mode-buttons-row">
+            <button class="mode-tab" id="btn-tab-table" onclick="toggleTableView()">
+              <span>🔢 Таблица</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="mode-group">
+          <div class="mode-group-title">Арифметика (можно выбрать несколько)</div>
+          <div class="mode-buttons-row">
+            <button class="mode-tab op-toggle-tab active" data-op="add" onclick="toggleArithmeticOp('add')">
+              <span>➕ Сложение</span>
+            </button>
+            <button class="mode-tab op-toggle-tab" data-op="sub" onclick="toggleArithmeticOp('sub')">
+              <span>➖ Вычитание</span>
+            </button>
+            <button class="mode-tab op-toggle-tab" data-op="mul" onclick="toggleArithmeticOp('mul')">
+              <span>✖️ Умножение</span>
+            </button>
+            <button class="mode-tab op-toggle-tab" data-op="div" onclick="toggleArithmeticOp('div')">
+              <span>➗ Деление</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="mode-group" style="flex: 0 0 auto;">
+          <div class="mode-group-title">Сравнение (&gt;, &lt;, =)</div>
+          <div class="mode-buttons-row">
+            <button class="mode-tab cmp-tab" id="btn-cmp-simple" onclick="setCompareMode('cmp_simple')">
+              <span>⚖️ Просто числа</span>
+            </button>
+            <button class="mode-tab cmp-tab" id="btn-cmp-expr" onclick="setCompareMode('cmp_expr')">
+              <span>⚖️ С примерами</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ТАБЛИЧНЫЙ РЕЖИМ -->
+      <div class="table-view-container" id="table-view-container">
+        <div class="table-toolbar">
+          <span class="table-toolbar-title" id="table-view-heading">Интерактивная таблица чисел:</span>
+          <div class="table-toggle-group">
+            <button class="table-sort-btn active" id="btn-table-pythagoras" onclick="setTableSubMode('pythagoras')">Таблица Пифагора</button>
+            <button class="table-sort-btn" id="btn-table-hundred" onclick="setTableSubMode('hundred')">Сотня (1–100 Никитина)</button>
+          </div>
+        </div>
+
+        <div class="table-card-container">
+          <!-- Информационный блок с расшифровкой -->
+          <div class="table-info-bubble" id="table-info-bubble">
+            <span class="info-tag">Инфо</span>
+            <span class="info-desc">Нажми на любое число в таблице</span>
+          </div>
+
+          <!-- Таблица Пифагора -->
+          <div id="pythagoras-grid-wrapper" class="pythagoras-grid"></div>
+
+          <!-- Таблица Сотни Никитина -->
+          <div id="hundred-grid-wrapper" class="nikitin-container" style="display: none;">
+            <div class="nikitin-title-block">
+              <div class="nikitin-title">ТАБЛИЦА СОТНИ</div>
+              <div class="nikitin-sub">Развивающие игры Никитиных</div>
+            </div>
+            <div class="nikitin-scroll-wrap"><div class="nikitin-board" id="nikitin-board"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- КАРТОЧКА С ЗАДАНИЕМ -->
+      <div class="card-wrapper" id="card-wrapper">
+        <div class="math-card" id="math-card" onclick="onCardClick(event)">
+          <div class="math-expression" id="math-expression"></div>
+          <div class="card-subtext" id="card-subtext">
+            <span>💡 Нажми на карточку, чтобы узнать ответ</span>
+          </div>
+        </div>
+
+        <!-- Кнопки выбора (в режиме тест) -->
+        <div class="choices-container" id="choices-container" style="display: none;"></div>
+
+        <!-- Кнопки стрелок -->
+        <div class="controls-row">
+          <button class="btn-nav-arrow" id="btn-prev-card" onclick="prevCard(event)" title="Предыдущая карточка">
+            <span class="arrow-icon">⟵</span>
+          </button>
+          <button class="btn-nav-arrow" id="btn-next-card" onclick="nextCard(event)" title="Следующая карточка">
+            <span class="arrow-icon">⟶</span>
+          </button>
+        </div>
+
+        <!-- Нижняя панель подсказок -->
+        <div class="hint-bar">
+          <span>Управление:</span>
+          <span class="kbd-chip">←</span>
+          <span class="kbd-chip">→</span>
+          <span>или</span>
+          <span class="kbd-chip">ПРОБЕЛ</span>
+        </div>
+      </div>
+
+      <div></div>
+    </main>
+
+  </div>
+
+  <script>
+    let selectedArithmeticOps = new Set(['add']); 
+    let currentMode = 'arithmetic'; // 'arithmetic', 'cmp_simple', 'cmp_expr', 'table'
+    let tableSubMode = 'pythagoras';
+    let maxRange = 10;
+    
+    let activeMultipliers = new Set([2, 3, 4, 5, 6, 7, 8, 9]);
+    let isQuizMode = false;
+    let isSoundMuted = false;
+    let currentSoundType = 'softping';
+
+    let selectedNikitinNumber = null;
+
+    let currentProblem = null;
+    let isAnswerRevealed = false;
+    let solvedCount = 0;
+    let wrongCount = 0;
+
+    let historyStack = [];
+    let historyIndex = -1;
+
+    let startTime = Date.now();
+    let solveTimestamps = [];
+    let lastActionTime = 0;
+    const THROTTLE_DELAY_MS = 160;
+
+    let audioCtx = null;
+
+    function playSound(type) {
+      if (isSoundMuted) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const t = audioCtx.currentTime;
+        const soundToPlay = type || currentSoundType;
+
+        switch (soundToPlay) {
+          case 'softping': {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(659.25, t);
+            gain.gain.setValueAtTime(0.14, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(t);
+            osc.stop(t + 0.19);
+            break;
+          }
+          case 'popit': {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(450, t);
+            osc.frequency.exponentialRampToValueAtTime(140, t + 0.045);
+            gain.gain.setValueAtTime(0.24, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(t);
+            osc.stop(t + 0.055);
+            break;
+          }
+          case 'bell': {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(880, t);
+            gain.gain.setValueAtTime(0.18, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(t);
+            osc.stop(t + 0.46);
+            break;
+          }
+          case 'success': {
+            const osc1 = audioCtx.createOscillator();
+            const osc2 = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc1.type = 'sine';
+            osc2.type = 'sine';
+            osc1.frequency.setValueAtTime(523.25, t);
+            osc2.frequency.setValueAtTime(659.25, t + 0.08);
+            gain.gain.setValueAtTime(0.18, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.32);
+            osc1.connect(gain);
+            osc2.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc1.start(t);
+            osc2.start(t + 0.08);
+            osc1.stop(t + 0.3);
+            osc2.stop(t + 0.33);
+            break;
+          }
+          case 'error': {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(160, t);
+            osc.frequency.linearRampToValueAtTime(110, t + 0.12);
+            gain.gain.setValueAtTime(0.12, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(t);
+            osc.stop(t + 0.15);
+            break;
+          }
+        }
+      } catch (e) {}
+    }
+
+    function updateTimers() {
+      const now = Date.now();
+      const elapsedTotal = Math.floor((now - startTime) / 1000);
+      const mins = Math.floor(elapsedTotal / 60).toString().padStart(2, '0');
+      const secs = (elapsedTotal % 60).toString().padStart(2, '0');
+      document.getElementById('session-time').textContent = `${mins}:${secs}`;
+
+      const speedBadge = document.getElementById('speed-badge');
+      const speedCountEl = document.getElementById('speed-count');
+
+      if (currentMode === 'table') {
+        speedBadge.classList.add('paused');
+        speedCountEl.textContent = '⏸';
+        return;
+      } else {
+        speedBadge.classList.remove('paused');
+      }
+
+      solveTimestamps = solveTimestamps.filter(t => now - t <= 60000);
+      let speed = solveTimestamps.length;
+      if (elapsedTotal > 3 && elapsedTotal < 60) {
+        speed = Math.round((solvedCount / elapsedTotal) * 60);
+      }
+      speedCountEl.textContent = speed;
+    }
+    setInterval(updateTimers, 1000);
+
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function pluralize(n, form1, form2, form5) {
+      n = Math.abs(n) % 100;
+      const n1 = n % 10;
+      if (n > 10 && n < 20) return form5;
+      if (n1 > 1 && n1 < 5) return form2;
+      if (n1 === 1) return form1;
+      return form5;
+    }
+
+    function formatNumberDecomposition(n) {
+      if (n === 100) return '10 десятков и 0 единиц';
+      const tens = Math.floor(n / 10);
+      const units = n % 10;
+      const tensStr = `${tens} ${pluralize(tens, 'десяток', 'десятка', 'десятков')}`;
+      const unitsStr = `${units} ${pluralize(units, 'единица', 'единицы', 'единиц')}`;
+      return `${tensStr} и ${unitsStr}`;
+    }
+
+    function generateAddition() {
+      let a, b;
+      if (maxRange <= 10) {
+        a = getRandomInt(1, 9);
+        b = getRandomInt(1, 10 - a);
+      } else if (maxRange <= 20) {
+        if (Math.random() < 0.6) {
+          a = getRandomInt(4, 9);
+          b = getRandomInt(11 - a, 9);
+        } else {
+          a = getRandomInt(1, 18);
+          b = getRandomInt(1, 20 - a);
+        }
+      } else {
+        a = getRandomInt(5, maxRange - 5);
+        b = getRandomInt(1, maxRange - a);
+      }
+      const ans = a + b;
+      return {
+        type: 'add',
+        leftText: `${a} + ${b}`,
+        answer: ans
+      };
+    }
+
+    function generateSubtraction() {
+      let a, b;
+      if (maxRange <= 10) {
+        a = getRandomInt(2, 10);
+        b = getRandomInt(1, a);
+      } else if (maxRange <= 20) {
+        if (Math.random() < 0.6) {
+          a = getRandomInt(11, 18);
+          b = getRandomInt(a - 9, 9);
+        } else {
+          a = getRandomInt(2, 20);
+          b = getRandomInt(1, a);
+        }
+      } else {
+        a = getRandomInt(10, maxRange);
+        b = getRandomInt(1, a);
+      }
+      const ans = a - b;
+      return {
+        type: 'sub',
+        leftText: `${a} − ${b}`,
+        answer: ans
+      };
+    }
+
+    function generateMultiplication() {
+      const mults = activeMultipliers.size > 0 ? Array.from(activeMultipliers) : [2];
+      const a = mults[Math.floor(Math.random() * mults.length)];
+      const b = getRandomInt(2, 9);
+      return {
+        type: 'mul',
+        leftText: `${a} × ${b}`,
+        answer: a * b
+      };
+    }
+
+    function generateDivision() {
+      const mults = activeMultipliers.size > 0 ? Array.from(activeMultipliers) : [2];
+      const b = mults[Math.floor(Math.random() * mults.length)];
+      const ans = getRandomInt(2, 9);
+      const a = b * ans;
+      return {
+        type: 'div',
+        leftText: `${a} : ${b}`,
+        answer: ans
+      };
+    }
+
+    function generateSimpleComparison() {
+      let a = getRandomInt(1, maxRange);
+      let b = Math.random() < 0.28 ? a : getRandomInt(1, maxRange);
+      let sign = '=';
+      if (a > b) sign = '>';
+      else if (a < b) sign = '<';
+
+      return {
+        type: 'cmp',
+        leftExpr: `${a}`,
+        rightExpr: `${b}`,
+        answer: sign
+      };
+    }
+
+    function generateExprComparison() {
+      function makeSubExpr(limit) {
+        const x = getRandomInt(Math.min(limit, 4), limit);
+        const y = getRandomInt(1, x - 1);
+        return { text: `${x} − ${y}`, val: x - y };
+      }
+
+      function makeAddExpr(limit) {
+        const x = getRandomInt(1, Math.max(1, limit - 2));
+        const y = getRandomInt(1, Math.max(1, limit - x));
+        return { text: `${x} + ${y}`, val: x + y };
+      }
+
+      function makeExpr(limit) {
+        return Math.random() < 0.5 ? makeSubExpr(limit) : makeAddExpr(limit);
+      }
+
+      const pattern = getRandomInt(1, 3);
+      let leftExpr = '', rightExpr = '';
+      let leftVal = 0, rightVal = 0;
+
+      if (pattern === 1) {
+        const e = makeExpr(maxRange);
+        leftExpr = e.text;
+        leftVal = e.val;
+        if (Math.random() < 0.3) {
+          rightVal = leftVal;
+        } else {
+          const delta = getRandomInt(-3, 3);
+          rightVal = Math.max(1, Math.min(maxRange, leftVal + (delta === 0 ? 1 : delta)));
+        }
+        rightExpr = `${rightVal}`;
+      } else if (pattern === 2) {
+        const e = makeExpr(maxRange);
+        rightExpr = e.text;
+        rightVal = e.val;
+        if (Math.random() < 0.3) {
+          leftVal = rightVal;
+        } else {
+          const delta = getRandomInt(-3, 3);
+          leftVal = Math.max(1, Math.min(maxRange, rightVal + (delta === 0 ? 1 : delta)));
+        }
+        leftExpr = `${leftVal}`;
+      } else {
+        const e1 = makeExpr(maxRange);
+        leftExpr = e1.text;
+        leftVal = e1.val;
+
+        if (Math.random() < 0.32) {
+          if (leftVal > 1 && Math.random() < 0.5 && leftVal + 3 <= maxRange) {
+            const addK = getRandomInt(1, 4);
+            rightExpr = `${leftVal + addK} − ${addK}`;
+          } else {
+            const part1 = getRandomInt(1, Math.max(1, leftVal - 1));
+            rightExpr = `${part1} + ${leftVal - part1}`;
+          }
+          rightVal = leftVal;
+        } else {
+          const e2 = makeExpr(maxRange);
+          rightExpr = e2.text;
+          rightVal = e2.val;
+        }
+      }
+
+      let sign = '=';
+      if (leftVal > rightVal) sign = '>';
+      else if (leftVal < rightVal) sign = '<';
+
+      return {
+        type: 'cmp',
+        leftExpr,
+        rightExpr,
+        answer: sign
+      };
+    }
+
+    function generateNextProblem() {
+      if (currentMode === 'cmp_simple') return generateSimpleComparison();
+      if (currentMode === 'cmp_expr') return generateExprComparison();
+
+      const ops = Array.from(selectedArithmeticOps);
+      const chosenOp = ops[Math.floor(Math.random() * ops.length)];
+
+      if (chosenOp === 'add') return generateAddition();
+      if (chosenOp === 'sub') return generateSubtraction();
+      if (chosenOp === 'mul') return generateMultiplication();
+      if (chosenOp === 'div') return generateDivision();
+      return generateAddition();
+    }
+
+    function generateOptions(correctAnswer, problemType) {
+      if (problemType === 'cmp') return ['<', '=', '>'];
+
+      const options = new Set([correctAnswer]);
+      let attempts = 0;
+      while (options.size < 4 && attempts < 35) {
+        attempts++;
+        let offset = getRandomInt(-4, 4);
+        if (offset === 0) offset = Math.random() < 0.5 ? 1 : -1;
+        let cand = correctAnswer + offset;
+        if (cand >= 0 && cand !== correctAnswer) options.add(cand);
+      }
+      let fallback = 1;
+      while (options.size < 4) {
+        if (!options.has(correctAnswer + fallback)) options.add(correctAnswer + fallback);
+        fallback++;
+      }
+      const arr = Array.from(options);
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function renderCard(problem, isRevealed) {
+      const container = document.getElementById('math-expression');
+      const subtext = document.getElementById('card-subtext');
+      container.innerHTML = '';
+      container.classList.remove('text-long', 'text-medium');
+
+      if (problem.type === 'cmp') {
+        const len = (problem.leftExpr + problem.rightExpr).length;
+        if (len > 10) container.classList.add('text-long');
+        else if (len > 6) container.classList.add('text-medium');
+
+        const leftSpan = document.createElement('span');
+        leftSpan.className = 'elem-num';
+        leftSpan.textContent = problem.leftExpr;
+
+        const signSpan = document.createElement('span');
+        if (isRevealed) {
+          signSpan.className = 'elem-answer';
+          signSpan.textContent = problem.answer;
+        } else {
+          signSpan.className = 'elem-question';
+          signSpan.textContent = '❓';
+        }
+
+        const rightSpan = document.createElement('span');
+        rightSpan.className = 'elem-num';
+        rightSpan.textContent = problem.rightExpr;
+
+        container.appendChild(leftSpan);
+        container.appendChild(signSpan);
+        container.appendChild(rightSpan);
+
+        subtext.innerHTML = isQuizMode 
+          ? '<span>🎯 Выбери знак: <b>&lt;</b>, <b>=</b> или <b>&gt;</b></span>'
+          : (isRevealed ? '<span>✨ Отлично! Нажми для следующего</span>' : '<span>💡 Нажми на карточку, чтобы узнать правильный знак</span>');
+        return;
+      }
+
+      const parts = problem.leftText.split(' ');
+      const aSpan = document.createElement('span');
+      aSpan.className = 'elem-num';
+      aSpan.textContent = parts[0];
+
+      const opSpan = document.createElement('span');
+      opSpan.className = 'elem-op';
+      opSpan.textContent = parts[1];
+
+      const bSpan = document.createElement('span');
+      bSpan.className = 'elem-num';
+      bSpan.textContent = parts[2];
+
+      const eqSpan = document.createElement('span');
+      eqSpan.className = 'elem-equal';
+      eqSpan.textContent = '=';
+
+      const ansSpan = document.createElement('span');
+      if (isRevealed) {
+        ansSpan.className = 'elem-answer';
+        ansSpan.textContent = problem.answer;
+      } else {
+        ansSpan.className = 'elem-question';
+        ansSpan.textContent = '?';
+      }
+
+      container.appendChild(aSpan);
+      container.appendChild(opSpan);
+      container.appendChild(bSpan);
+      container.appendChild(eqSpan);
+      container.appendChild(ansSpan);
+
+      subtext.innerHTML = isQuizMode 
+        ? '<span>🎯 Выбери правильный ответ</span>'
+        : (isRevealed ? '<span>✨ Отлично! Нажми для следующего</span>' : '<span>💡 Нажми на карточку, чтобы узнать ответ</span>');
+    }
+
+    function renderQuizChoices(problem, allowRevealed = false) {
+      const container = document.getElementById('choices-container');
+      container.innerHTML = '';
+
+      if (!isQuizMode || currentMode === 'table') {
+        container.style.display = 'none';
+        return;
+      }
+
+      container.style.display = 'flex';
+      const options = generateOptions(problem.answer, problem.type);
+
+      options.forEach((opt) => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+
+        const textSpan = document.createElement('span');
+        textSpan.textContent = opt;
+        btn.appendChild(textSpan);
+
+        if (isAnswerRevealed && opt === problem.answer && allowRevealed) {
+          btn.classList.add('correct');
+        }
+
+        btn.onclick = (e) => {
+          e.stopPropagation();
+          handleQuizSelection(opt, btn);
+        };
+
+        container.appendChild(btn);
+      });
+    }
+
+    function handleQuizSelection(selectedVal, btnElement) {
+      if (isAnswerRevealed) {
+        nextCard();
+        return;
+      }
+
+      if (selectedVal === currentProblem.answer) {
+        btnElement.classList.add('correct');
+        playSound('success');
+        isAnswerRevealed = true;
+        renderCard(currentProblem, true);
+        solvedCount++;
+        solveTimestamps.push(Date.now());
+        document.getElementById('star-count').textContent = solvedCount;
+
+        const card = document.getElementById('math-card');
+        card.classList.add('correct-flash');
+        setTimeout(() => card.classList.remove('correct-flash'), 600);
+
+        setTimeout(() => {
+          if (isAnswerRevealed) nextCard();
+        }, 850);
+      } else {
+        btnElement.classList.add('wrong');
+        wrongCount++;
+        document.getElementById('wrong-count').textContent = wrongCount;
+        playSound('error');
+
+        const card = document.getElementById('math-card');
+        card.classList.remove('shake');
+        void card.offsetWidth;
+        card.classList.add('shake');
+      }
+    }
+
+    function generateNext(resetHistory = false) {
+      if (currentMode === 'table') return;
+
+      if (resetHistory) {
+        historyStack = [];
+        historyIndex = -1;
+      }
+
+      currentProblem = generateNextProblem();
+      isAnswerRevealed = false;
+
+      if (historyIndex < historyStack.length - 1) {
+        historyStack = historyStack.slice(0, historyIndex + 1);
+      }
+      historyStack.push({ ...currentProblem, solvedInQuiz: false });
+      historyIndex = historyStack.length - 1;
+
+      renderCard(currentProblem, false);
+      renderQuizChoices(currentProblem, false);
+      updateNavButtonsState();
+
+      const card = document.getElementById('math-card');
+      card.classList.remove('card-fade');
+      void card.offsetWidth;
+      card.classList.add('card-fade');
+    }
+
+    function onCardClick(e) {
+      if (currentMode === 'table') return;
+      if (!isQuizMode) {
+        if (!isAnswerRevealed) {
+          playSound('softping');
+          isAnswerRevealed = true;
+          renderCard(currentProblem, true);
+          solvedCount++;
+          solveTimestamps.push(Date.now());
+          document.getElementById('star-count').textContent = solvedCount;
+        } else {
+          nextCard();
+        }
+      }
+    }
+
+    function nextCard(event) {
+      if (currentMode === 'table') return;
+      if (event) event.stopPropagation();
+
+      const now = Date.now();
+      if (now - lastActionTime < THROTTLE_DELAY_MS) return;
+      lastActionTime = now;
+
+      playSound('softping');
+
+      if (historyIndex < historyStack.length - 1) {
+        historyIndex++;
+        currentProblem = historyStack[historyIndex];
+        isAnswerRevealed = isQuizMode ? !!currentProblem.solvedInQuiz : true;
+        renderCard(currentProblem, isAnswerRevealed);
+        renderQuizChoices(currentProblem, isAnswerRevealed);
+        updateNavButtonsState();
+      } else {
+        generateNext();
+      }
+    }
+
+    function prevCard(event) {
+      if (currentMode === 'table') return;
+      if (event) event.stopPropagation();
+
+      const now = Date.now();
+      if (now - lastActionTime < THROTTLE_DELAY_MS) return;
+      lastActionTime = now;
+
+      if (historyIndex > 0) {
+        historyIndex--;
+        currentProblem = historyStack[historyIndex];
+        isAnswerRevealed = isQuizMode ? !!currentProblem.solvedInQuiz : true;
+        playSound('softping');
+        renderCard(currentProblem, isAnswerRevealed);
+        renderQuizChoices(currentProblem, isAnswerRevealed);
+        updateNavButtonsState();
+      }
+    }
+
+    function updateNavButtonsState() {
+      const prevBtn = document.getElementById('btn-prev-card');
+      if (prevBtn) prevBtn.disabled = (historyIndex <= 0);
+    }
+
+    function toggleArithmeticOp(op) {
+      currentMode = 'arithmetic';
+      clearCompareActiveStates();
+
+      if (selectedArithmeticOps.has(op)) {
+        if (selectedArithmeticOps.size > 1) {
+          selectedArithmeticOps.delete(op);
+        }
+      } else {
+        selectedArithmeticOps.add(op);
+      }
+
+      updateOpButtonsVisual();
+      hideTableView();
+      generateNext(true);
+    }
+
+    function updateOpButtonsVisual() {
+      document.querySelectorAll('.op-toggle-tab').forEach(b => {
+        const op = b.dataset.op;
+        b.classList.toggle('active', currentMode === 'arithmetic' && selectedArithmeticOps.has(op));
+      });
+    }
+
+    function setCompareMode(cmpType) {
+      currentMode = cmpType;
+      updateOpButtonsVisual();
+      clearCompareActiveStates();
+
+      if (cmpType === 'cmp_simple') {
+        document.getElementById('btn-cmp-simple').classList.add('active');
+      } else {
+        document.getElementById('btn-cmp-expr').classList.add('active');
+      }
+
+      hideTableView();
+      generateNext(true);
+    }
+
+    function clearCompareActiveStates() {
+      document.getElementById('btn-cmp-simple').classList.remove('active');
+      document.getElementById('btn-cmp-expr').classList.remove('active');
+    }
+
+    function setTrainingMode(quiz) {
+      isQuizMode = quiz;
+      document.getElementById('btn-mode-cards').classList.toggle('active', !quiz);
+      document.getElementById('btn-mode-quiz').classList.toggle('active', quiz);
+      document.getElementById('wrong-badge').style.display = quiz ? 'flex' : 'none';
+
+      if (currentProblem) {
+        renderCard(currentProblem, isAnswerRevealed);
+        renderQuizChoices(currentProblem, isAnswerRevealed);
+      }
+    }
+
+    function setMaxRange(val) {
+      maxRange = val;
+      document.querySelectorAll('.range-pill-btn').forEach(btn => {
+        btn.classList.toggle('active', parseInt(btn.dataset.range) === val);
+      });
+      generateNext(true);
+    }
+
+    function toggleAllOrMinMultipliers() {
+      if (activeMultipliers.size >= 8) {
+        activeMultipliers = new Set([2]);
+      } else {
+        activeMultipliers = new Set([2, 3, 4, 5, 6, 7, 8, 9]);
+      }
+      renderMultipliersCheckboxes();
+      if (selectedArithmeticOps.has('mul') || selectedArithmeticOps.has('div')) {
+        generateNext(true);
+      }
+    }
+
+    function renderMultipliersCheckboxes() {
+      const container = document.getElementById('multipliers-grid');
+      container.innerHTML = '';
+
+      for (let i = 2; i <= 9; i++) {
+        const item = document.createElement('div');
+        item.className = 'mult-item';
+
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.id = `mult-${i}`;
+        input.value = i;
+        input.checked = activeMultipliers.has(i);
+
+        input.onchange = (e) => {
+          if (e.target.checked) activeMultipliers.add(i);
+          else activeMultipliers.delete(i);
+
+          if (activeMultipliers.size === 0) {
+            activeMultipliers.add(i);
+            input.checked = true;
+          }
+          if (selectedArithmeticOps.has('mul') || selectedArithmeticOps.has('div')) {
+            generateNext(true);
+          }
+        };
+
+        const label = document.createElement('label');
+        label.className = 'mult-label';
+        label.htmlFor = `mult-${i}`;
+        label.textContent = `× ${i}`;
+
+        item.appendChild(input);
+        item.appendChild(label);
+        container.appendChild(item);
+      }
+    }
+
+    function renderPythagorasGrid() {
+      const wrapper = document.getElementById('pythagoras-grid-wrapper');
+      wrapper.innerHTML = '';
+
+      for (let r = 1; r <= 10; r++) {
+        for (let c = 1; c <= 10; c++) {
+          const cell = document.createElement('div');
+          cell.className = 'pythagoras-cell';
+          const val = r * c;
+          cell.textContent = val;
+
+          if (r === 1 || c === 1) cell.classList.add('header-cell');
+
+          cell.onclick = () => {
+            playSound('bell');
+            document.getElementById('table-info-bubble').innerHTML = 
+              `<span class="info-tag">${r} × ${c}</span>` +
+              `<span class="info-desc">Результат: <b style="color:#059669; font-size:1.15em;">${val}</b></span>`;
+            highlightPythagorasCross(r, c);
+          };
+
+          cell.setAttribute('data-row', r);
+          cell.setAttribute('data-col', c);
+          wrapper.appendChild(cell);
+        }
+      }
+    }
+
+    function highlightPythagorasCross(targetR, targetC) {
+      const cells = document.querySelectorAll('.pythagoras-cell');
+      cells.forEach(el => {
+        const r = parseInt(el.getAttribute('data-row'));
+        const c = parseInt(el.getAttribute('data-col'));
+        el.classList.remove('cross-highlight', 'target-cell');
+
+        if (r === targetR && c === targetC) {
+          el.classList.add('target-cell');
+        } else if (r === targetR || c === targetC) {
+          el.classList.add('cross-highlight');
+        }
+      });
+    }
+
+    function renderNikitinHundredTable() {
+      const board = document.getElementById('nikitin-board');
+      board.innerHTML = '';
+
+      for (let r = 1; r <= 10; r++) {
+        const unitCell = document.createElement('div');
+        unitCell.className = 'nikitin-unit-cell';
+        unitCell.id = `nikitin-unit-cell-${r}`;
+        unitCell.appendChild(createNikitinUnitDots(r));
+        board.appendChild(unitCell);
+
+        for (let col = 0; col < 10; col++) {
+          const cell = document.createElement('div');
+          cell.className = 'nikitin-cell';
+          const num = col * 10 + r;
+          cell.textContent = num;
+          cell.id = `nikitin-cell-${num}`;
+
+          if (r === 10) cell.classList.add('round-ten');
+
+          cell.onclick = () => selectNikitinNumber(num, r, col);
+          board.appendChild(cell);
+        }
+      }
+
+      const corner = document.createElement('div');
+      corner.className = 'nikitin-corner-cell';
+      board.appendChild(corner);
+
+      for (let col = 0; col < 10; col++) {
+        const tenCell = document.createElement('div');
+        tenCell.className = 'nikitin-ten-cell';
+        tenCell.id = `nikitin-ten-cell-${col}`;
+        tenCell.appendChild(createNikitinTenBars(col + 1));
+        board.appendChild(tenCell);
+      }
+    }
+
+    function createNikitinUnitDots(count) {
+      const wrap = document.createElement('div');
+      wrap.className = 'dot-pattern';
+
+      if (count <= 5) {
+        for (let i = 0; i < count; i++) {
+          const d = document.createElement('div');
+          d.className = 'n-dot';
+          wrap.appendChild(d);
+        }
+      } else {
+        const col1 = document.createElement('div');
+        col1.style.display = 'flex';
+        col1.style.flexDirection = 'column';
+        col1.style.gap = '2px';
+        const col2 = document.createElement('div');
+        col2.style.display = 'flex';
+        col2.style.flexDirection = 'column';
+        col2.style.gap = '2px';
+
+        for (let i = 0; i < 5; i++) {
+          const d = document.createElement('div');
+          d.className = 'n-dot';
+          col1.appendChild(d);
+        }
+        for (let i = 5; i < count; i++) {
+          const d = document.createElement('div');
+          d.className = 'n-dot';
+          col2.appendChild(d);
+        }
+        const doubleWrap = document.createElement('div');
+        doubleWrap.style.display = 'flex';
+        doubleWrap.style.gap = '3px';
+        doubleWrap.appendChild(col1);
+        doubleWrap.appendChild(col2);
+        wrap.appendChild(doubleWrap);
+      }
+      return wrap;
+    }
+
+    function createNikitinTenBars(tenCount) {
+      const wrap = document.createElement('div');
+      wrap.className = 'tens-bars';
+
+      for (let t = 0; t < tenCount; t++) {
+        const bar = document.createElement('div');
+        bar.className = 'ten-bar';
+        for (let d = 0; d < 9; d++) {
+          const dot = document.createElement('div');
+          dot.className = 'ten-dot';
+          bar.appendChild(dot);
+        }
+        const baseDot = document.createElement('div');
+        baseDot.className = 'ten-dot base-dot';
+        bar.appendChild(baseDot);
+        wrap.appendChild(bar);
+      }
+      return wrap;
+    }
+
+    function selectNikitinNumber(num, rowIdx, colIdx) {
+      selectedNikitinNumber = num;
+      playSound('popit');
+
+      const decomp = formatNumberDecomposition(num);
+      document.getElementById('table-info-bubble').innerHTML = 
+        `<span class="info-tag" style="margin-right: 12px; font-size:1.05em;">Число ${num}</span>` +
+        `<span class="info-desc">${decomp}</span>`;
+
+      document.querySelectorAll('.nikitin-cell').forEach(c => c.classList.remove('selected'));
+      const activeCell = document.getElementById(`nikitin-cell-${num}`);
+      if (activeCell) activeCell.classList.add('selected');
+
+      document.querySelectorAll('.nikitin-unit-cell').forEach(c => c.classList.remove('active-unit'));
+      const unitEl = document.getElementById(`nikitin-unit-cell-${rowIdx}`);
+      if (unitEl) unitEl.classList.add('active-unit');
+
+      document.querySelectorAll('.nikitin-ten-cell').forEach(c => c.classList.remove('active-ten'));
+      const tenEl = document.getElementById(`nikitin-ten-cell-${colIdx}`);
+      if (tenEl) tenEl.classList.add('active-ten');
+    }
+
+    function setTableSubMode(subMode) {
+      tableSubMode = subMode;
+      document.getElementById('btn-table-pythagoras').classList.toggle('active', subMode === 'pythagoras');
+      document.getElementById('btn-table-hundred').classList.toggle('active', subMode === 'hundred');
+
+      const pythWrap = document.getElementById('pythagoras-grid-wrapper');
+      const hundWrap = document.getElementById('hundred-grid-wrapper');
+      const heading = document.getElementById('table-view-heading');
+
+      if (subMode === 'pythagoras') {
+        pythWrap.style.display = 'grid';
+        hundWrap.style.display = 'none';
+        heading.textContent = 'Таблица Пифагора (Умножение):';
+        document.getElementById('table-info-bubble').innerHTML = 
+          `<span class="info-tag">Пифагор</span><span class="info-desc">Нажми на любое число для разбора</span>`;
+      } else {
+        pythWrap.style.display = 'none';
+        hundWrap.style.display = 'flex';
+        heading.textContent = 'Сотня (1–100 по методике Никитиных):';
+        if (selectedNikitinNumber) {
+          selectNikitinNumber(selectedNikitinNumber, ((selectedNikitinNumber - 1) % 10) + 1, Math.floor((selectedNikitinNumber - 1) / 10));
+        } else {
+          document.getElementById('table-info-bubble').innerHTML = 
+            `<span class="info-tag">Сотня</span><span class="info-desc">Нажми на число: изучай единицы (слева) и десятки (снизу)</span>`;
+        }
+      }
+    }
+
+    function toggleTableView() {
+      const tabBtn = document.getElementById('btn-tab-table');
+      const cardView = document.getElementById('card-wrapper');
+      const tableView = document.getElementById('table-view-container');
+
+      if (currentMode === 'table') {
+        currentMode = 'arithmetic';
+        tabBtn.classList.remove('active');
+        tableView.style.display = 'none';
+        cardView.style.display = 'flex';
+        updateOpButtonsVisual();
+        generateNext(true);
+      } else {
+        currentMode = 'table';
+        tabBtn.classList.add('active');
+        document.querySelectorAll('.op-toggle-tab').forEach(b => b.classList.remove('active'));
+        clearCompareActiveStates();
+        cardView.style.display = 'none';
+        tableView.style.display = 'flex';
+        setTableSubMode(tableSubMode);
+      }
+      updateTimers();
+    }
+
+    function hideTableView() {
+      document.getElementById('btn-tab-table').classList.remove('active');
+      document.getElementById('table-view-container').style.display = 'none';
+      document.getElementById('card-wrapper').style.display = 'flex';
+    }
+
+    function toggleSoundMute() {
+      isSoundMuted = !isSoundMuted;
+      document.getElementById('sound-mute-icon').textContent = isSoundMuted ? '🔇' : '🔊';
+      if (!isSoundMuted) playSound('softping');
+    }
+
+    function changeSoundEffect(val) {
+      currentSoundType = val;
+      playSound(val);
+    }
+
+    function changeFont(fontName) {
+      document.body.className = `font-${fontName}`;
+    }
+
+    function openHelpModal() {
+      document.getElementById('help-modal').classList.add('open');
+    }
+
+    function closeHelpModal() {
+      document.getElementById('help-modal').classList.remove('open');
+    }
+
+    function onHelpBackdropClick(e) {
+      if (e.target.id === 'help-modal') closeHelpModal();
+    }
+
+    const settingsPanel = document.getElementById('settings-panel');
+    const panelBackdrop = document.getElementById('panel-backdrop');
+
+    function toggleSettingsPanel() {
+      const isMobile = window.innerWidth <= 900;
+      if (isMobile) {
+        settingsPanel.classList.toggle('open');
+        panelBackdrop.classList.toggle('active', settingsPanel.classList.contains('open'));
+      } else {
+        settingsPanel.classList.toggle('collapsed');
+        const isHidden = settingsPanel.classList.contains('collapsed');
+        document.getElementById('panel-btn-label').textContent = isHidden ? 'Параметры' : 'Скрыть';
+      }
+    }
+
+    function closeSettingsPanel() {
+      settingsPanel.classList.remove('open');
+      panelBackdrop.classList.remove('active');
+    }
+
+    if (window.innerWidth > 900) {
+      settingsPanel.classList.remove('collapsed');
+      document.getElementById('panel-btn-label').textContent = 'Скрыть';
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (currentMode === 'table') return;
+
+      if (e.code === 'ArrowLeft') {
+        e.preventDefault();
+        if (!e.repeat) prevCard();
+      } else if (e.code === 'Space' || e.code === 'ArrowRight') {
+        e.preventDefault();
+        if (!e.repeat) {
+          if (!isQuizMode && !isAnswerRevealed) {
+            onCardClick();
+          } else {
+            nextCard();
+          }
+        }
+      } else if (e.code === 'Escape') {
+        closeHelpModal();
+      }
+    });
+
+    let pythagorasRendered = false;
+    let hundredRendered = false;
+
+    function ensureTableRendered(subMode) {
+      if (subMode === 'pythagoras' && !pythagorasRendered) {
+        renderPythagorasGrid();
+        pythagorasRendered = true;
+      } else if (subMode === 'hundred' && !hundredRendered) {
+        renderNikitinHundredTable();
+        hundredRendered = true;
+      }
+    }
+
+    const originalSetTableSubMode = setTableSubMode;
+    setTableSubMode = function(subMode) {
+      ensureTableRendered(subMode);
+      originalSetTableSubMode(subMode);
+    };
+
+    renderMultipliersCheckboxes();
+    updateOpButtonsVisual();
+    generateNext(true);
+
+    if (window.requestIdleCallback) {
+      requestIdleCallback(() => ensureTableRendered('pythagoras'));
+    } else {
+      setTimeout(() => ensureTableRendered('pythagoras'), 150);
+    }
+  </script>
+</body>
+</html>
