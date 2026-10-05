@@ -4,10 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Читай-ка: Обучение чтению</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@700&family=Comfortaa:wght@700&family=Lora:ital,wght@0,600;0,700;1,600&family=Nunito:wght@700;800;900&family=PT+Serif:wght@700&family=Rubik:wght@700;900&display=swap" rel="stylesheet">
-  <style>
+  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=bb6ECWkLPQev9oAS08y1aJvej5FHbe4nL0CIJWS99Xmkq9NB5vhFhjm3fphWlOWPM7vPnjLfIbNSTJ_0QDoI9OtqCfrgfbk5GQexsAtB3BXXFQJFgna1EOaqkYCUZ4Fk6aaIG3H_v2BUgMOmqj68HsDDDCQOVEqx__UxNSiR0ll7HQlEVsi3sqALvKz42uJFScgP07vA9kjirIMfEY6ste07v3xm7MZPJJPamw7rQOKLxPpQDyOTVmKJuULATfZZ6Q4XVfIgmDArxrRPqCzJf5i6AP_PD5gW37B7M8sjz5wfMBX9QuldFtAsLN0KcdoWXI0ac24kMo-0AsK6oD6ZIA" charset="UTF-8"></script><style>
     :root {
       --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 50%, #fce7f3 100%);
       --card-bg: #ffffff;
@@ -192,6 +194,7 @@
     }
 
     .btn-icon-header {
+      text-decoration: none;
       background: #ffffff;
       border: 1.5px solid #cbd5e1;
       height: 34px;
@@ -1179,7 +1182,8 @@
         gap: 4px;
       }
 
-      .mode-group:nth-child(2) .mode-tab:last-child {
+      .mode-group:nth-child(2) .mode-tab:last-child,
+      .mode-group:nth-child(3) .mode-tab:last-child {
         grid-column: span 2;
       }
 
@@ -1717,13 +1721,13 @@
         <div class="help-section">
           <div class="help-section-title">🧩 Категории и режимы тренировки</div>
           <ul class="help-list">
-            <li><b>🔤 Алфавит:</b> экран с парными большими и маленькими буквами. Доступны вкладки «По группам», «По алфавиту», «Все» и интерактивный «Помощник» (Лента букв).</li>
-            <li><b>🎈 Прямые слоги (МА):</b> открытые слоги (согласный + гласный).</li>
-            <li><b>🔄 Обратные слоги (АМ):</b> закрытые слоги (гласный + согласный).</li>
-            <li><b>🎲 Все слоги:</b> перемешанные прямые и обратные слоги из 2 букв.</li>
-            <li><b>🧱 Слова по буквам (3–4 буквы):</b> слова строго из 1 слога (КОТ, ДОМ, СТОЛ, ВОЛК).</li>
-            <li><b>📖 Слова (2 слога):</b> слова с делением дефисом (МА-МА, КА-ША, МЫ-ЛО).</li>
-            <li><b>🌟 Слова (3 слога):</b> слова с делением дефисом (МА-ШИ-НА, СО-БА-КА, МО-ЛО-КО).</li>
+            <li><b>Алфавит:</b> экран с парными большими и маленькими буквами. Доступны вкладки «По группам», «По алфавиту», «Все» и интерактивный «Помощник» (Лента букв).</li>
+            <li><b>Прямые слоги (МА):</b> открытые слоги (согласный + гласный).</li>
+            <li><b>Обратные слоги (АМ):</b> закрытые слоги (гласный + согласный).</li>
+            <li><b>Все слоги:</b> перемешанные прямые и обратные слоги из 2 букв.</li>
+            <li><b>1 слог (3–4 буквы):</b> слова строго из 1 слога (КОТ, ДОМ, СТОЛ, ВОЛК).</li>
+            <li><b>2 слога:</b> слова с делением дефисом (МА-МА, КА-ША, МЫ-ЛО).</li>
+            <li><b>3 слога:</b> слова с делением дефисом (МА-ШИ-НА, СО-БА-КА, МО-ЛО-КО).</li>
           </ul>
         </div>
 
@@ -1733,7 +1737,10 @@
 
   <header>
     <div class="brand">
-      <span class="brand-icon">📚</span>
+      <a href="index.html" class="btn-icon-header" title="На главную" style="font-size: 14px; text-decoration: none; padding: 0 12px; gap: 6px;">
+        <span>🏠</span>
+        <span>Домой</span>
+      </a>
       <h1 class="brand-title">Читай-ка!</h1>
     </div>
 
@@ -1917,7 +1924,7 @@
           <div class="mode-group-title">Буквы</div>
           <div class="mode-buttons-row">
             <button class="mode-tab" data-mode="alphabet" onclick="setMode('alphabet')">
-              <span>🔤 Алфавит</span>
+              <span>Алфавит</span>
               <span class="count-badge" id="count-alphabet">0</span>
             </button>
           </div>
@@ -1928,41 +1935,34 @@
           <div class="mode-group-title">Слоги</div>
           <div class="mode-buttons-row">
             <button class="mode-tab active" data-mode="open" onclick="setMode('open')">
-              <span>🎈 Прямые</span>
+              <span>Прямые</span>
               <span class="count-badge" id="count-open">0</span>
             </button>
             <button class="mode-tab" data-mode="reverse" onclick="setMode('reverse')">
-              <span>🔄 Обратные</span>
+              <span>Обратные</span>
               <span class="count-badge" id="count-reverse">0</span>
             </button>
             <button class="mode-tab" data-mode="mix" onclick="setMode('mix')">
-              <span>🎲 Все</span>
+              <span>Все</span>
               <span class="count-badge" id="count-mix">0</span>
             </button>
           </div>
         </div>
 
-        <!-- Категория: Слова по буквам (1 слог, 3-4 буквы) -->
-        <div class="mode-group">
-          <div class="mode-group-title">Слова по буквам</div>
-          <div class="mode-buttons-row">
-            <button class="mode-tab" data-mode="one_syllable" onclick="setMode('one_syllable')">
-              <span>🧱 3–4 буквы</span>
-              <span class="count-badge" id="count-one-syllable">0</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Категория: Слова -->
+        <!-- Категория: Слова по слогам (1, 2 и 3 слога) -->
         <div class="mode-group">
           <div class="mode-group-title">Слова по слогам</div>
           <div class="mode-buttons-row">
+            <button class="mode-tab" data-mode="one_syllable" onclick="setMode('one_syllable')">
+              <span>1 слог</span>
+              <span class="count-badge" id="count-one-syllable">0</span>
+            </button>
             <button class="mode-tab" data-mode="words2" onclick="setMode('words2')">
-              <span>📖 2 слога</span>
+              <span>2 слога</span>
               <span class="count-badge" id="count-words2">0</span>
             </button>
             <button class="mode-tab" data-mode="words3" onclick="setMode('words3')">
-              <span>🌟 3 слога</span>
+              <span>3 слога</span>
               <span class="count-badge" id="count-words3">0</span>
             </button>
           </div>
@@ -1980,7 +1980,7 @@
             <button class="alpha-sort-btn active" id="btn-sort-groups" onclick="setAlphabetSort('groups')">По группам</button>
             <button class="alpha-sort-btn" id="btn-sort-order" onclick="setAlphabetSort('order')">По алфавиту</button>
             <button class="alpha-sort-btn" id="btn-sort-all" onclick="setAlphabetSort('all')">Все</button>
-            <button class="alpha-sort-btn" id="btn-sort-helper" onclick="setAlphabetSort('helper')">✨ Помощник</button>
+            <button class="alpha-sort-btn" id="btn-sort-helper" onclick="setAlphabetSort('helper')">Помощник</button>
           </div>
         </div>
 
