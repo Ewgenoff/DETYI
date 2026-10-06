@@ -38,7 +38,7 @@
       flex-direction: column;
       color: var(--text-main);
       overflow-x: hidden;
-      transition: font-family 0.15s ease;
+      font-family: "Century Schoolbook", "Школьная", "PT Serif", "Lora", serif;
       touch-action: pan-y;
     }
 
@@ -51,8 +51,7 @@
     body.font-rubik { font-family: 'Rubik', sans-serif; }
 
     header {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(8px);
+      background: #ffffff;
       border-bottom: 2px solid #e2e8f0;
       padding: 8px 16px;
       display: flex;
@@ -166,7 +165,7 @@
       right: 0;
       bottom: 0;
       background-color: #cbd5e1;
-      transition: .25s;
+      transition: .2s;
       border-radius: 20px;
     }
 
@@ -178,7 +177,7 @@
       left: 3px;
       bottom: 3px;
       background-color: white;
-      transition: .25s;
+      transition: .2s;
       border-radius: 50%;
     }
 
@@ -206,7 +205,7 @@
       align-items: center;
       justify-content: center;
       gap: 5px;
-      transition: all 0.2s;
+      transition: background 0.15s;
     }
 
     .btn-icon-header:hover {
@@ -225,17 +224,17 @@
     /* Боковая панель букв */
     .letters-panel {
       width: 360px;
-      background: rgba(255, 255, 255, 0.98);
-      backdrop-filter: blur(12px);
+      background: #ffffff;
       border-right: 2px solid #e2e8f0;
       padding: 16px;
       overflow-y: auto;
-      transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1);
       display: flex;
       flex-direction: column;
       gap: 12px;
       z-index: 50;
       position: relative;
+      will-change: transform;
     }
 
     .letters-panel.collapsed {
@@ -246,36 +245,36 @@
       bottom: 0;
     }
 
-    /* Хвостик-ярлычок для открытия панели */
+    /* Шестеренка смещена выше к топу */
     .panel-tab-pull {
       position: fixed;
       left: 0;
-      top: calc(50% - 28px);
+      top: 90px;
       width: 44px;
-      height: 56px;
+      height: 52px;
       background: #ffffff;
       border: 2px solid #cbd5e1;
       border-left: none;
       border-radius: 0 16px 16px 0;
-      box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.12);
+      box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.12);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       z-index: 45;
       font-size: 24px;
-      transition: transform 0.2s, background 0.2s;
+      transition: transform 0.15s, background 0.15s;
       outline: none;
     }
 
     .panel-tab-pull:hover, .panel-tab-pull:active {
       background: #eff6ff;
-      transform: scale(1.06) translateX(2px);
+      transform: scale(1.05) translateX(2px);
       border-color: #3b82f6;
     }
 
     .panel-tab-pull.hidden {
-      display: none;
+      display: none !important;
     }
 
     .panel-header-row {
@@ -310,22 +309,21 @@
     .btn-panel-hide {
       background: #f1f5f9;
       border: 1.5px solid #cbd5e1;
-      padding: 5px 12px;
+      padding: 6px 14px;
       border-radius: 10px;
       font-family: inherit;
-      font-size: 13px;
+      font-size: 13.5px;
       font-weight: 800;
       color: #334155;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 4px;
-      transition: all 0.15s ease;
+      transition: background 0.15s ease;
     }
 
     .btn-panel-hide:hover {
       background: #e2e8f0;
-      border-color: #94a3b8;
       color: #0f172a;
     }
 
@@ -346,7 +344,7 @@
       cursor: pointer;
       color: #334155;
       text-align: left;
-      transition: all 0.15s ease;
+      transition: background 0.15s ease;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -355,7 +353,6 @@
     .preset-btn-col:hover {
       background: #e2e8f0;
       color: #0f172a;
-      border-color: #94a3b8;
     }
 
     .preset-btn-col.danger {
@@ -442,7 +439,7 @@
       font-size: 17px;
       font-weight: 900;
       cursor: pointer;
-      transition: all 0.12s ease;
+      transition: background 0.1s ease, border-color 0.1s ease;
     }
 
     .letter-item.vowel .letter-label { color: #dc2626; }
@@ -493,11 +490,6 @@
       color: var(--text-main);
       cursor: pointer;
       outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .font-select-wrap select:focus {
-      border-color: #2563eb;
     }
 
     .stage {
@@ -509,6 +501,7 @@
       padding: 12px 18px;
       position: relative;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     /* Навигация режимов */
@@ -526,8 +519,7 @@
 
     .mode-group {
       display: flex;
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(8px);
+      background: #ffffff;
       padding: 4px;
       border-radius: 14px;
       border: 1.5px solid #e2e8f0;
@@ -549,7 +541,7 @@
       font-weight: 800;
       color: var(--text-muted);
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: background 0.15s ease, color 0.15s ease;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -586,30 +578,33 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
       max-width: 720px;
       width: 100%;
       margin: auto 0;
+      position: relative;
+    }
+
+    .card-container-relative {
+      width: 100%;
+      position: relative;
     }
 
     .syllable-card {
       width: 100%;
-      height: 275px;
+      height: 270px;
       background: var(--card-bg);
       border-radius: 36px;
       border: 4px solid #ffffff;
-      box-shadow: 0 20px 45px -10px rgba(37, 99, 235, 0.15), 0 0 0 4px #e0e7ff;
+      box-shadow: 0 16px 36px -10px rgba(37, 99, 235, 0.15), 0 0 0 4px #e0e7ff;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       position: relative;
       overflow: hidden;
-      transition: box-shadow 0.2s ease, transform 0.08s ease;
-    }
-
-    .syllable-card:hover {
-      box-shadow: 0 26px 55px -10px rgba(37, 99, 235, 0.2), 0 0 0 4px #c7d2fe;
+      transition: transform 0.08s ease;
+      will-change: transform;
     }
 
     .syllable-card:active {
@@ -640,11 +635,11 @@
     }
 
     .card-fade {
-      animation: calmFade 0.15s ease-out;
+      animation: calmFade 0.12s ease-out;
     }
 
     @keyframes calmFade {
-      0% { opacity: 0.3; transform: scale(0.97); }
+      0% { opacity: 0.4; transform: scale(0.98); }
       100% { opacity: 1; transform: scale(1); }
     }
 
@@ -656,21 +651,68 @@
 
     .char-vowel {
       color: var(--vowel-color);
-      text-shadow: 0 2px 0 #b91c1c18;
     }
 
     .char-consonant {
       color: var(--consonant-color);
-      text-shadow: 0 2px 0 #1e40af18;
     }
 
     .char-consonant-soft {
       color: var(--consonant-soft-color);
-      text-shadow: 0 2px 0 #15803d18;
     }
 
     .char-neutral {
       color: #64748b;
+    }
+
+    /* Подкарточная полоса со звуком справа */
+    .card-sub-bar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      width: 100%;
+      padding: 0 8px;
+      min-height: 42px;
+    }
+
+    .btn-speaker-card {
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 999px;
+      height: 42px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 17px;
+      font-weight: 800;
+      color: #1e293b;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+      transition: all 0.15s ease;
+      outline: none;
+    }
+
+    .btn-speaker-card:not(.disabled):hover {
+      background: #eff6ff;
+      border-color: #3b82f6;
+      transform: scale(1.04);
+    }
+
+    .btn-speaker-card:not(.disabled):active {
+      transform: scale(0.96);
+    }
+
+    .btn-speaker-card.disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      box-shadow: none;
+      filter: grayscale(1);
+    }
+
+    .btn-speaker-card .speaker-icon {
+      font-size: 20px;
+      line-height: 1;
     }
 
     .alphabet-view-container {
@@ -687,7 +729,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: rgba(255, 255, 255, 0.95);
+      background: #ffffff;
       border-radius: 16px;
       border: 2px solid #e2e8f0;
       padding: 8px 16px;
@@ -732,8 +774,7 @@
     }
 
     .alphabet-category-card {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(8px);
+      background: #ffffff;
       border-radius: 16px;
       border: 2px solid #e2e8f0;
       padding: 10px 14px;
@@ -811,14 +852,8 @@
       align-items: center;
       justify-content: center;
       gap: 4px;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
       cursor: pointer;
       position: relative;
-    }
-
-    .alphabet-letter-tile:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 14px rgba(0,0,0,0.08);
     }
 
     .alphabet-letter-tile.vowel {
@@ -864,7 +899,6 @@
       border-style: dashed;
       cursor: default;
       box-shadow: none;
-      transform: none;
     }
 
     .tile-upper {
@@ -901,7 +935,6 @@
       right: 4px;
       font-size: 13px;
       line-height: 1;
-      filter: drop-shadow(0 1px 1px rgba(0,0,0,0.15));
       pointer-events: none;
     }
 
@@ -911,7 +944,6 @@
       right: 4px;
       font-size: 13px;
       line-height: 1;
-      filter: drop-shadow(0 1px 1px rgba(0,0,0,0.15));
       pointer-events: none;
     }
 
@@ -950,17 +982,14 @@
       align-items: center;
       justify-content: center;
       box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-      transition: all 0.15s ease;
+      transition: background 0.15s ease, border-color 0.15s ease;
       color: #64748b;
-      opacity: 0.72;
+      opacity: 0.85;
     }
 
     .btn-nav-arrow:hover {
-      opacity: 1;
       background: #f8fafc;
       border-color: #cbd5e1;
-      transform: translateY(-1px);
-      box-shadow: 0 6px 14px rgba(0,0,0,0.04);
       color: #334155;
     }
 
@@ -973,8 +1002,6 @@
       cursor: not-allowed;
       border-color: #e2e8f0;
       background: #ffffff;
-      box-shadow: none;
-      transform: none;
     }
 
     .arrow-icon {
@@ -1031,8 +1058,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(15, 23, 42, 0.4);
-      backdrop-filter: blur(2px);
+      background: rgba(15, 23, 42, 0.45);
       z-index: 48;
     }
 
@@ -1040,22 +1066,21 @@
       display: block;
     }
 
-    .help-modal-backdrop {
+    .help-modal-backdrop, .sticker-modal-backdrop {
       display: none;
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(15, 23, 42, 0.5);
-      backdrop-filter: blur(4px);
+      background: rgba(15, 23, 42, 0.55);
       z-index: 100;
       align-items: center;
       justify-content: center;
       padding: 16px;
     }
 
-    .help-modal-backdrop.open {
+    .help-modal-backdrop.open, .sticker-modal-backdrop.open {
       display: flex;
     }
 
@@ -1070,12 +1095,6 @@
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
       border: 3px solid #e2e8f0;
       overflow: hidden;
-      animation: modalPop 0.2s ease-out;
-    }
-
-    @keyframes modalPop {
-      0% { transform: scale(0.95); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
     }
 
     .help-modal-header {
@@ -1105,12 +1124,6 @@
       cursor: pointer;
       padding: 4px 8px;
       border-radius: 8px;
-      transition: background 0.15s;
-    }
-
-    .help-modal-close-btn:hover {
-      background: #e2e8f0;
-      color: #0f172a;
     }
 
     .help-modal-body {
@@ -1197,7 +1210,7 @@
       }
 
       .letters-panel.open {
-        transform: translateX(0);
+        transform: translateX(0) !important;
       }
 
       .stage {
@@ -1207,8 +1220,6 @@
       }
 
       .modes-categories-wrapper {
-        flex-direction: row;
-        flex-wrap: wrap;
         gap: 4px;
         width: 100%;
       }
@@ -1219,17 +1230,9 @@
         gap: 3px;
       }
 
-      .mode-group-alphabet {
-        flex: 1 1 28%;
-      }
-
-      .mode-group-syllables {
-        flex: 1 1 65%;
-      }
-
-      .mode-group-words {
-        flex: 1 1 100%;
-      }
+      .mode-group-alphabet { flex: 1 1 28%; }
+      .mode-group-syllables { flex: 1 1 65%; }
+      .mode-group-words { flex: 1 1 100%; }
 
       .mode-tab {
         padding: 6px 4px;
@@ -1244,7 +1247,7 @@
 
       .card-wrapper {
         margin: 6px 0;
-        gap: 10px;
+        gap: 8px;
       }
 
       .syllable-card {
@@ -1276,13 +1279,8 @@
         height: 52px;
       }
 
-      .tile-upper {
-        font-size: 21px;
-      }
-
-      .tile-lower {
-        font-size: 17px;
-      }
+      .tile-upper { font-size: 21px; }
+      .tile-lower { font-size: 17px; }
 
       .alphabet-order-grid {
         grid-template-columns: repeat(5, 1fr);
@@ -1308,25 +1306,6 @@
       z-index: 999;
     }
 
-    .sticker-modal-backdrop {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(5px);
-      z-index: 105;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-
-    .sticker-modal-backdrop.open {
-      display: flex;
-    }
-
     .sticker-card {
       background: #ffffff;
       border-radius: 32px;
@@ -1340,13 +1319,6 @@
       flex-direction: column;
       align-items: center;
       gap: 14px;
-      animation: stickerBounce 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    @keyframes stickerBounce {
-      0% { transform: scale(0.3) rotate(-8deg); opacity: 0; }
-      70% { transform: scale(1.08) rotate(3deg); }
-      100% { transform: scale(1) rotate(0deg); opacity: 1; }
     }
 
     .sticker-badge-title {
@@ -1357,20 +1329,12 @@
       border: 2px solid #fde047;
       border-radius: 999px;
       padding: 4px 14px;
-      letter-spacing: 0.5px;
       text-transform: uppercase;
     }
 
     .sticker-animal-icon {
       font-size: 90px;
       line-height: 1;
-      filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.15));
-      animation: floatAnimal 2s ease-in-out infinite alternate;
-    }
-
-    @keyframes floatAnimal {
-      0% { transform: translateY(0) scale(1); }
-      100% { transform: translateY(-8px) scale(1.05); }
     }
 
     .sticker-name {
@@ -1388,7 +1352,7 @@
 
     .sticker-btn {
       margin-top: 6px;
-      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      background: #2563eb;
       color: #ffffff;
       border: none;
       padding: 12px 30px;
@@ -1398,13 +1362,6 @@
       font-weight: 900;
       cursor: pointer;
       box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
-      transition: all 0.15s ease;
-    }
-
-    .sticker-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.45);
-      background: linear-gradient(135deg, #1d4ed8, #2563eb);
     }
 
     /* Лента букв */
@@ -1482,7 +1439,6 @@
       font-weight: 900;
       border-right: 1px solid rgba(255,255,255,0.4);
       position: relative;
-      user-select: none;
     }
 
     .ribbon-cell:last-child {
@@ -1571,24 +1527,15 @@
       color: var(--yellow-letter);
       text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
       border-right: 1px solid rgba(255,255,255,0.4);
-      user-select: none;
     }
 
     .cons-cell:last-child {
       border-right: none;
     }
 
-    .bg-green-soft {
-      background-color: var(--soft-green);
-    }
-
-    .bg-blue-hard {
-      background-color: var(--hard-blue);
-    }
-
-    .bg-split {
-      background: linear-gradient(135deg, var(--hard-blue) 50%, var(--soft-green) 50%);
-    }
+    .bg-green-soft { background-color: var(--soft-green); }
+    .bg-blue-hard { background-color: var(--hard-blue); }
+    .bg-split { background: linear-gradient(135deg, var(--hard-blue) 50%, var(--soft-green) 50%); }
 
     .bg-empty {
       background: #f8fafc;
@@ -1683,8 +1630,8 @@
 </head>
 <body class="font-schoolbook">
 
-  <!-- Хвостик-ярлычок для открытия панели букв -->
-  <button class="panel-tab-pull" id="panel-tab-pull" onclick="openLettersPanel()" title="Открыть изученные буквы">
+  <!-- Хвостик-ярлычок для открытия панели букв: расположен ближе к верху -->
+  <button class="panel-tab-pull" id="panel-tab-pull" onclick="openLettersPanel()" title="Открыть изученные буквы (или клавиша Ctrl)">
     <span>⚙️</span>
   </button>
 
@@ -1716,24 +1663,23 @@
           <p>Буквы вводятся по принципу плавного звукослияния: сначала протяжные гласные и непарные звонкие согласные, позволяющие сразу читать первые осмысленные слова (МА-МА, МЫ-ЛО, РА-МА).</p>
           <p style="margin-top: 6px;"><b>Цветовое кодирование и значки:</b></p>
           <ul class="help-list">
-            <li><b style="color: #ef4444;">Красный цвет</b> — гласные звуки (твёрдые и смягчающие).</li>
+            <li><b style="color: #ef4444;">Красный цвет</b> — гласные звуки.</li>
             <li><b style="color: #2563eb;">Синий цвет</b> — твёрдые согласные (Ж, Ш всегда твёрдые).</li>
             <li><b style="color: #16a34a;">Зелёный цвет</b> — мягкие согласные (перед Е, Ё, И, Ю, Я, Ь; звуки Й, Ч, Щ — всегда мягкие).</li>
             <li><b style="color: #64748b;">Серый цвет</b> — знаки Ь и Ъ (не имеют звука).</li>
-            <li><b>🔔 Колокольчик:</b> звонкие согласные (в правом верхнем углу буквы в алфавите).</li>
-            <li><b>🎧 Наушники:</b> глухие согласные (в правом нижнем углу буквы в алфавите).</li>
-            <li><b>🎉 Награды:</b> салют из конфетти каждые 10 карточек и призовой стикер с животным каждые 20 карточек!</li>
+            <li><b>🔔 Колокольчик:</b> звонкие согласные.</li>
+            <li><b>🎧 Наушники:</b> глухие согласные.</li>
+            <li><b>🔊 Динамик под карточкой:</b> активен, если найдена аудиозапись слога/слова.</li>
+            <li><b>Ctrl:</b> открывает и закрывает боковое меню букв.</li>
           </ul>
         </div>
 
         <div class="help-section">
           <div class="help-section-title">🧩 Режимы тренировки</div>
           <ul class="help-list">
-            <li><b>Алфавит:</b> экран с парными большими и маленькими буквами. Доступны вкладки «По группам», «По алфавиту», «Все» и интерактивный «Помощник» (Лента букв).</li>
-            <li><b>Прямые (МА) / Обратные (АМ):</b> независимые переключатели с залипанием — можно включить один из них или оба сразу.</li>
-            <li><b>1 слог (3–4 буквы):</b> слова строго из 1 слога (КОТ, ДОМ, СТОЛ, ВОЛК).</li>
-            <li><b>2 слога:</b> слова с делением дефисом (МА-МА, КА-ША, МЫ-ЛО).</li>
-            <li><b>3 слога:</b> слова с делением дефисом (МА-ШИ-НА, СО-БА-КА, МО-ЛО-КО).</li>
+            <li><b>Алфавит:</b> экран с парными буквами, сортировкой и «Лентой букв».</li>
+            <li><b>Прямые (169) / Обратные (60):</b> строгий орфоэпический фильтр.</li>
+            <li><b>1 слог / 2 слога / 3 слога:</b> слова с делением по складам.</li>
           </ul>
         </div>
 
@@ -1743,7 +1689,7 @@
 
   <header>
     <div class="brand">
-      <a href="index.html" class="btn-icon-header" title="На главную" style="font-size: 14px; text-decoration: none; padding: 0 10px; gap: 5px;">
+      <a href="index.html" class="btn-icon-header" title="На главную">
         <span>🏠</span>
         <span>Домой</span>
       </a>
@@ -1781,8 +1727,8 @@
         </label>
       </div>
 
-      <!-- Звук (Динамик) -->
-      <button class="btn-icon-header" id="sound-mute-btn" onclick="toggleSoundMute()" title="Включить / отключить звук">
+      <!-- Общий звук эффектов -->
+      <button class="btn-icon-header" id="sound-mute-btn" onclick="toggleSoundMute()" title="Включить / отключить звуковые эффекты">
         <span id="sound-mute-icon">🔊</span>
       </button>
 
@@ -1802,7 +1748,7 @@
           <div class="panel-title">Изученные буквы</div>
           <span class="panel-active-count-badge" id="panel-active-count" title="Количество выбранных букв">10/33</span>
         </div>
-        <button class="btn-panel-hide" onclick="closeLettersPanel()" title="Скрыть боковую панель">
+        <button class="btn-panel-hide" id="btn-close-panel" onclick="closeLettersPanel()" title="Скрыть боковую панель">
           <span>◀</span>
           <span>Скрыть</span>
         </button>
@@ -1921,8 +1867,6 @@
       
       <!-- ШАПКА РЕЖИМОВ -->
       <div class="modes-categories-wrapper">
-        
-        <!-- Блок Алфавит -->
         <div class="mode-group mode-group-alphabet">
           <button class="mode-tab" id="tab-alphabet" onclick="onAlphabetClick()">
             <span>Алфавит</span>
@@ -1930,7 +1874,6 @@
           </button>
         </div>
 
-        <!-- Блок Слоги: Прямые и Обратные с залипанием -->
         <div class="mode-group mode-group-syllables">
           <button class="mode-tab active" id="tab-open" onclick="toggleSyllableSubmode('open')">
             <span>Прямые</span>
@@ -1942,7 +1885,6 @@
           </button>
         </div>
 
-        <!-- Блок Слова по слогам -->
         <div class="mode-group mode-group-words">
           <button class="mode-tab" id="tab-one_syllable" onclick="onWordModeClick('one_syllable')">
             <span>1 слог</span>
@@ -1957,13 +1899,10 @@
             <span class="count-badge" id="count-words3">0</span>
           </button>
         </div>
-
       </div>
 
       <!-- ВИД 1: РЕЖИМ АЛФАВИТА -->
       <div class="alphabet-view-container" id="alphabet-view-container">
-        
-        <!-- Тулбар -->
         <div class="alphabet-toolbar">
           <span class="alphabet-toolbar-title">Режим просмотра букв:</span>
           <div class="alphabet-toggle-group">
@@ -1974,9 +1913,7 @@
           </div>
         </div>
 
-        <!-- Отображение "По группам" -->
         <div id="alpha-groups-view" style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
-          
           <div class="alphabet-category-card">
             <div class="alphabet-category-header">
               <span style="color: #ef4444;">●</span> Гласные буквы
@@ -2029,7 +1966,6 @@
           </div>
         </div>
 
-        <!-- Отображение "По алфавиту" -->
         <div id="alpha-order-view" class="alphabet-category-card" style="display: none;">
           <div class="alphabet-category-header">
             <span>🔤</span> Выбранные буквы по алфавиту (А — Я)
@@ -2037,7 +1973,6 @@
           <div class="alphabet-order-grid" id="alpha-order-grid"></div>
         </div>
 
-        <!-- Отображение "Все" -->
         <div id="alpha-all-view" class="alphabet-category-card" style="display: none;">
           <div class="alphabet-category-header">
             <span>🔤</span> Весь алфавит (неактивные буквы — серые)
@@ -2045,14 +1980,11 @@
           <div class="alphabet-order-grid" id="alpha-all-grid"></div>
         </div>
 
-        <!-- Отображение "Помощник" -->
         <div id="alpha-helper-view" style="display: none; width: 100%;">
           <div class="ribbon-wrapper">
             <div class="ribbon-table">
-
               <div class="ribbon-vowels">
                 <div class="col-title">Буквы гласных звуков</div>
-                
                 <div class="vowel-row">
                   <div class="row-hint">Гласные 1-го ряда обозначают твёрдость предшествующих согласных</div>
                   <div class="letters-row">
@@ -2063,7 +1995,6 @@
                     <div class="ribbon-cell bg-vowel">э</div>
                   </div>
                 </div>
-
                 <div class="vowel-row">
                   <div class="row-hint">Гласные 2-го ряда обозначают мягкость предшествующих согласных</div>
                   <div class="letters-row">
@@ -2078,7 +2009,6 @@
 
               <div class="ribbon-consonants">
                 <div class="col-title">Буквы согласных звуков</div>
-
                 <div class="consonant-body">
                   <div class="cons-row cons-row-1">
                     <div class="row-hint">В первом ряду — звонкие согласные звуки</div>
@@ -2141,7 +2071,6 @@
                 <div class="sign-row">ъ</div>
                 <div class="sign-row">ь</div>
               </div>
-
             </div>
 
             <div class="ribbon-footer-labels">
@@ -2185,14 +2114,24 @@
 
       <!-- ВИД 2: КАРТОЧКА СО СЛОГОМ / СЛОВОМ -->
       <div class="card-wrapper" id="card-wrapper">
-        <div class="syllable-card" id="syllable-card" onclick="onCardClick(event)">
-          <div class="syllable-text" id="syllable-text"></div>
+        <div class="card-container-relative">
+          <div class="syllable-card" id="syllable-card" onclick="onCardClick(event)">
+            <div class="syllable-text" id="syllable-text"></div>
 
-          <div class="empty-warning" id="empty-warning">
-            <span class="empty-icon">🧩</span>
-            <h3>Мало букв для этого режима</h3>
-            <p>Откройте меню букв и отметьте нужные согласные и гласные.</p>
+            <div class="empty-warning" id="empty-warning">
+              <span class="empty-icon">🧩</span>
+              <h3>Мало букв для этого режима</h3>
+              <p>Откройте меню букв и отметьте нужные согласные и гласные.</p>
+            </div>
           </div>
+        </div>
+
+        <!-- Под карточкой: справа динамик озвучки карточки -->
+        <div class="card-sub-bar">
+          <button class="btn-speaker-card" id="btn-card-audio" onclick="onSpeakerCardClick(event)" title="Озвучить слог/слово">
+            <span class="speaker-icon">🔊</span>
+            <span style="font-size: 13px;">Озвучить</span>
+          </button>
         </div>
 
         <div class="controls-row">
@@ -2205,7 +2144,7 @@
         </div>
 
         <div class="hint-bar">
-          <span>💡 Листайте карточки:</span>
+          <span>Листать:</span>
           <span class="kbd-chip">←</span>
           <span class="kbd-chip">→</span>
           <span>или</span>
@@ -2214,6 +2153,9 @@
           <span>Озвучка:</span>
           <span class="kbd-chip">↑</span>
           <span class="kbd-chip">↓</span>
+          <span style="opacity: 0.5; margin: 0 4px;">•</span>
+          <span>Меню букв:</span>
+          <span class="kbd-chip">Ctrl</span>
         </div>
       </div>
 
@@ -2260,9 +2202,7 @@
       { icon: '🐿️', name: 'Ловкая белочка' },
       { icon: '🦩', name: 'Изящный фламинго' },
       { icon: '🐢', name: 'Мудрая черепаха' },
-      { icon: '🦈', name: 'Смелая акула' },
-      { icon: '🦏', name: 'Сильный носорог' },
-      { icon: '🐆', name: 'Быстрый гепард' }
+      { icon: '🦈', name: 'Смелая акула' }
     ];
 
     let currentAnimalDeckIndex = 0;
@@ -2276,138 +2216,238 @@
 
     const VOWELS_SET = new Set([...LETTERS.vowelsHard, ...LETTERS.vowelsSoft]);
 
+    /* База обратных слогов: 12 базовых согласных * 5 гласных = 60 слогов */
+    const REVERSE_ALLOWED_CONSONANTS = new Set(['М', 'Н', 'Л', 'Р', 'С', 'Т', 'К', 'П', 'Б', 'В', 'Д', 'З']);
+    const REVERSE_ALLOWED_VOWELS = new Set(['А', 'О', 'У', 'Ы', 'И']);
+
     const WORDS_ONE_SYLLABLE_3_4 = [
-      'БАРС', 'БЫК', 'ВОЛК', 'ЁЖ', 'ЗВЕРЬ', 'ЗУБР', 'КОНЬ', 'КОРМ', 'КОТ', 'КРОТ',
-      'ЛЕВ', 'ЛИС', 'ЛОСЬ', 'ЛЬВЫ', 'МОРЖ', 'МЫШЬ', 'ПЁС', 'РЫСЬ', 'СЛОН', 'ТИГР',
-      'ГРАЧ', 'ГУСЬ', 'ДРОЗД', 'ЁРШ', 'ЖУК', 'КИТ', 'КЛЮВ', 'КРАБ', 'МОЛЬ', 'РАК',
-      'РОЙ', 'СЕЛЬДЬ', 'СКАТ', 'СОМ', 'СТРИЖ', 'ШМЕЛЬ', 'ГРИБ', 'ГРУЗДЬ', 'ГРЯЗЬ',
-      'ДУБ', 'ЕЛЬ', 'КЛЁН', 'КУСТ', 'ЛЕС', 'ЛИСТ', 'ЛУГ', 'МАК', 'МОХ', 'ПЕНЬ',
-      'ПЛОД', 'ПРУД', 'РОЖЬ', 'САД', 'СТЕПЬ', 'СТВОЛ', 'ХОЛМ', 'ВЕК', 'ГОД', 'ГРАД',
-      'ГРОМ', 'ДЕНЬ', 'ДОЖДЬ', 'ЖАР', 'ЛЁД', 'МАЙ', 'МАРТ', 'НОЧЬ', 'СНЕГ', 'ЧАС',
-      'ШТОРМ', 'БЛИН', 'БОБ', 'БОРЩ', 'ЖИР', 'КВАС', 'ЛУК', 'МЁД', 'МОРС', 'РИС',
-      'СОРТ', 'СОК', 'СОЛЬ', 'СУП', 'СЫР', 'ТОРТ', 'ФРУКТ', 'ХЛЕБ', 'ЧАЙ', 'ДВОР',
-      'ДВЕРЬ', 'ДОМ', 'ДУШ', 'ДЫМ', 'КЛЮЧ', 'ЛАК', 'ЛЮК', 'ПАР', 'ПЕЧЬ', 'ПОЛ',
-      'ПЫЛЬ', 'СКЛАД', 'СТОЛ', 'СТУЛ', 'ТАЗ', 'ФЕН', 'ШКАФ', 'БАНТ', 'ЗОНТ', 'МЕХ',
-      'ПЛАЩ', 'ПУХ', 'ТРОСТЬ', 'ТЮЛЬ', 'ШАРФ', 'ШЁЛК', 'ШЕРСТЬ', 'БОЛТ', 'БУР',
-      'ВИНТ', 'ГАЗ', 'ГВОЗДЬ', 'ДИСК', 'ДРЕЛЬ', 'КОЛ', 'КРАН', 'ЛОМ', 'НОЖ', 'СЕТЬ',
-      'СТАЛЬ', 'ТОК', 'ФИЛЬТР', 'ШНУР', 'БАК', 'ВЗВОД', 'ГРУЗ', 'ДЖИП', 'ПЛОТ',
-      'ПОРТ', 'ПУСК', 'РУЛЬ', 'ТАНК', 'ТРОС', 'ФЛОТ', 'ГЕРБ', 'ГИМН', 'ЗНАК',
-      'КРЕМЛЬ', 'МИР', 'МОСТ', 'ПАРК', 'ПЛАН', 'РУСЬ', 'СТОЛБ', 'ФЛАГ', 'ЧЕК',
-      'БРАТ', 'ВНУК', 'ВРАЧ', 'ГОСТЬ', 'ДЕД', 'ДОЧЬ', 'ДРУГ', 'МАТЬ', 'МУЖ',
-      'СПОР', 'СЫН', 'ШЕФ', 'БИНТ', 'БОК', 'БОЛЬ', 'ВКУС', 'ГЛАЗ', 'ЗУБ', 'ЙОД',
-      'КЛЫК', 'КОСТЬ', 'ЛОБ', 'НОС', 'ПОТ', 'РОГ', 'РОСТ', 'РОТ', 'СЛУХ', 'СОН',
-      'ХВОСТ', 'ВЕС', 'ГРАММ', 'КИСТЬ', 'КЛАСС', 'КЛЕЙ', 'КРЕСТ', 'КРУГ', 'КУБ',
-      'МЕЛ', 'НОЛЬ', 'ПЛЮС', 'РОМБ', 'СЕМЬ', 'СЛОГ', 'ТРУД', 'ТУШЬ', 'ШЕСТЬ',
-      'БЕГ', 'БОЙ', 'ВАЛЬС', 'ГОЛ', 'ЗАЛ', 'КЛАД', 'КВЕСТ', 'КОМ', 'МАРШ', 'МЯЧ',
-      'ПЛЯЖ', 'РОК', 'СПОРТ', 'СТАРТ', 'СТОП', 'ТИР', 'ФИЛЬМ', 'ХОР', 'ЦЕЛЬ',
-      'ЦИРК', 'ШАР', 'БАЛ', 'ГНОМ', 'ЗМЕЙ', 'МАРС', 'МЕЧ', 'РАЙ', 'ТРОН', 'ЦАРЬ',
-      'ШЛЕМ', 'ЩИТ', 'ШУТ', 'БЛЕСК', 'БУМ', 'ВОЙ', 'ГУЛ', 'ЗВОН', 'ЗОВ', 'ЗВУК',
-      'КРИК', 'ЛУЧ', 'ПЛАЧ', 'РЕЧЬ', 'СВЕТ', 'СКРИП', 'СМЕХ', 'СТУК', 'ТЕНЬ',
-      'ТЬМА', 'ЦВЕТ', 'ХРУСТ', 'ШУМ', 'ВЪЕЗД', 'ВИД', 'ВХОД', 'ДНО', 'КРАЙ',
-      'НИЗ', 'РЯД', 'СЛЕД', 'ЦЕНТР', 'ХОД', 'ШАГ', 'ВДРУГ', 'ДАЙ', 'ДНЁМ',
-      'ЗДЕСЬ', 'МОЙ', 'САМ', 'ТАК', 'ТАМ', 'ТОТ', 'ТВОЙ', 'БЫЛ', 'ВЁЗ', 'ВЁЛ',
-      'ВЫЛ', 'ЕСТЬ', 'ЖИТЬ', 'ЛЁГ', 'ЛЬЁТ', 'НЁС', 'ПЕЛ', 'ПЬЁТ', 'ПЬЮТ',
-      'СЕЛ', 'СПАТЬ', 'СПИТ', 'СТАЛ', 'СЪЕЛ', 'СЪЕСТЬ', 'ШИТЬ', 'ШЁЛ', 'ГРУСТЬ',
-      'ЖИЗНЬ', 'ЗЛОЙ', 'ЛЕНЬ', 'РИСК', 'УМ'
+      // ─── ЖИВОТНЫЕ ───
+  'БАРС', 'БЫК', 'ВОЛК', 'ЁЖ', 'ЗВЕРЬ', 'ЗУБР', 'КОНЬ', 'КОРМ', 'КОТ', 'КРОТ',
+  'ЛЕВ', 'ЛИС', 'ЛОСЬ', 'ЛЬВЫ', 'МОРЖ', 'МЫШЬ', 'ПЁС', 'РЫСЬ', 'СЛОН', 'ТИГР',
+  // ─── ПТИЦЫ, РЫБЫ И НАСЕКОМЫЕ ───
+  'ГРАЧ', 'ГУСЬ', 'ДРОЗД', 'ЁРШ', 'ЖУК', 'КИТ', 'КЛЮВ', 'КРАБ', 'МОЛЬ', 'РАК',
+  'РОЙ', 'СЕЛЬДЬ', 'СКАТ', 'СОМ', 'СТРИЖ', 'ШМЕЛЬ',
+  // ─── РАСТЕНИЯ И ПРИРОДА ───
+  'ГРИБ', 'ГРУЗДЬ', 'ГРЯЗЬ', 'ДУБ', 'ЕЛЬ', 'КЛЁН', 'КУСТ', 'ЛЕС', 'ЛИСТ', 'ЛУГ',
+  'МАК', 'МОХ', 'ПЕНЬ', 'ПЛОД', 'ПРУД', 'РОЖЬ', 'САД', 'СТЕПЬ', 'СТВОЛ', 'ХОЛМ',
+  // ─── ПОГОДА И ВРЕМЯ ───
+  'ВЕК', 'ГОД', 'ГРАД', 'ГРОМ', 'ДЕНЬ', 'ДОЖДЬ', 'ЖАР', 'ЛЁД', 'МАЙ', 'МАРТ',
+  'НОЧЬ', 'СНЕГ', 'ЧАС', 'ШТОРМ',
+  // ─── ЕДА И НАПИТКИ ───
+  'БЛИН', 'БОБ', 'БОРЩ', 'ЖИР', 'КВАС', 'ЛУК', 'МЁД', 'МОРС', 'РИС', 'СОРТ',
+  'СОК', 'СОЛЬ', 'СУП', 'СЫР', 'ТОРТ', 'ФРУКТ', 'ХЛЕБ', 'ЧАЙ',
+  // ─── ДОМ И БЫТ ───
+  'ДВОР', 'ДВЕРЬ', 'ДОМ', 'ДУШ', 'ДЫМ', 'КЛЮЧ', 'ЛАК', 'ЛЮК', 'ПАР', 'ПЕЧЬ',
+  'ПОЛ', 'ПЫЛЬ', 'СКЛАД', 'СТОЛ', 'СТУЛ', 'ТАЗ', 'ФЕН', 'ШКАФ',
+  // ─── ОДЕЖДА И ВЕЩИ ───
+  'БАНТ', 'ЗОНТ', 'МЕХ', 'ПЛАЩ', 'ПУХ', 'ТРОСТЬ', 'ТЮЛЬ', 'ШАРФ', 'ШЁЛК', 'ШЕРСТЬ',
+  // ─── ИНСТРУМЕНТЫ И ТЕХНИКА ───
+  'БОЛТ', 'БУР', 'ВИНТ', 'ГАЗ', 'ГВОЗДЬ', 'ДИСК', 'ДРЕЛЬ', 'КОЛ', 'КРАН', 'ЛОМ',
+  'НОЖ', 'СЕТЬ', 'СТАЛЬ', 'ТОК', 'ФИЛЬТР', 'ШНУР',
+  // ─── ТРАНСПОРТ И АРМИЯ ───
+  'БАК', 'ВЗВОД', 'ГРУЗ', 'ДЖИП', 'ПЛОТ', 'ПОРТ', 'ПУСК', 'РУЛЬ', 'ТАНК', 'ТРОС',
+  'ФЛОТ',
+  // ─── ГОРОД И СТРАНА ───
+  'ГЕРБ', 'ГИМН', 'ЗНАК', 'КРЕМЛЬ', 'МИР', 'МОСТ', 'ПАРК', 'ПЛАН', 'РУСЬ', 'СТОЛБ',
+  'ФЛАГ', 'ЧЕК',
+  // ─── ЛЮДИ И СЕМЬЯ ───
+  'БРАТ', 'ВНУК', 'ВРАЧ', 'ГОСТЬ', 'ДЕД', 'ДОЧЬ', 'ДРУГ', 'МАТЬ', 'МУЖ', 'СПОР',
+  'СЫН', 'ШЕФ',
+  // ─── ТЕЛО И ЗДОРОВЬЕ ───
+  'БИНТ', 'БОК', 'БОЛЬ', 'ВКУС', 'ГЛАЗ', 'ЗУБ', 'ЙОД', 'КЛЫК', 'КОСТЬ',
+  'ЛОБ', 'НОС', 'ПОТ', 'РОГ', 'РОСТ', 'РОТ', 'СЛУХ', 'СОН', 'ХВОСТ',
+  // ─── ШКОЛА И ТВОРЧЕСТВО ───
+  'ВЕС', 'ГРАММ', 'КИСТЬ', 'КЛАСС', 'КЛЕЙ', 'КРЕСТ', 'КРУГ', 'КУБ', 'МЕЛ', 'НОЛЬ',
+  'ПЛЮС', 'РОМБ', 'СЕМЬ', 'СЛОГ', 'ТРУД', 'ТУШЬ', 'ШЕСТЬ',
+  // ─── ИГРЫ, СПОРТ И МУЗЫКА ───
+  'БЕГ', 'БОЙ', 'ВАЛЬС', 'ГОЛ', 'ЗАЛ', 'КЛАД', 'КВЕСТ', 'КОМ', 'МАРШ', 'МЯЧ',
+  'ПЛЯЖ', 'РОК', 'СПОРТ', 'СТАРТ', 'СТОП', 'ТИР', 'ФИЛЬМ', 'ХОР', 'ЦЕЛЬ', 'ЦИРК',
+  'ШАР',
+  // ─── СКАЗКИ, ЧУДЕСА И КОСМОС ───
+  'БАЛ', 'ГНОМ', 'ЗМЕЙ', 'МАРС', 'МЕЧ', 'РАЙ', 'ТРОН', 'ЦАРЬ', 'ШЛЕМ', 'ЩИТ',
+  'ШУТ',
+  // ─── ЦВЕТ, СВЕТ И ЗВУКИ ───
+  'БЛЕСК', 'БУМ', 'ВОЙ', 'ГУЛ', 'ЗВОН', 'ЗОВ', 'ЗВУК', 'КРИК', 'ЛУЧ', 'ПЛАЧ',
+  'РЕЧЬ', 'СВЕТ', 'СКРИП', 'СМЕХ', 'СТУК', 'ТЕНЬ', 'ТЬМА', 'ЦВЕТ', 'ХРУСТ', 'ШУМ',
+  // ─── МЕСТО И ДВИЖЕНИЕ ───
+  'ВЪЕЗД', 'ВИД', 'ВХОД', 'ДНО', 'КРАЙ', 'НИЗ', 'РЯД', 'СЛЕД', 'ЦЕНТР', 'ХОД',
+  'ШАГ',
+  // ─── МАЛЕНЬКИЕ СЛОВА ───
+  'ВДРУГ', 'ДАЙ', 'ДНЁМ', 'ЗДЕСЬ', 'МОЙ', 'САМ', 'ТАК', 'ТАМ', 'ТОТ', 'ТВОЙ',
+  // ─── ДЕЙСТВИЯ ───
+  'БЫЛ', 'ВЁЗ', 'ВЁЛ', 'ВЫЛ', 'ЕСТЬ', 'ЖИТЬ', 'ЛЁГ', 'ЛЬЁТ', 'НЁС', 'ПЕЛ',
+  'ПЬЁТ', 'ПЬЮТ', 'СЕЛ', 'СПАТЬ', 'СПИТ', 'СТАЛ', 'СЪЕЛ', 'СЪЕСТЬ', 'ШИТЬ', 'ШЁЛ',
+  // ─── ЧУВСТВА И КАЧЕСТВА ───
+  'ГРУСТЬ', 'ЖИЗНЬ', 'ЗЛОЙ', 'ЛЕНЬ', 'РИСК', 'УМ'
     ];
 
     const DICTIONARY_WORDS_2 = [
-      'МА-МА', 'ПА-ПА', 'БА-БА', 'ТЁ-ТЯ', 'ДЯ-ДЯ', 'НЯ-НЯ', 'ДЕ-ТИ',
-      'СЫ-НОК', 'ДОЧ-КА', 'МАЛЬ-ЧИК', 'СЕС-ТРА', 'ДА-МА', 'ДОК-ТОР', 'КЛО-УН',
-      'ВА-СЯ', 'ДИ-МА', 'РО-МА', 'ЛЕ-НА', 'ВЕ-РА', 'ВО-ВА', 'НИ-НА',
-      'СВЕ-ТА', 'О-ЛЯ', 'Ю-ЛЯ', 'КО-ЛЯ','НА-ДЯ','СА-ША','ЛЮ-ДА','ВА-НЯ',
-      'КО-ЗА', 'КО-ЗЁЛ', 'КО-НИ', 'ПО-НИ', 'ЛА-МА', 'БА-РАН', 'ОВ-ЦА',
-      'БЫ-КИ', 'ТА-БУН', 'О-СЁЛ', 'КО-ТЫ', 'КОШ-КА', 'КОТ-ИК', 'МУР-КА',
-      'ПЁС-ИК', 'БАР-БОС', 'ЛАЙ-КА', 'ЖУЧ-КА', 'ЩЕ-НОК', 'БУД-КА',
-      'КРО-ЛИК', 'ХО-МЯК', 'ГУ-СИ', 'УТ-КА', 'ЛИ-СА', 'ВОЛ-КИ', 'ЗАЙ-КА',
-      'ЗА-ЯЦ', 'БЕЛ-КА', 'Ё-ЖИК', 'МЫ-ШИ', 'МЫШ-КА', 'ПАН-ДА', 'ЗЕБ-РА',
-      'ЖИ-РАФ', 'ПУ-МА', 'СЛО-НЫ', 'ЛА-ПА', 'ЛАП-КИ', 'РО-ГА', 'НО-РА',
-      'ПТИ-ЦА', 'СО-ВА', 'ЧАЙ-КА', 'А-ИСТ', 'О-РЁЛ', 'СО-КОЛ', 'ГРА-ЧИ',
-      'ДЯ-ТЕЛ', 'СКВО-РЕЦ', 'ПЕ-РО', 'МУ-ХА', 'МУ-ХИ', 'МУШ-КА', 'О-СА',
-      'ПЧЕ-ЛА', 'КО-МАР', 'ПА-УК', 'РЫ-БА', 'РЫБ-КА', 'ЩУ-КА', 'РА-КИ',
-      'КИ-ТЫ', 'ДЕЛЬ-ФИН', 'ЖА-БА', 'КА-ША', 'СА-ЛО', 'МУ-КА', 'СО-КИ',
-      'КО-ФЕ', 'ДЫ-НЯ', 'КИ-ВИ', 'ЛИ-МОН', 'ПИ-РОГ', 'СУ-ХАРЬ', 'СО-ДА',
-      'СУШ-КА', 'РЕ-ПА', 'РЕП-КА', 'ГРУ-ША', 'СЛИ-ВА', 'БА-НАН', 'АР-БУЗ',
-      'ВИШ-НЯ', 'О-РЕХ', 'ТЫК-ВА', 'ГО-РОХ', 'МАС-ЛО', 'КОМ-ПОТ', 'СА-ЛАТ',
-      'БУЛ-КА', 'ПРЯ-НИК', 'ШУ-БА', 'ЮБ-КА', 'ШАП-КА', 'КЕП-КА', 'МАЙ-КА',
-      'ТАП-КИ', 'СА-ПОГ', 'БУ-СЫ', 'МО-ДА', 'ПАЛЬ-ТО', 'КУРТ-КА', 'ШОР-ТЫ',
-      'ЛЫ-ЖИ', 'КОНЬ-КИ', 'ДО-МА', 'ДО-МИК', 'ХА-ТА', 'ДА-ЧА', 'ОК-НО',
-      'СТЕ-НА', 'КРЫ-ША', 'ПОЛ-КА', 'ДИ-ВАН', 'КОВ-ЁР', 'КОВ-РИК', 'ЛАМ-ПА',
-      'СТО-ЛИК', 'ГА-РАЖ', 'ЗА-БОР', 'ФО-НАРЬ', 'ВЕД-РО', 'МЕТ-ЛА', 'ВЕ-НИК',
-      'У-ТЮГ', 'ЩЁТ-КА', 'ВА-ЗА', 'ЧА-ША', 'ЧАШ-КА', 'ЛОЖ-КА', 'ВИЛ-КА',
-      'МИС-КА', 'БАН-КА', 'БОЧ-КА', 'КО-ТЁЛ', 'КУ-ВШИН', 'ЧАЙ-НИК', 'НО-ЖИК',
-      'ЛЕЙ-КА', 'МЫ-ЛО', 'ГУБ-КА', 'ВА-ТА', 'И-ГЛА', 'НИТ-КА', 'СЕТ-КА',
-      'СУМ-КА', 'РА-МА', 'ЧА-СЫ', 'ВЕ-СЫ', 'ЗА-МОК', 'ДУ-ХИ', 'ПИ-ЛА',
-      'МО-ЛОТ', 'ТО-ПОР', 'КАС-КА', 'ЗИ-МА', 'ЛЕ-ТО', 'ВЕС-НА', 'О-СЕНЬ',
-      'МО-РОЗ', 'ГРО-ЗА', 'ВЕ-ТЕР', 'ТУ-ЧА', 'НЕ-БО', 'ЗВЕЗ-ДА', 'ЛУ-НА',
-      'ВЕ-ЧЕР', 'НОЧ-КА', 'ВО-ДА', 'РЕ-КА', 'МО-РЕ', 'ВОЛ-НА', 'ЛУ-ЖА',
-      'РО-СА', 'ГО-РА', 'ПО-ЛЕ', 'ПЕ-СОК', 'ЛЕС-ОК', 'РО-ЗА', 'ЦВЕ-ТОК',
-      'МА-КИ', 'ТЮЛЬ-ПАН', 'ЛАН-ДЫШ', 'МЯ-ТА', 'ВЕТ-КА', 'ЛИС-ТИК',
-      'КУС-ТИК', 'ДУ-БЫ', 'ЛИ-ПА', 'И-ВА', 'ЁЛ-КА', 'СОС-НА', 'ШИШ-КА',
-      'КО-ЛОС', 'СЕ-НО', 'ТРА-ВА', 'АВ-ТО', 'ФА-РА', 'ШИ-НА', 'СА-НИ',
-      'ПО-ЕЗД', 'ВА-ГОН', 'ТРАМ-ВАЙ', 'ТРАК-ТОР', 'ЛОД-КА', 'ТЕ-ЛО',
-      'РУ-КА', 'РУ-КИ', 'НО-ГИ', 'У-ХО', 'У-ШИ', 'ГЛА-ЗА', 'ГУ-БЫ',
-      'ЗУ-БЫ', 'Я-ЗЫК', 'ВО-ЛОС', 'ЖИ-ВОТ', 'СПИ-НА', 'КО-ЖА', 'РА-НА',
-      'ШКО-ЛА', 'КНИ-ГА', 'ПЕ-НАЛ', 'ЛАС-ТИК', 'КРАС-КИ', 'БУК-ВЫ',
-      'АЛЬ-БОМ', 'РУЧ-КА', 'ПАР-ТА', 'ТОЧ-КА', 'ЗВО-НОК', 'КУК-ЛА',
-      'РО-БОТ', 'МЯ-ЧИК', 'ША-РЫ', 'ША-РИК', 'КУ-БИК', 'Ю-ЛА', 'ЛО-ТО',
-      'ДУД-КА', 'МАСК-А', 'САН-КИ', 'ИГ-РА', 'НО-ТА', 'НО-ТЫ', 'ПЕС-НЯ',
-      'СКАЗ-КА', 'НО-ША', 'ДУ-МА', 'СИ-ЛА', 'ДУ-ША', 'ФО-ТО', 'ЧУ-ДО',
-      'ПЕ-НА', 'Я-МА', 'ТА-РА', 'ДЫ-РА', 'КИ-НО', 'ПО-РА', 'СУ-ХО',
-      'ЖА-РА', 'КА-ПА', 'КО-МА', 'РО-ТА', 'ДЫ-МОК', 'ХО-ЛОД', 'ГО-ЛОД',
-      'ГО-РОД', 'ПО-РОХ', 'ГО-ЛОС', 'КО-СА', 'ПУШ-КА', 'МОС-ТИК', 'МАР-КА'
+      // ── ИМЕНА ──
+  'ВА-СЯ', 'ДИ-МА', 'РО-МА', 'ЛЕ-НА', 'ВЕ-РА', 'ВО-ВА', 'НИ-НА',
+  'СВЕ-ТА', 'О-ЛЯ', 'Ю-ЛЯ', 'КО-ЛЯ','НА-ДЯ','СА-ША','ЛЮ-ДА','ВА-НЯ',
+
+  // ── ЖИВОТНЫЕ: домашние ──
+  'КО-ЗА', 'КО-ЗЁЛ', 'КО-НИ', 'ПО-НИ', 'ЛА-МА', 'БА-РАН', 'ОВ-ЦА',
+  'БЫ-КИ', 'ТА-БУН', 'О-СЁЛ', 'КО-ТЫ', 'КОШ-КА', 'КОТ-ИК', 'МУР-КА',
+  'ПЁС-ИК', 'БАР-БОС', 'ЛАЙ-КА', 'ЖУЧ-КА', 'ЩЕ-НОК', 'БУД-КА',
+  'КРО-ЛИК', 'ХО-МЯК', 'ГУ-СИ', 'УТ-КА',
+
+  // ── ЖИВОТНЫЕ: дикие ──
+  'ЛИ-СА', 'ВОЛ-КИ', 'ЗАЙ-КА', 'ЗА-ЯЦ', 'БЕЛ-КА', 'Ё-ЖИК', 'МЫ-ШИ',
+  'МЫШ-КА', 'ПАН-ДА', 'ЗЕБ-РА', 'ЖИ-РАФ', 'ПУ-МА', 'СЛО-НЫ',
+  'ЛА-ПА', 'ЛАП-КИ', 'РО-ГА', 'НО-РА',
+
+  // ── ПТИЦЫ И НАСЕКОМЫЕ ──
+  'ПТИ-ЦА', 'СО-ВА', 'ЧАЙ-КА', 'А-ИСТ', 'О-РЁЛ', 'СО-КОЛ', 'ГРА-ЧИ',
+  'ДЯ-ТЕЛ', 'СКВО-РЕЦ', 'ПЕ-РО', 'МУ-ХА', 'МУ-ХИ', 'МУШ-КА', 'О-СА',
+  'ПЧЕ-ЛА', 'КО-МАР', 'ПА-УК',
+
+  // ── РЕКИ И МОРЯ ──
+  'РЫ-БА', 'РЫБ-КА', 'ЩУ-КА', 'РА-КИ', 'КИ-ТЫ', 'ДЕЛЬ-ФИН', 'ЖА-БА',
+
+  // ── ЕДА ──
+  'КА-ША', 'СА-ЛО', 'МУ-КА', 'СО-КИ', 'КО-ФЕ', 'ДЫ-НЯ', 'КИ-ВИ',
+  'ЛИ-МОН', 'ПИ-РОГ', 'СУ-ХАРЬ', 'СО-ДА', 'СУШ-КА', 'РЕ-ПА', 'РЕП-КА',
+  'ГРУ-ША', 'СЛИ-ВА', 'БА-НАН', 'АР-БУЗ', 'ВИШ-НЯ', 'О-РЕХ', 'ТЫК-ВА',
+  'ГО-РОХ', 'МАС-ЛО', 'КОМ-ПОТ', 'СА-ЛАТ', 'БУЛ-КА', 'ПРЯ-НИК',
+
+  // ── ОДЕЖДА ──
+  'ШУ-БА', 'ЮБ-КА', 'ШАП-КА', 'КЕП-КА', 'МАЙ-КА', 'ТАП-КИ', 'СА-ПОГ',
+  'БУ-СЫ', 'МО-ДА', 'ПАЛЬ-ТО', 'КУРТ-КА', 'ШОР-ТЫ', 'ЛЫ-ЖИ', 'КОНЬ-КИ',
+
+  // ── ДОМ И МЕБЕЛЬ ──
+  'ДО-МА', 'ДО-МИК', 'ХА-ТА', 'ДА-ЧА', 'ОК-НО', 'СТЕ-НА', 'КРЫ-ША',
+  'ПОЛ-КА', 'ДИ-ВАН', 'КОВ-ЁР', 'КОВ-РИК', 'ЛАМ-ПА', 'СТО-ЛИК',
+  'ГА-РАЖ', 'ЗА-БОР', 'ФО-НАРЬ', 'ВЕД-РО', 'МЕТ-ЛА', 'ВЕ-НИК',
+  'У-ТЮГ', 'ЩЁТ-КА',
+
+  // ── ПОСУДА И ВЕЩИ ──
+  'ВА-ЗА', 'ЧА-ША', 'ЧАШ-КА', 'ЛОЖ-КА', 'ВИЛ-КА', 'МИС-КА', 'БАН-КА',
+  'БОЧ-КА', 'КО-ТЁЛ', 'КУ-ВШИН', 'ЧАЙ-НИК', 'НО-ЖИК', 'ЛЕЙ-КА',
+  'МЫ-ЛО', 'ГУБ-КА', 'ВА-ТА', 'И-ГЛА', 'НИТ-КА', 'СЕТ-КА', 'СУМ-КА',
+  'РА-МА', 'ЧА-СЫ', 'ВЕ-СЫ', 'ЗА-МОК', 'ДУ-ХИ', 'ПИ-ЛА', 'МО-ЛОТ',
+  'ТО-ПОР', 'КАС-КА',
+
+  // ── ПРИРОДА: времена года и погода ──
+  'ЗИ-МА', 'ЛЕ-ТО', 'ВЕС-НА', 'О-СЕНЬ', 'МО-РОЗ', 'ГРО-ЗА', 'ВЕ-ТЕР',
+  'ТУ-ЧА', 'НЕ-БО', 'ЗВЕЗ-ДА', 'ЛУ-НА', 'ВЕ-ЧЕР', 'НОЧ-КА',
+
+  // ── ПРИРОДА: вода и земля ──
+  'ВО-ДА', 'РЕ-КА', 'МО-РЕ', 'ВОЛ-НА', 'ЛУ-ЖА', 'РО-СА', 'ГО-РА',
+  'ПО-ЛЕ', 'ПЕ-СОК', 'ЛЕС-ОК',
+
+  // ── ПРИРОДА: растения ──
+  'РО-ЗА', 'ЦВЕ-ТОК', 'МА-КИ', 'ТЮЛЬ-ПАН', 'ЛАН-ДЫШ', 'МЯ-ТА', 'ВЕТ-КА',
+  'ЛИС-ТИК', 'КУС-ТИК', 'ДУ-БЫ', 'ЛИ-ПА', 'И-ВА', 'ЁЛ-КА', 'СОС-НА',
+  'ШИШ-КА', 'КО-ЛОС', 'СЕ-НО', 'ТРА-ВА',
+
+  // ── ТРАНСПОРТ ──
+  'АВ-ТО', 'ФА-РА', 'ШИ-НА', 'СА-НИ', 'ПО-ЕЗД', 'ВА-ГОН', 'ТРАМ-ВАЙ',
+  'ТРАК-ТОР', 'ЛОД-КА',
+
+  // ── ТЕЛО ──
+  'ТЕ-ЛО', 'РУ-КА', 'РУ-КИ', 'НО-ГИ', 'У-ХО', 'У-ШИ', 'ГЛА-ЗА', 'ГУ-БЫ',
+  'ЗУ-БЫ', 'Я-ЗЫК', 'ВО-ЛОС', 'ЖИ-ВОТ', 'СПИ-НА', 'КО-ЖА', 'РА-НА',
+
+  // ── ШКОЛА ──
+  'ШКО-ЛА', 'КНИ-ГА', 'ПЕ-НАЛ', 'ЛАС-ТИК', 'КРАС-КИ', 'БУК-ВЫ', 'АЛЬ-БОМ',
+  'РУЧ-КА', 'ПАР-ТА', 'ТОЧ-КА', 'ЗВО-НОК',
+
+  // ── ИГРУШКИ И ИГРЫ ──
+  'КУК-ЛА', 'РО-БОТ', 'МЯ-ЧИК', 'ША-РЫ', 'ША-РИК', 'КУ-БИК', 'Ю-ЛА',
+  'ЛО-ТО', 'ДУД-КА', 'МАСК-А', 'САН-КИ', 'ИГ-РА',
+
+  // ── ПЕСНИ И СКАЗКИ ──
+  'НО-ТА', 'НО-ТЫ', 'ПЕС-НЯ', 'СКАЗ-КА',
+
+  // ── РАЗНОЕ (для отработки слогов) ──
+  'НО-ША', 'ДУ-МА', 'СИ-ЛА', 'ДУ-ША', 'ФО-ТО', 'ЧУ-ДО', 'ПЕ-НА', 'Я-МА',
+  'ТА-РА', 'ДЫ-РА', 'КИ-НО', 'ПО-РА', 'СУ-ХО', 'ЖА-РА', 'КА-ПА', 'КО-МА',
+  'РО-ТА', 'ДЫ-МОК', 'ХО-ЛОД', 'ГО-ЛОД', 'ГО-РОД', 'ПО-РОХ', 'ГО-ЛОС',
+  'КО-СА', 'ПУШ-КА', 'МОС-ТИК', 'МАР-КА'
     ];
 
     const DICTIONARY_WORDS_3 = [
-      'БА-БУШ-КА', 'ДЕ-ДУШ-КА', 'ДЕ-ВОЧ-КА', 'РЕ-БЯ-ТА', 'РЕ-БЁ-НОК',
-      'КА-РА-ПУЗ', 'ПО-ДРУ-ГА', 'НА-ТА-ША', 'ВО-ДИ-ТЕЛЬ', 'КОС-МО-НАВТ',
-      'СО-БА-КА', 'СО-БАЧ-КА', 'КО-РО-ВА', 'КУ-РИ-ЦА', 'КУ-РОЧ-КА',
-      'ПЕ-ТУ-ШОК', 'ЦЫП-ЛЁ-НОК', 'КО-ЗЁ-НОК', 'ЛО-ШАД-КА', 'ТЕЛ-Ё-НОК',
-      'ЛИ-СИ-ЦА', 'ВОЛ-ЧО-НОК', 'ЛИС-Ё-НОК', 'ЗАЙ-ЧО-НОК', 'БЕ-ЛОЧ-КА',
-      'ТИГ-РЁ-НОК', 'НО-СО-РОГ', 'БЕ-ГЕ-МОТ', 'ВО-РО-НА', 'СО-РО-КА',
-      'СИ-НИ-ЦА', 'СО-ЛО-ВЕЙ', 'ВО-РО-БЕЙ', 'ПО-ПУ-ГАЙ', 'ПЕ-ЛИ-КАН',
-      'МУ-РА-ВЕЙ', 'КУ-ЗНЕ-ЧИК', 'БА-БОЧ-КА', 'СТРЕ-КО-ЗА', 'А-КУ-ЛА',
-      'У-ЛИТ-КА', 'МЕ-ДУ-ЗА', 'ЛЯ-ГУШ-КА', 'КРО-КО-ДИЛ', 'КО-ТЁ-НОК',
-      'У-ТЁ-НОК', 'ГУ-СЁ-НОК', 'МЫ-ШО-НОК', 'МО-ЛО-КО', 'Я-ГО-ДА',
-      'Я-ГОД-КА', 'МА-ЛИ-НА', 'КА-ЛИ-НА', 'КЛУБ-НИ-КА', 'ЯБ-ЛО-КО',
-      'А-ПЕЛЬ-СИН', 'МАН-ДА-РИН', 'ВИ-НО-ГРАД', 'АН-АН-АС', 'БА-НА-НЫ',
-      'ЛИ-МО-НЫ', 'О-ГУ-РЕЦ', 'ПО-МИ-ДОР', 'КА-ПУС-ТА', 'РЕ-ДИС-КА',
-      'КА-БА-ЧОК', 'КА-РТОШ-КА', 'СМЕ-ТА-НА', 'КОЛ-БА-СА', 'СО-СИС-КА',
-      'ВА-РЕ-НЬЕ', 'ПЕ-ЧЕНЬ-Е', 'ВАТ-РУШ-КА', 'ПИ-РОЖ-ОК', 'КОН-ФЕ-ТА',
-      'ШО-КО-ЛАД', 'КА-РА-МЕЛЬ', 'СУ-ХА-РИК', 'О-ДЕЖ-ДА', 'СА-ПО-ГИ',
-      'БО-ТИ-НОК', 'РУ-БАШ-КА', 'СА-РА-ФАН', 'КО-СЫН-КА', 'ПА-НА-МА',
-      'ВА-РЕЖ-КИ', 'ПЕР-ЧАТ-КИ', 'ПО-МА-ДА', 'ПО-СУ-ДА', 'ТА-РЕЛ-КА',
-      'КОР-ЗИН-КА', 'КО-РОБ-КА', 'ПО-ДУШ-КА', 'БУ-ТЫЛ-КА', 'СА-МО-ВАР',
-      'ЧЕ-МО-ДАН', 'КОМ-НА-ТА', 'КАР-ТИ-НА', 'БУ-МА-ГА', 'ПО-СЫЛ-КА',
-      'КА-ЛИТ-КА', 'ВО-РО-ТА', 'КО-ЛО-ДЕЦ', 'КО-ЧЕ-РГА', 'ЛО-ПАТ-КА',
-      'ПА-ЛАТ-КА', 'ФО-НА-РИК', 'ТЕЛ-Е-ФОН', 'МО-ЛО-ТОК', 'ГРЕ-БЕ-ШОК',
-      'КО-ЛО-КОЛ', 'ПРУ-ЖИ-НА', 'У-ЛИ-ЦА', 'ДО-РО-ГА', 'АП-ТЕ-КА',
-      'МА-ГА-ЗИН', 'БОЛЬ-НИ-ЦА', 'СВЕ-ТО-ФОР', 'ПЕ-ШЕ-ХОД', 'СКА-МЕЙ-КА',
-      'ПО-ГО-ДА', 'СОЛ-НЫШ-КО', 'О-БЛА-КО', 'РА-ДУ-ГА', 'О-ЗЕ-РО',
-      'БО-ЛО-ТО', 'ЛУ-ЖИ-ЦА', 'КА-НА-ВА', 'ПО-ЛЯ-НА', 'ДЕ-РЕ-ВО',
-      'БЕ-РЁ-ЗА', 'О-СИ-НА', 'РЯ-БИ-НА', 'РО-МАШ-КА', 'СО-ЛО-МА',
-      'КО-ЛО-СОК', 'СНЕ-ЖИН-КА', 'СНЕ-ГО-ВИК', 'СНЕ-ГО-ПАД', 'ВО-ДО-ПАД',
-      'КО-МЕ-ТА', 'ПЛА-НЕ-ТА', 'МА-ШИ-НА', 'АВ-ТО-БУС', 'ГРУ-ЗО-ВИК',
-      'МО-ТО-ЦИКЛ', 'СА-МО-КАТ', 'КО-ЛЯС-КА', 'КА-РЕ-ТА', 'СА-МО-ЛЁТ',
-      'ВЕР-ТО-ЛЁТ', 'РА-КЕ-ТА', 'ПА-РО-ВОЗ', 'ПА-РО-ХОД', 'ЛЕ-ДО-КОЛ',
-      'КО-РАБ-ЛИК', 'ПА-ЛУ-БА', 'СА-МО-СВАЛ', 'КО-ЛЕ-СО', 'ГО-ЛО-ВА',
-      'БО-РО-ДА', 'У-ЧЕ-НИК', 'У-ЧИТ-ЕЛЬ', 'АЗ-БУ-КА', 'ЛИ-НЕЙ-КА',
-      'КИС-ТОЧ-КА', 'КА-РАН-ДАШ', 'ФЛО-МАС-ТЕР', 'АЛЬ-БОМ-ЧИК',
-      'КАР-ТИН-КА', 'РИ-СУ-НОК', 'ИГ-РУШ-КА', 'МАТ-РЁШ-КА', 'ПИ-РА-МИД-КА',
-      'КА-ЧЕ-ЛИ', 'КАР-У-СЕЛЬ', 'БА-РА-БАН', 'МУ-ЗЫ-КА', 'ЗА-ГАД-КА',
-      'ПЕ-СЕН-КА', 'КО-ЛО-БОК', 'ТЕ-РЕ-МОК', 'НЕ-ЗНАЙ-КА', 'ЦА-РИ-ЦА',
-      'КО-РО-НА', 'РА-БО-ТА', 'ПО-БЕ-ДА', 'СА-ЛЮ-ТЫ', 'ПО-ДА-РОК',
-      'ГА-ЗЕ-ТА', 'МИ-НУ-ТА', 'МО-НЕ-ТА', 'НЕ-ДЕ-ЛЯ', 'СУБ-БО-ТА',
-      'ХО-РО-ШО', 'МО-ЛО-ДЕЦ', 'ГО-ЛО-СОК'
+       // ── СЕМЬЯ И ЛЮДИ ──
+  'БА-БУШ-КА', 'ДЕ-ДУШ-КА', 'ДЕ-ВОЧ-КА', 'РЕ-БЯ-ТА', 'РЕ-БЁ-НОК',
+  'КА-РА-ПУЗ', 'ПО-ДРУ-ГА', 'НА-ТА-ША', 'ВО-ДИ-ТЕЛЬ', 'КОС-МО-НАВТ',
+
+  // ── ЖИВОТНЫЕ: домашние ──
+  'СО-БА-КА', 'СО-БАЧ-КА', 'КО-РО-ВА', 'КУ-РИ-ЦА', 'КУ-РОЧ-КА',
+  'ПЕ-ТУ-ШОК', 'ЦЫП-ЛЁ-НОК', 'КО-ЗЁ-НОК', 'ЛО-ШАД-КА', 'ТЕЛ-Ё-НОК',
+
+  // ── ЖИВОТНЫЕ: дикие ──
+  'ЛИ-СИ-ЦА', 'ВОЛ-ЧО-НОК', 'ЛИС-Ё-НОК', 'ЗАЙ-ЧО-НОК', 'БЕ-ЛОЧ-КА',
+  'ТИГ-РЁ-НОК', 'НО-СО-РОГ', 'БЕ-ГЕ-МОТ',
+
+  // ── ПТИЦЫ И НАСЕКОМЫЕ ──
+  'ВО-РО-НА', 'СО-РО-КА', 'СИ-НИ-ЦА', 'СО-ЛО-ВЕЙ', 'ВО-РО-БЕЙ',
+  'ПО-ПУ-ГАЙ', 'ПЕ-ЛИ-КАН', 'МУ-РА-ВЕЙ', 'КУ-ЗНЕ-ЧИК', 'БА-БОЧ-КА',
+  'СТРЕ-КО-ЗА',
+
+  // ── РЕКИ И МОРЯ ──
+  'А-КУ-ЛА', 'У-ЛИТ-КА', 'МЕ-ДУ-ЗА', 'ЛЯ-ГУШ-КА', 'КРО-КО-ДИЛ',
+
+  // ── МАЛЫШИ ЖИВОТНЫХ ──
+  'КО-ТЁ-НОК', 'У-ТЁ-НОК', 'ГУ-СЁ-НОК', 'МЫ-ШО-НОК',
+
+  // ── ЕДА ──
+  'МО-ЛО-КО', 'Я-ГО-ДА', 'Я-ГОД-КА', 'МА-ЛИ-НА', 'КА-ЛИ-НА', 'КЛУБ-НИ-КА',
+  'ЯБ-ЛО-КО', 'А-ПЕЛЬ-СИН', 'МАН-ДА-РИН', 'ВИ-НО-ГРАД', 'АН-АН-АС',
+  'БА-НА-НЫ', 'ЛИ-МО-НЫ', 'О-ГУ-РЕЦ', 'ПО-МИ-ДОР', 'КА-ПУС-ТА',
+  'РЕ-ДИС-КА', 'КА-БА-ЧОК', 'КА-РТОШ-КА', 'СМЕ-ТА-НА', 'КОЛ-БА-СА',
+  'СО-СИС-КА', 'ВА-РЕ-НЬЕ', 'ПЕ-ЧЕНЬ-Е', 'ВАТ-РУШ-КА', 'ПИ-РОЖ-ОК',
+  'КОН-ФЕ-ТА', 'ШО-КО-ЛАД', 'КА-РА-МЕЛЬ', 'СУ-ХА-РИК',
+
+  // ── ОДЕЖДА ──
+  'О-ДЕЖ-ДА', 'СА-ПО-ГИ', 'БО-ТИ-НОК', 'РУ-БАШ-КА', 'СА-РА-ФАН',
+  'КО-СЫН-КА', 'ПА-НА-МА', 'ВА-РЕЖ-КИ', 'ПЕР-ЧАТ-КИ', 'ПО-МА-ДА',
+
+  // ── ДОМ И ВЕЩИ ──
+  'ПО-СУ-ДА', 'ТА-РЕЛ-КА', 'КОР-ЗИН-КА', 'КО-РОБ-КА', 'ПО-ДУШ-КА',
+  'БУ-ТЫЛ-КА', 'СА-МО-ВАР', 'ЧЕ-МО-ДАН', 'КОМ-НА-ТА', 'КАР-ТИ-НА',
+  'БУ-МА-ГА', 'ПО-СЫЛ-КА', 'КА-ЛИТ-КА', 'ВО-РО-ТА', 'КО-ЛО-ДЕЦ',
+  'КО-ЧЕ-РГА', 'ЛО-ПАТ-КА', 'ПА-ЛАТ-КА', 'ФО-НА-РИК', 'ТЕЛ-Е-ФОН',
+  'МО-ЛО-ТОК', 'ГРЕ-БЕ-ШОК', 'КО-ЛО-КОЛ', 'ПРУ-ЖИ-НА',
+
+  // ── ГОРОД И МЕСТА ──
+  'У-ЛИ-ЦА', 'ДО-РО-ГА', 'АП-ТЕ-КА', 'МА-ГА-ЗИН', 'БОЛЬ-НИ-ЦА',
+  'СВЕ-ТО-ФОР', 'ПЕ-ШЕ-ХОД', 'СКА-МЕЙ-КА',
+
+  // ── ПРИРОДА ──
+  'ПО-ГО-ДА', 'СОЛ-НЫШ-КО', 'О-БЛА-КО', 'РА-ДУ-ГА', 'О-ЗЕ-РО', 'БО-ЛО-ТО',
+  'ЛУ-ЖИ-ЦА', 'КА-НА-ВА', 'ПО-ЛЯ-НА', 'ДЕ-РЕ-ВО', 'БЕ-РЁ-ЗА', 'О-СИ-НА',
+  'РЯ-БИ-НА', 'РО-МАШ-КА', 'СО-ЛО-МА', 'КО-ЛО-СОК', 'СНЕ-ЖИН-КА',
+  'СНЕ-ГО-ВИК', 'СНЕ-ГО-ПАД', 'ВО-ДО-ПАД', 'КО-МЕ-ТА', 'ПЛА-НЕ-ТА',
+
+  // ── ТРАНСПОРТ ──
+  'МА-ШИ-НА', 'АВ-ТО-БУС', 'ГРУ-ЗО-ВИК', 'МО-ТО-ЦИКЛ', 'СА-МО-КАТ',
+  'КО-ЛЯС-КА', 'КА-РЕ-ТА', 'СА-МО-ЛЁТ', 'ВЕР-ТО-ЛЁТ', 'РА-КЕ-ТА',
+  'ПА-РО-ВОЗ', 'ПА-РО-ХОД', 'ЛЕ-ДО-КОЛ', 'КО-РАБ-ЛИК', 'ПА-ЛУ-БА',
+  'СА-МО-СВАЛ', 'КО-ЛЕ-СО',
+
+  // ── ТЕЛО ──
+  'ГО-ЛО-ВА', 'БО-РО-ДА',
+
+  // ── ШКОЛА И ТВОРЧЕСТВО ──
+  'У-ЧЕ-НИК', 'У-ЧИТ-ЕЛЬ', 'АЗ-БУ-КА', 'ЛИ-НЕЙ-КА', 'КИС-ТОЧ-КА',
+  'КА-РАН-ДАШ', 'ФЛО-МАС-ТЕР', 'АЛЬ-БОМ-ЧИК', 'КАР-ТИН-КА', 'РИ-СУ-НОК',
+
+  // ── ИГРУШКИ И ИГРЫ ──
+  'ИГ-РУШ-КА', 'МАТ-РЁШ-КА', 'ПИ-РА-МИД-КА', 'КА-ЧЕ-ЛИ', 'КАР-У-СЕЛЬ',
+  'БА-РА-БАН', 'МУ-ЗЫ-КА', 'ЗА-ГАД-КА', 'ПЕ-СЕН-КА',
+
+  // ── ИЗ СКАЗОК ──
+  'КО-ЛО-БОК', 'ТЕ-РЕ-МОК', 'НЕ-ЗНАЙ-КА', 'ЦА-РИ-ЦА', 'КО-РО-НА',
+
+  // ── РАЗНОЕ ──
+  'РА-БО-ТА', 'ПО-БЕ-ДА', 'СА-ЛЮ-ТЫ', 'ПО-ДА-РОК', 'ГА-ЗЕ-ТА', 'МИ-НУ-ТА',
+  'МО-НЕ-ТА', 'НЕ-ДЕ-ЛЯ', 'СУБ-БО-ТА', 'ХО-РО-ШО', 'МО-ЛО-ДЕЦ', 'ГО-ЛО-СОК'
     ];
 
     let activeLetters = new Set(['А', 'У', 'О', 'М', 'С', 'Х', 'Р', 'Ы', 'Л', 'Н']);
-    
     let primaryMode = 'syllables';
-    let syllableModes = {
-      open: true,
-      reverse: false
-    };
+    let syllableModes = { open: true, reverse: false };
 
     let currentText = '';
     let readCount = 0;
@@ -2421,7 +2461,7 @@
     let currentSoundType = 'softping';
 
     let lastActionTime = 0;
-    const THROTTLE_DELAY_MS = 180;
+    const THROTTLE_DELAY_MS = 160;
 
     let startTime = Date.now();
     let cardTimestamps = [];
@@ -2429,6 +2469,7 @@
     /* ОЗВУЧКА СЛОГОВ ИЗ ПАПКИ audio/ */
     let currentSyllableAudio = null;
     let currentSequenceId = 0;
+    const audioAvailabilityCache = new Map();
 
     function stopSyllableAudio() {
       currentSequenceId++;
@@ -2437,6 +2478,58 @@
         currentSyllableAudio.currentTime = 0;
         currentSyllableAudio = null;
       }
+    }
+
+    async function checkFileExists(url) {
+      if (audioAvailabilityCache.has(url)) {
+        return audioAvailabilityCache.get(url);
+      }
+      try {
+        const res = await fetch(url, { method: 'HEAD' });
+        const exists = res.ok;
+        audioAvailabilityCache.set(url, exists);
+        return exists;
+      } catch (e) {
+        audioAvailabilityCache.set(url, false);
+        return false;
+      }
+    }
+
+    async function checkCurrentCardAudioAvailable(text) {
+      if (!text || primaryMode === 'alphabet') return false;
+      const parts = text.split(/[-–]/).map(s => s.trim()).filter(Boolean);
+      if (parts.length === 0) return false;
+
+      // Проверяем первый слог/слово на наличие wav
+      const syllable = parts[0].toUpperCase();
+      const hasUpper = await checkFileExists(`audio/${syllable}.wav`);
+      if (hasUpper) return true;
+      const hasLower = await checkFileExists(`audio/${syllable.toLowerCase()}.wav`);
+      return hasLower;
+    }
+
+    async function updateSpeakerButtonState() {
+      const btn = document.getElementById('btn-card-audio');
+      if (!btn) return;
+      if (primaryMode === 'alphabet' || !currentText) {
+        btn.classList.add('disabled');
+        return;
+      }
+      const available = await checkCurrentCardAudioAvailable(currentText);
+      if (available) {
+        btn.classList.remove('disabled');
+        btn.title = "Озвучить карточку";
+      } else {
+        btn.classList.add('disabled');
+        btn.title = "Озвучка для этого слова/слога не найдена в папке audio/";
+      }
+    }
+
+    function onSpeakerCardClick(e) {
+      if (e) e.stopPropagation();
+      const btn = document.getElementById('btn-card-audio');
+      if (btn && btn.classList.contains('disabled')) return;
+      playSyllableAudio();
     }
 
     function playSingleSyllable(syllable, sequenceId) {
@@ -2480,7 +2573,6 @@
         };
 
         audio.onerror = tryFallback;
-
         audio.play().catch(() => {
           tryFallback();
         });
@@ -2489,12 +2581,9 @@
 
     async function playSyllableAudio() {
       if (primaryMode === 'alphabet' || !currentText) return;
-      if (isSoundMuted) return;
-
       stopSyllableAudio();
       const sequenceId = currentSequenceId;
 
-      // Деление по слогам для слов или воспроизведение одного слога
       const parts = currentText.split(/[-–]/).map(s => s.trim()).filter(Boolean);
       if (parts.length === 0) return;
 
@@ -2503,7 +2592,7 @@
         await playSingleSyllable(parts[i], sequenceId);
         if (sequenceId !== currentSequenceId) break;
         if (i < parts.length - 1) {
-          await new Promise(r => setTimeout(r, 80));
+          await new Promise(r => setTimeout(r, 70));
         }
       }
     }
@@ -2555,11 +2644,11 @@
             osc.type = 'sine';
             osc.frequency.setValueAtTime(659.25, t);
             gain.gain.setValueAtTime(0.14, t);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             osc.start(t);
-            osc.stop(t + 0.19);
+            osc.stop(t + 0.17);
             break;
           }
           case 'popit': {
@@ -2582,123 +2671,24 @@
             osc.type = 'sine';
             osc.frequency.setValueAtTime(880, t);
             gain.gain.setValueAtTime(0.2, t);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             osc.start(t);
-            osc.stop(t + 0.46);
+            osc.stop(t + 0.41);
             break;
           }
-          case 'xylophone': {
+          default: {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.type = 'triangle';
-            osc.frequency.setValueAtTime(1046.5, t);
-            gain.gain.setValueAtTime(0.22, t);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+            osc.frequency.setValueAtTime(880, t);
+            gain.gain.setValueAtTime(0.15, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             osc.start(t);
-            osc.stop(t + 0.23);
-            break;
-          }
-          case 'woodblock': {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(950, t);
-            osc.frequency.exponentialRampToValueAtTime(500, t + 0.035);
-            gain.gain.setValueAtTime(0.28, t);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start(t);
-            osc.stop(t + 0.045);
-            break;
-          }
-          case 'waterdrop': {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(350, t);
-            osc.frequency.exponentialRampToValueAtTime(1100, t + 0.07);
-            gain.gain.setValueAtTime(0.25, t);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start(t);
-            osc.stop(t + 0.085);
-            break;
-          }
-          case 'marimba': {
-            const osc1 = audioCtx.createOscillator();
-            const osc2 = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc1.type = 'sine';
-            osc2.type = 'sine';
-            osc1.frequency.setValueAtTime(392, t);
-            osc2.frequency.setValueAtTime(784, t);
-            gain.gain.setValueAtTime(0.22, t);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
-            osc1.connect(gain);
-            osc2.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc1.start(t);
-            osc2.start(t);
-            osc1.stop(t + 0.19);
-            osc2.stop(t + 0.19);
-            break;
-          }
-          case 'boing': {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(220, t);
-            osc.frequency.linearRampToValueAtTime(580, t + 0.08);
-            osc.frequency.linearRampToValueAtTime(320, t + 0.15);
-            gain.gain.setValueAtTime(0.2, t);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start(t);
-            osc.stop(t + 0.17);
-            break;
-          }
-          case 'flute': {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(784, t);
-            osc.frequency.exponentialRampToValueAtTime(1175, t + 0.06);
-            gain.gain.setValueAtTime(0.16, t);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start(t);
-            osc.stop(t + 0.21);
-            break;
-          }
-          case 'magic': {
-            const osc1 = audioCtx.createOscillator();
-            const osc2 = audioCtx.createOscillator();
-            const gain1 = audioCtx.createGain();
-            const gain2 = audioCtx.createGain();
-            osc1.type = 'sine';
-            osc2.type = 'sine';
-            osc1.frequency.setValueAtTime(1046.5, t);
-            osc2.frequency.setValueAtTime(1567.98, t + 0.05);
-            gain1.gain.setValueAtTime(0.15, t);
-            gain1.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
-            gain2.gain.setValueAtTime(0.18, t + 0.05);
-            gain2.gain.exponentialRampToValueAtTime(0.001, t + 0.38);
-            osc1.connect(gain1);
-            osc2.connect(gain2);
-            gain1.connect(audioCtx.destination);
-            gain2.connect(audioCtx.destination);
-            osc1.start(t);
-            osc2.start(t + 0.05);
-            osc1.stop(t + 0.31);
-            osc2.stop(t + 0.39);
+            osc.stop(t + 0.13);
             break;
           }
         }
@@ -2731,9 +2721,7 @@
     }
 
     function onHelpBackdropClick(e) {
-      if (e.target.id === 'help-modal') {
-        closeHelpModal();
-      }
+      if (e.target.id === 'help-modal') closeHelpModal();
     }
 
     function createLetterCheckbox(char, type) {
@@ -2789,30 +2777,43 @@
       mount('grid-signs', LETTERS.signs, 'sign');
     }
 
+    /* СТРОГИЙ ОРФОЭПИЧЕСКИЙ ФИЛЬТР: 169 открытых слогов при 33 буквах */
     function isValidOpenSyllable(c, v) {
-      if (c === 'Ь' || c === 'Ъ') return false;
-      if (c === 'Й') return false;
+      if (c === 'Ь' || c === 'Ъ' || c === 'Й') return false;
+      // В русской графике после согласных гласная Э не пишется (кроме МЭР, СЭР и заимствований)
       if (v === 'Э') return false;
-      if (['Ж', 'Ш', 'Ч', 'Щ', 'Г', 'К', 'Х'].includes(c) && v === 'Ы') return false;
-      if (['Ж', 'Ш', 'Ч', 'Щ', 'Г', 'К', 'Х', 'Ц', 'Ф'].includes(c) && (v === 'Я' || v === 'Ю')) return false;
-      if (c === 'З' && v === 'Ю') return false;
-      if (v === 'Ё' && ['З', 'Ц', 'Х', 'К', 'Г', 'Ф', 'Ж', 'Ш', 'Ч', 'Щ', 'Б', 'Д'].includes(c)) return false;
-      if (c === 'Ц' && ['Я', 'Ю', 'Ё'].includes(v)) return false;
-      if (['Ч', 'Щ'].includes(c) && ['Я', 'Ю', 'Ы'].includes(v)) return false;
+
+      // ЖИ - ШИ только с И
+      if ((c === 'Ж' || c === 'Ш') && v === 'Ы') return false;
+
+      // ЧА - ЩА с буквой А, ЧУ - ЩУ с буквой У (запрет Ы, Я, Ю)
+      if ((c === 'Ч' || c === 'Щ') && (v === 'Ы' || v === 'Я' || v === 'Ю')) return false;
+
+      // Заднеязычные Г, К, Х не сочетаются с Ы, а также с Я, Ю в исконных открытых слогах
+      if (['Г', 'К', 'Х'].includes(c) && (v === 'Ы' || v === 'Я' || v === 'Ю')) return false;
+
+      // Буква Ц: не пишется с Я, Ю, Ё
+      if (c === 'Ц' && (v === 'Я' || v === 'Ю' || v === 'Ё')) return false;
+
+      // Ж, Ш не сочетаются с Я, Ю
+      if ((c === 'Ж' || c === 'Ш') && (v === 'Я' || v === 'Ю')) return false;
+
+      // ЩО в русском слогосложении исключено (пишется ЩЁ)
       if (c === 'Щ' && v === 'О') return false;
+
+      // Ф: не используется с мягкими гласными Я, Ю в учебных базовых складах
+      if (c === 'Ф' && (v === 'Я' || v === 'Ю')) return false;
+
+      // ЗЮ исключается из базового букваря
+      if (c === 'З' && v === 'Ю') return false;
+
       return true;
     }
 
+    /* СТРОГИЙ ОРФОЭПИЧЕСКИЙ ФИЛЬТР: 60 обратных слогов (5 гласных * 12 базовых согласных) */
     function isValidReverseSyllable(v, c) {
-      if (c === 'Ь' || c === 'Ъ') return false;
-      if (v === 'Ы') return false;
-      
-      const pair = v + c;
-      if (['ЁБ', 'ЁП', 'ЕБ', 'ЕП', 'УЙ'].includes(pair)) return false;
-
-      if (c === 'Й') return ['А', 'О', 'У', 'И', 'Э', 'Е'].includes(v);
-      if (v === 'Э') return ['Х', 'Т', 'С', 'М', 'Р', 'Л', 'Н', 'П', 'К'].includes(c);
-      if (['Ю', 'Я', 'Ё'].includes(v) && ['Ч', 'Щ', 'Ф', 'Ц', 'Ж', 'Х', 'З'].includes(c)) return false;
+      if (!REVERSE_ALLOWED_CONSONANTS.has(c)) return false;
+      if (!REVERSE_ALLOWED_VOWELS.has(v)) return false;
       return true;
     }
 
@@ -3031,22 +3032,18 @@
       if (!allowLowercase) return text.toUpperCase();
 
       const style = Math.floor(Math.random() * 3);
+      if (style === 0) return text.toLowerCase();
+      if (style === 1) return text.toUpperCase();
 
-      if (style === 0) {
-        return text.toLowerCase();
-      } else if (style === 1) {
-        return text.toUpperCase();
-      } else {
-        let firstFound = false;
-        return text.split('').map(ch => {
-          if (ch === '-') return ch;
-          if (!firstFound) {
-            firstFound = true;
-            return ch.toUpperCase();
-          }
-          return ch.toLowerCase();
-        }).join('');
-      }
+      let firstFound = false;
+      return text.split('').map(ch => {
+        if (ch === '-') return ch;
+        if (!firstFound) {
+          firstFound = true;
+          return ch.toUpperCase();
+        }
+        return ch.toLowerCase();
+      }).join('');
     }
 
     function toggleCaseMixing(e) {
@@ -3090,6 +3087,7 @@
         emptyEl.classList.add('active');
         currentText = '';
         updateNavButtonsState();
+        updateSpeakerButtonState();
         return;
       }
 
@@ -3112,6 +3110,7 @@
 
       renderFormattedText(currentText);
       updateNavButtonsState();
+      updateSpeakerButtonState();
 
       card.classList.remove('card-fade');
       void card.offsetWidth;
@@ -3134,6 +3133,7 @@
         playSoundEffect();
         renderFormattedText(currentText);
         updateNavButtonsState();
+        updateSpeakerButtonState();
 
         const card = document.getElementById('syllable-card');
         card.classList.remove('card-fade');
@@ -3165,30 +3165,28 @@
     function launchConfetti() {
       const canvas = initConfettiCanvas();
       if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-
       const card = document.getElementById('syllable-card');
       const rect = card ? card.getBoundingClientRect() : { left: window.innerWidth / 2, top: window.innerHeight / 2, width: 0, height: 0 };
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
 
       const colors = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#fde047'];
-      const count = 75;
+      const count = 50;
 
       for (let i = 0; i < count; i++) {
         const angle = Math.random() * Math.PI * 2;
-        const speed = 4 + Math.random() * 8;
+        const speed = 3 + Math.random() * 6;
         confettiParticles.push({
-          x: centerX + (Math.random() - 0.5) * 60,
-          y: centerY + (Math.random() - 0.5) * 40,
+          x: centerX,
+          y: centerY,
           vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed - 3,
-          size: 6 + Math.random() * 6,
+          vy: Math.sin(angle) * speed - 2,
+          size: 6 + Math.random() * 5,
           color: colors[Math.floor(Math.random() * colors.length)],
           rotation: Math.random() * 360,
-          vRot: (Math.random() - 0.5) * 12,
+          vRot: (Math.random() - 0.5) * 10,
           alpha: 1,
-          gravity: 0.22,
+          gravity: 0.2,
           drag: 0.96
         });
       }
@@ -3211,9 +3209,9 @@
         p.x += p.vx;
         p.y += p.vy;
         p.rotation += p.vRot;
-        p.alpha -= 0.012;
+        p.alpha -= 0.015;
 
-        if (p.alpha <= 0 || p.y > canvas.height + 20) {
+        if (p.alpha <= 0 || p.y > canvas.height + 15) {
           confettiParticles.splice(i, 1);
           continue;
         }
@@ -3253,9 +3251,7 @@
     }
 
     function onStickerBackdropClick(e) {
-      if (e.target.id === 'sticker-modal') {
-        closeStickerModal();
-      }
+      if (e.target.id === 'sticker-modal') closeStickerModal();
     }
 
     function nextCard(event) {
@@ -3267,7 +3263,6 @@
       lastActionTime = now;
 
       stopSyllableAudio();
-
       playSoundEffect();
       readCount++;
       cardTimestamps.push(now);
@@ -3279,9 +3274,7 @@
       }
 
       if (readCount > 0 && readCount % 20 === 0) {
-        setTimeout(() => {
-          openStickerModal();
-        }, 300);
+        setTimeout(() => openStickerModal(), 200);
       }
 
       if (historyIndex < historyStack.length - 1) {
@@ -3289,6 +3282,7 @@
         currentText = historyStack[historyIndex];
         renderFormattedText(currentText);
         updateNavButtonsState();
+        updateSpeakerButtonState();
 
         const card = document.getElementById('syllable-card');
         card.classList.remove('card-fade');
@@ -3360,7 +3354,6 @@
       });
     }
 
-    /* Логика режимов */
     function syncModeUI() {
       stopSyllableAudio();
 
@@ -3405,9 +3398,7 @@
       } else {
         if (syllableModes[sub]) {
           const other = (sub === 'open') ? 'reverse' : 'open';
-          if (!syllableModes[other]) {
-            syllableModes[other] = true;
-          }
+          if (!syllableModes[other]) syllableModes[other] = true;
           syllableModes[sub] = false;
         } else {
           syllableModes[sub] = true;
@@ -3439,7 +3430,63 @@
       }
     }
 
+    const lettersPanel = document.getElementById('letters-panel');
+    const panelBackdrop = document.getElementById('panel-backdrop');
+    const panelTabPull = document.getElementById('panel-tab-pull');
+
+    function isPanelOpen() {
+      const isMobile = window.innerWidth <= 900;
+      return isMobile ? lettersPanel.classList.contains('open') : !lettersPanel.classList.contains('collapsed');
+    }
+
+    function syncTabPullVisibility() {
+      if (isPanelOpen()) {
+        panelTabPull.classList.add('hidden');
+      } else {
+        panelTabPull.classList.remove('hidden');
+      }
+    }
+
+    function openLettersPanel() {
+      const isMobile = window.innerWidth <= 900;
+      if (isMobile) {
+        lettersPanel.classList.remove('collapsed');
+        lettersPanel.classList.add('open');
+        panelBackdrop.classList.add('active');
+      } else {
+        lettersPanel.classList.remove('collapsed');
+      }
+      syncTabPullVisibility();
+    }
+
+    function closeLettersPanel() {
+      const isMobile = window.innerWidth <= 900;
+      if (isMobile) {
+        lettersPanel.classList.remove('open');
+        lettersPanel.classList.add('collapsed');
+        panelBackdrop.classList.remove('active');
+      } else {
+        lettersPanel.classList.add('collapsed');
+      }
+      syncTabPullVisibility();
+    }
+
+    function toggleLettersPanel() {
+      if (isPanelOpen()) {
+        closeLettersPanel();
+      } else {
+        openLettersPanel();
+      }
+    }
+
+    // Обработка клавиатуры: Ctrl открывает/закрывает панель
     window.addEventListener('keydown', (e) => {
+      if (e.key === 'Control' || e.code === 'ControlLeft' || e.code === 'ControlRight') {
+        e.preventDefault();
+        toggleLettersPanel();
+        return;
+      }
+
       if (isStickerModalOpen) {
         if (e.code === 'Space' || e.key === ' ' || e.code === 'Escape') {
           e.preventDefault();
@@ -3451,6 +3498,7 @@
       if (primaryMode === 'alphabet') {
         if (e.code === 'Escape') {
           closeHelpModal();
+          closeLettersPanel();
         }
         return;
       }
@@ -3463,56 +3511,16 @@
         e.preventDefault();
         if (e.repeat) return;
         nextCard();
-      } else if (e.code === 'ArrowUp' || e.key === 'ArrowUp' || e.code === 'ArrowDown' || e.key === 'ArrowDown') {
+      } else if (e.code === 'ArrowUp' || e.code === 'ArrowDown') {
         e.preventDefault();
         if (e.repeat) return;
         playSyllableAudio();
       } else if (e.code === 'Escape') {
         closeHelpModal();
         closeStickerModal();
+        closeLettersPanel();
       }
     });
-
-    const lettersPanel = document.getElementById('letters-panel');
-    const panelBackdrop = document.getElementById('panel-backdrop');
-    const panelTabPull = document.getElementById('panel-tab-pull');
-
-    function syncTabPullVisibility() {
-      const isMobile = window.innerWidth <= 900;
-      let isPanelOpen = false;
-      if (isMobile) {
-        isPanelOpen = lettersPanel.classList.contains('open');
-      } else {
-        isPanelOpen = !lettersPanel.classList.contains('collapsed');
-      }
-      if (isPanelOpen) {
-        panelTabPull.classList.add('hidden');
-      } else {
-        panelTabPull.classList.remove('hidden');
-      }
-    }
-
-    function openLettersPanel() {
-      const isMobile = window.innerWidth <= 900;
-      if (isMobile) {
-        lettersPanel.classList.add('open');
-        panelBackdrop.classList.add('active');
-      } else {
-        lettersPanel.classList.remove('collapsed');
-      }
-      syncTabPullVisibility();
-    }
-
-    function closeLettersPanel() {
-      const isMobile = window.innerWidth <= 900;
-      if (isMobile) {
-        lettersPanel.classList.add('open');
-        panelBackdrop.classList.remove('active');
-      } else {
-        lettersPanel.classList.add('collapsed');
-      }
-      syncTabPullVisibility();
-    }
 
     let touchStartX = 0;
     let touchStartY = 0;
@@ -3529,9 +3537,7 @@
       if (touchStartX < 40 && diffX > 45 && Math.abs(diffY) < 60) {
         openLettersPanel();
       }
-      const isMobile = window.innerWidth <= 900;
-      const isOpen = isMobile ? lettersPanel.classList.contains('open') : !lettersPanel.classList.contains('collapsed');
-      if (isOpen && diffX < -50 && Math.abs(diffY) < 70) {
+      if (isPanelOpen() && diffX < -50 && Math.abs(diffY) < 70) {
         closeLettersPanel();
       }
     }, { passive: true });
