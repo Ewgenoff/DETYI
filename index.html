@@ -1,731 +1,175 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Обучающий портал «Учись играя»</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#FFF3C9">
-  <title>Выберите раздел</title>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Nunito:wght@800;900&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 50%, #fce7f3 100%);
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+    }
+
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
+      user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
 
-    html, body {
+    body {
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      font-family: 'Nunito', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
+
+    .main-container {
+      max-width: 600px;
       width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #FFF3C9;
-      font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-
-    canvas {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      display: block;
-      z-index: 0;
-    }
-
-    /* Тёплая виньетка по краям */
-    body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background: radial-gradient(
-        circle at 50% 42%,
-        transparent 55%,
-        rgba(255, 176, 59, 0.20) 100%
-      );
-      mix-blend-mode: multiply;
-    }
-
-    /* Золотое свечение у курсора */
-    #glow {
-      position: fixed;
-      width: 420px;
-      height: 420px;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      background: radial-gradient(
-        circle,
-        rgba(255, 196, 70, 0.28) 0%,
-        rgba(255, 170, 60, 0.10) 30%,
-        transparent 70%
-      );
-      filter: blur(18px);
-      opacity: 0;
-      transition: opacity .25s ease;
-      z-index: 1;
-    }
-
-    /* Облака */
-    .cloud {
-      position: fixed;
-      left: 0;
-      width: 140px;
-      height: 44px;
       background: rgba(255, 255, 255, 0.95);
-      border-radius: 50px;
-      z-index: 1;
-      pointer-events: none;
-      filter: drop-shadow(0 8px 14px rgba(190, 130, 20, 0.14));
-      animation: drift linear infinite;
-    }
-    .cloud::before,
-    .cloud::after {
-      content: "";
-      position: absolute;
-      border-radius: 50%;
-      background: inherit;
-    }
-    .cloud::before { width: 56px; height: 56px; top: -28px; left: 18px; }
-    .cloud::after  { width: 40px; height: 40px; top: -16px; left: 64px; }
-
-    @keyframes drift {
-      from { transform: translateX(-25vw) scale(var(--sc, 1)); }
-      to   { transform: translateX(115vw) scale(var(--sc, 1)); }
-    }
-
-    /* Выглядывающие буквы и цифры */
-    .deco-letter {
-      position: fixed;
-      z-index: 1;
-      pointer-events: none;
-      user-select: none;
-      font-family: "Comfortaa", "Nunito", sans-serif;
-      font-weight: 700;
-      line-height: 1;
-      opacity: .9;
-      text-shadow: 0 5px 0 rgba(255, 255, 255, .55), 0 12px 26px rgba(200, 140, 20, .28);
-      animation: floaty var(--d, 8s) ease-in-out infinite alternate;
-    }
-
-    /* Плавающие школьные предметы */
-    .deco-item {
-      position: fixed;
-      z-index: 1;
-      pointer-events: none;
-      opacity: .95;
-      filter: drop-shadow(0 6px 10px rgba(190, 130, 20, .25));
-      animation: floaty var(--d, 9s) ease-in-out infinite alternate;
-    }
-
-    @keyframes floaty {
-      from { transform: rotate(var(--r, 0deg)) translateY(-6px); }
-      to   { transform: rotate(calc(var(--r, 0deg) + 4deg)) translateY(8px); }
-    }
-
-    /* Основной контейнер */
-    .container {
-      position: relative;
-      z-index: 2;
-      height: 100vh;
-      height: 100dvh;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      padding-top: max(24px, env(safe-area-inset-top));
-      padding-bottom: max(24px, env(safe-area-inset-bottom));
-    }
-
-    /* Заголовок */
-    .title {
+      border-radius: 32px;
+      padding: 32px 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+      border: 3px solid #ffffff;
       text-align: center;
-      margin-bottom: 34px;
-      animation: fadeInUp 0.6s ease both;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
     }
 
-    .title h1 {
-      font-family: "Comfortaa", "Nunito", sans-serif;
-      font-size: clamp(30px, 7vw, 44px);
-      font-weight: 700;
-      color: #FF8A00;
-      background: linear-gradient(135deg, #FF8A00 15%, #FFB300 55%, #FF7A45 100%);
+    .header-title {
+      font-family: 'Comfortaa', cursive, sans-serif;
+      font-size: 32px;
+      font-weight: 900;
+      background: linear-gradient(90deg, #2563eb, #ec4899);
       -webkit-background-clip: text;
-      background-clip: text;
       -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 4px 10px rgba(220, 140, 0, 0.30));
+      margin-bottom: 4px;
     }
 
-    /* Кнопки */
-    .buttons {
-      width: 100%;
-      max-width: 440px;
+    .header-subtitle {
+      font-size: 16px;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .buttons-grid {
       display: flex;
       flex-direction: column;
-      gap: 18px;
-    }
-
-    .btn {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      text-decoration: none;
-      padding: 14px 18px 14px 14px;
-      border-radius: 26px;
-      background: rgba(255, 255, 255, 0.62);
-      backdrop-filter: blur(14px) saturate(1.4);
-      -webkit-backdrop-filter: blur(14px) saturate(1.4);
-      border: 2px solid rgba(255, 190, 80, 0.55);
-      box-shadow:
-        0 10px 28px rgba(200, 140, 20, 0.18),
-        inset 0 2px 2px rgba(255, 255, 255, 0.85);
-      transition: transform 0.2s ease, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-      cursor: pointer;
-      user-select: none;
-      touch-action: manipulation;
-      animation: fadeInUp 0.6s ease both;
-    }
-
-    .btn:nth-child(1) { animation-delay: 0.1s; }
-    .btn:nth-child(2) { animation-delay: 0.2s; }
-
-    .btn:hover {
-      background: rgba(255, 255, 255, 0.82);
-      border-color: rgba(255, 160, 40, 0.85);
-      box-shadow:
-        0 12px 30px rgba(200, 140, 20, 0.24),
-        0 0 20px rgba(255, 190, 60, 0.35),
-        inset 0 2px 2px rgba(255, 255, 255, 0.9);
-      transform: translateY(-2px);
-    }
-
-    .btn:active {
-      transform: scale(0.97);
-    }
-
-    .btn-left {
-      display: flex;
-      align-items: center;
       gap: 16px;
+      width: 100%;
+      margin-top: 8px;
     }
 
-    .btn-icon-wrap {
-      width: 76px;
-      height: 76px;
-      border-radius: 22px;
+    .app-card-btn {
       display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 18px;
+      background: #ffffff;
+      border: 2.5px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 16px 20px;
+      text-decoration: none;
+      color: var(--text-main);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    .app-card-btn:active {
+      transform: scale(0.98);
+    }
+
+    .app-card-btn:hover {
+      border-color: #3b82f6;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.12);
+    }
+
+    .app-icon {
+      font-size: 42px;
+      line-height: 1;
       flex-shrink: 0;
-      box-shadow:
-        inset 0 -3px 6px rgba(200, 140, 20, 0.12),
-        inset 0 2px 3px rgba(255, 255, 255, 0.9);
     }
 
-    .btn.book .btn-icon-wrap { background: linear-gradient(145deg, #FFE9DC, #FFC9A3); }
-    .btn.calc .btn-icon-wrap { background: linear-gradient(145deg, #DCEBFF, #B7D7FF); }
-
-    .btn-icon {
-      width: 46px;
-      height: 46px;
-      display: block;
-    }
-
-    .btn-content {
+    .app-info {
       display: flex;
       flex-direction: column;
-      gap: 4px;
       text-align: left;
     }
 
-    .btn-title {
-      font-size: clamp(19px, 4.5vw, 22px);
-      font-weight: 800;
-      letter-spacing: -0.2px;
-      color: #6B4400;
+    .app-title {
+      font-size: 20px;
+      font-weight: 900;
+      color: #1e293b;
     }
 
-    .btn-subtitle {
-      font-size: clamp(13px, 3vw, 14.5px);
-      font-weight: 600;
-      color: rgba(150, 105, 25, 0.85);
+    .app-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-top: 2px;
     }
 
-    .btn-arrow {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: rgba(255, 190, 70, 0.25);
-      border: 2px solid rgba(255, 170, 50, 0.45);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+    .arrow-badge {
+      margin-left: auto;
+      font-size: 20px;
+      color: #94a3b8;
+      font-weight: 900;
     }
 
-    .btn:hover .btn-arrow {
-      background: rgba(255, 180, 60, 0.45);
-      border-color: rgba(255, 150, 30, 0.7);
-      transform: translateX(3px);
-    }
-
-    .btn-arrow svg {
-      width: 20px;
-      height: 20px;
-      stroke: #C77800;
-      stroke-width: 3;
-      fill: none;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    /* Подпись внизу */
-    .footer {
-      position: fixed;
-      bottom: max(18px, env(safe-area-inset-bottom));
-      left: 0;
-      right: 0;
-      text-align: center;
-      color: rgba(160, 110, 25, 0.8);
+    footer {
+      margin-top: 20px;
       font-size: 13px;
-      font-weight: 600;
-      z-index: 2;
-      animation: fadeInUp 0.6s ease 0.3s both;
-    }
-
-    .footer .star {
-      color: #F0A020;
-      margin: 0 5px;
-    }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Узкие экраны */
-    @media (max-width: 640px) {
-      .deco-item { display: none; }
-      .cloud { opacity: 0.75; }
-    }
-
-    /* Низкие экраны */
-    @media (max-height: 520px) {
-      .title { margin-bottom: 14px; }
-      .btn { padding: 8px 14px 8px 8px; }
-      .btn-icon-wrap { width: 54px; height: 54px; border-radius: 16px; }
-      .btn-icon { width: 34px; height: 34px; }
-      .btn-arrow { width: 32px; height: 32px; }
-      .footer { font-size: 11px; }
+      color: var(--text-muted);
+      font-weight: 700;
     }
   </style>
 </head>
 <body>
 
-  <canvas id="canvas"></canvas>
-  <div id="glow"></div>
-
-  <!-- Облака -->
-  <div class="cloud" style="--sc:.85; top:10%; animation-duration:80s; animation-delay:-30s;"></div>
-  <div class="cloud" style="--sc:1.15; top:30%; animation-duration:110s; animation-delay:-70s;"></div>
-  <div class="cloud" style="--sc:.7; top:62%; animation-duration:95s; animation-delay:-50s;"></div>
-
-  <!-- Выглядывающие буквы и цифры -->
-  <div class="deco-letter" style="color:#FF7E5F; left:-0.30em; top:5%;  font-size:min(170px,24vw); --r:-10deg; --d:7s;">А</div>
-  <div class="deco-letter" style="color:#2FB7A9; left:-0.26em; top:42%; font-size:min(110px,16vw); --r:8deg;  --d:9s;">3</div>
-  <div class="deco-letter" style="color:#9B6BDF; left:-0.32em; top:72%; font-size:min(150px,22vw); --r:-14deg; --d:8s;">Б</div>
-  <div class="deco-letter" style="color:#4D96FF; right:-0.30em; top:8%;  font-size:min(150px,22vw); --r:12deg; --d:8.5s;">Я</div>
-  <div class="deco-letter" style="color:#FF9F45; right:-0.20em; top:44%; font-size:min(120px,17vw); --r:-8deg; --d:6.5s;">+</div>
-  <div class="deco-letter" style="color:#F0609E; right:-0.30em; top:70%; font-size:min(160px,23vw); --r:10deg; --d:7.5s;">7</div>
-
-  <!-- Школьные предметы -->
-  <div class="deco-item" style="top:7%; left:12%; width:64px; --r:-6deg; --d:8s;">
-    <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
-      <g transform="rotate(40 32 32)">
-        <rect x="25" y="2" width="14" height="9" rx="3" fill="#FF8A80"/>
-        <rect x="25" y="11" width="14" height="4" fill="#C9CFD6"/>
-        <rect x="25" y="15" width="14" height="30" fill="#FFC531"/>
-        <rect x="25" y="15" width="4.5" height="30" fill="#FFDD7A"/>
-        <path d="M25 45 L32 60 L39 45 Z" fill="#FFE8C2"/>
-        <path d="M29.8 53.4 L32 60 L34.2 53.4 Z" fill="#5D4633"/>
-      </g>
-    </svg>
-  </div>
-  <div class="deco-item" style="bottom:8%; right:11%; width:70px; --r:10deg; --d:10s;">
-    <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
-      <g transform="rotate(-30 32 32)">
-        <rect x="6" y="24" width="52" height="15" rx="4" fill="#FFE082" stroke="#E8B84B" stroke-width="2"/>
-        <path d="M14 24 v6 M21 24 v4 M28 24 v6 M35 24 v4 M42 24 v6 M49 24 v4" stroke="#D9A63C" stroke-width="2" stroke-linecap="round"/>
-      </g>
-    </svg>
-  </div>
-
-  <div class="container">
-    <div class="title">
-      <h1>Выберите раздел</h1>
+  <div class="main-container">
+    <div>
+      <h1 class="header-title">Учись Играя! 🎈</h1>
+      <p class="header-subtitle">Развивающие интерактивные программы</p>
     </div>
 
-    <div class="buttons">
-      <a href="Chitayka.html" class="btn book">
-        <div class="btn-left">
-          <div class="btn-icon-wrap">
-            <svg class="btn-icon" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-              <path d="M32 18 C27 12.5 18.5 10.5 9 11.5 V47 C18.5 46 27 48 32 53.5 C37 48 45.5 46 55 47 V11.5 C45.5 10.5 37 12.5 32 18 Z" fill="#FF8A5C"/>
-              <path d="M32 20.5 C28 15.8 20.5 14 12.2 14.8 V44.2 C20.5 43.4 28 45.2 32 50 C36 45.2 43.5 43.4 51.8 44.2 V14.8 C43.5 14 36 15.8 32 20.5 Z" fill="#FFF7E6"/>
-              <path d="M32 20.5 V50" stroke="#E5A94F" stroke-width="2.4" stroke-linecap="round"/>
-              <path d="M17 22 C20.5 21.7 24 22.5 27 24.4 M17 29.5 C20.5 29.2 24 30 27 32 M17 37 C20.5 36.7 24 37.5 27 39.4" stroke="#F0C681" stroke-width="2.4" stroke-linecap="round"/>
-              <path d="M47 22 C43.5 21.7 40 22.5 37 24.4 M47 29.5 C43.5 29.2 40 30 37 32 M47 37 C43.5 36.7 40 37.5 37 39.4" stroke="#F0C681" stroke-width="2.4" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <div class="btn-content">
-            <span class="btn-title">Читай-ка</span>
-            <span class="btn-subtitle">Тренажер по чтению слогов</span>
-          </div>
+    <div class="buttons-grid">
+      <!-- Первая кнопка: Читай-ка -->
+      <a href="Chitayka.html" class="app-card-btn" id="btn-chitayka">
+        <span class="app-icon">📖</span>
+        <div class="app-info">
+          <span class="app-title">Читай-ка</span>
+          <span class="app-desc">Обучение чтению: буквы, слоги и слова</span>
         </div>
-        <div class="btn-arrow">
-          <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"></polyline></svg>
-        </div>
+        <span class="arrow-badge">➔</span>
       </a>
 
-      <a href="Reshayka.html" class="btn calc">
-        <div class="btn-left">
-          <div class="btn-icon-wrap">
-            <svg class="btn-icon" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-              <rect x="15" y="6" width="34" height="52" rx="9" fill="#5B9BFF"/>
-              <rect x="20.5" y="11.5" width="23" height="12" rx="3" fill="#EFF8FF"/>
-              <path d="M24.5 17.5 h9" stroke="#8FBCE8" stroke-width="2.2" stroke-linecap="round"/>
-              <circle cx="24" cy="31.5" r="3.1" fill="#EFF8FF"/>
-              <circle cx="32" cy="31.5" r="3.1" fill="#EFF8FF"/>
-              <circle cx="40" cy="31.5" r="3.1" fill="#EFF8FF"/>
-              <circle cx="24" cy="40.5" r="3.1" fill="#EFF8FF"/>
-              <circle cx="32" cy="40.5" r="3.1" fill="#EFF8FF"/>
-              <circle cx="40" cy="40.5" r="3.1" fill="#FFC531"/>
-              <circle cx="24" cy="49.5" r="3.1" fill="#EFF8FF"/>
-              <circle cx="32" cy="49.5" r="3.1" fill="#EFF8FF"/>
-              <circle cx="40" cy="49.5" r="3.1" fill="#FF8A5C"/>
-            </svg>
-          </div>
-          <div class="btn-content">
-            <span class="btn-title">Решай-ка</span>
-            <span class="btn-subtitle">Тренажер по математике</span>
-          </div>
+      <!-- Дополнительные модули -->
+      <a href="#" class="app-card-btn" style="opacity: 0.65; cursor: default;" onclick="return false;">
+        <span class="app-icon">🔢</span>
+        <div class="app-info">
+          <span class="app-title">Считай-ка</span>
+          <span class="app-desc">Весёлая математика и устный счёт</span>
         </div>
-        <div class="btn-arrow">
-          <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"></polyline></svg>
-        </div>
+        <span class="arrow-badge">🔒</span>
       </a>
     </div>
   </div>
 
-  <div class="footer"><span class="star">★</span>Не для коммерческого использования<span class="star">★</span></div>
+  <footer>Детский развивающий комплекс © 2026</footer>
 
-  <script>
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d", { alpha: false });
-    const glow = document.getElementById("glow");
-
-    let W = 0, H = 0;
-    let DPR = Math.min(window.devicePixelRatio || 1, 2);
-
-    const mouse = {
-      x: -1000, y: -1000, px: -1000, py: -1000,
-      vx: 0, vy: 0, active: false
-    };
-
-    let particles = [];
-    let sparks = [];
-    let waves = [];
-
-    function resize() {
-      W = window.innerWidth;
-      H = window.innerHeight;
-      canvas.width = W * DPR;
-      canvas.height = H * DPR;
-      canvas.style.width = W + "px";
-      canvas.style.height = H + "px";
-      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-      createParticles();
-    }
-
-    window.addEventListener("resize", resize);
-
-    function createParticles() {
-      particles = [];
-      const count = Math.min(1600, Math.max(500, Math.floor((W * H) / 1100)));
-      for (let i = 0; i < count; i++) {
-        const depth = Math.random();
-        particles.push({
-          x: Math.random() * W, y: Math.random() * H,
-          ox: 0, oy: 0,
-          vx: (Math.random() - .5) * .15, vy: (Math.random() - .5) * .15,
-          size: depth < .75 ? Math.random() * 1.2 + .25 : Math.random() * 2.8 + .7,
-          depth,
-          alpha: depth < .75 ? Math.random() * .35 + .18 : Math.random() * .5 + .35,
-          phase: Math.random() * Math.PI * 2,
-          twinkleSpeed: Math.random() * .035 + .008,
-          twinkle: Math.random() * Math.PI * 2,
-          hue: Math.random() * 18 - 9, // золотая палитра (около 42 HSL)
-          life: Math.random()
-        });
-      }
-    }
-
-    window.addEventListener("mousemove", e => {
-      mouse.px = mouse.x; mouse.py = mouse.y;
-      mouse.x = e.clientX; mouse.y = e.clientY;
-      mouse.vx = mouse.x - mouse.px; mouse.vy = mouse.y - mouse.py;
-      mouse.active = true;
-      glow.style.left = mouse.x + "px";
-      glow.style.top = mouse.y + "px";
-      glow.style.opacity = "1";
-
-      const speed = Math.sqrt(mouse.vx * mouse.vx + mouse.vy * mouse.vy);
-      if (speed > 2) {
-        const amount = Math.min(5, Math.floor(speed / 5));
-        for (let i = 0; i < amount; i++) {
-          sparks.push({
-            x: mouse.x + (Math.random() - .5) * 18,
-            y: mouse.y + (Math.random() - .5) * 18,
-            vx: (Math.random() - .5) * 2 - mouse.vx * .05,
-            vy: (Math.random() - .5) * 2 - mouse.vy * .05,
-            size: Math.random() * 2 + .5,
-            life: 1,
-            decay: Math.random() * .025 + .02
-          });
-        }
-      }
-    });
-
-    window.addEventListener("mouseleave", () => {
-      mouse.active = false;
-      glow.style.opacity = "0";
-    });
-
-    window.addEventListener("click", e => {
-      waves.push({ x: e.clientX, y: e.clientY, radius: 0, life: 1 });
-      for (let i = 0; i < 100; i++) {
-        const a = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 6 + 1;
-        sparks.push({
-          x: e.clientX, y: e.clientY,
-          vx: Math.cos(a) * speed, vy: Math.sin(a) * speed,
-          size: Math.random() * 3 + .5,
-          life: 1,
-          decay: Math.random() * .018 + .012
-        });
-      }
-    });
-
-    /* Контур маленькой звёздочки (4 луча) */
-    function starPath(x, y, r) {
-      ctx.beginPath();
-      for (let i = 0; i < 8; i++) {
-        const ang = i * Math.PI / 4 - Math.PI / 2;
-        const rad = (i % 2 === 0) ? r : r * 0.45;
-        const px = x + Math.cos(ang) * rad;
-        const py = y + Math.sin(ang) * rad;
-        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-      }
-      ctx.closePath();
-    }
-
-    function drawBackground(time) {
-      const g = ctx.createLinearGradient(0, 0, 0, H);
-      g.addColorStop(0, "#FFFCF0");
-      g.addColorStop(.45, "#FFF3C7");
-      g.addColorStop(1, "#FFE08F");
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, W, H);
-
-      // Тёплый «солнечный» блик, медленно плавает
-      const gx = W * .5 + Math.sin(time * .00018) * W * .25;
-      const gy = H * .35 + Math.cos(time * .00013) * H * .15;
-      const sun = ctx.createRadialGradient(gx, gy, 0, gx, gy, Math.max(W, H) * .5);
-      sun.addColorStop(0, "rgba(255, 208, 92, 0.32)");
-      sun.addColorStop(.4, "rgba(255, 190, 80, 0.12)");
-      sun.addColorStop(1, "rgba(255,190,80,0)");
-      ctx.fillStyle = sun;
-      ctx.fillRect(0, 0, W, H);
-    }
-
-    function updateParticles(time) {
-      for (const p of particles) {
-        p.twinkle += p.twinkleSpeed;
-        p.vx += Math.sin(time * .00025 + p.phase) * .018;
-        p.vy += Math.cos(time * .00021 + p.phase * 1.7) * .018;
-
-        if (mouse.active) {
-          const dx = p.x - mouse.x;
-          const dy = p.y - mouse.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          const radius = 180;
-          if (distance < radius && distance > 0.1) {
-            const force = Math.pow((radius - distance) / radius, 2);
-            const push = force * 1.7;
-            p.vx += (dx / distance) * push + mouse.vx * force * .025;
-            p.vy += (dy / distance) * push + mouse.vy * force * .025;
-          }
-        }
-
-        p.vx *= .965;
-        p.vy *= .965;
-        p.x += p.vx;
-        p.y += p.vy;
-
-        const margin = 30;
-        if (p.x < -margin) p.x = W + margin;
-        if (p.x > W + margin) p.x = -margin;
-        if (p.y < -margin) p.y = H + margin;
-        if (p.y > H + margin) p.y = -margin;
-
-        const shimmer = Math.sin(p.twinkle) * .5 + .5;
-        const alpha = p.alpha * (.55 + shimmer * .75);
-        const parallax = p.depth * 4;
-        const drawX = p.x - mouse.vx * parallax * .03;
-        const drawY = p.y - mouse.vy * parallax * .03;
-
-        if (p.size > 1.3 && alpha > .5) {
-          ctx.shadowBlur = 8 + p.size * 5;
-          ctx.shadowColor = `rgba(255,180,40,${alpha})`;
-        } else {
-          ctx.shadowBlur = 0;
-        }
-
-        const hue = 42 + p.hue;
-        const light = 44 + shimmer * 14;
-        ctx.fillStyle = `hsla(${hue}, 92%, ${light}%, ${alpha})`;
-
-        if (p.size > 1.6) {
-          // Крупные частицы рисуем как золотые звёздочки
-          ctx.save();
-          ctx.translate(drawX, drawY);
-          ctx.rotate(p.twinkle * .25);
-          starPath(0, 0, p.size * 1.35);
-          ctx.fill();
-          ctx.restore();
-        } else {
-          ctx.beginPath();
-          ctx.arc(drawX, drawY, p.size, 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        if (p.size > 1.9 && shimmer > .8) {
-          const flare = p.size * 3.5;
-          ctx.globalAlpha = alpha * shimmer;
-          ctx.strokeStyle = "rgba(255,235,170,.9)";
-          ctx.lineWidth = .6;
-          ctx.beginPath();
-          ctx.moveTo(drawX - flare, drawY); ctx.lineTo(drawX + flare, drawY);
-          ctx.moveTo(drawX, drawY - flare); ctx.lineTo(drawX, drawY + flare);
-          ctx.stroke();
-          ctx.globalAlpha = 1;
-        }
-      }
-      ctx.shadowBlur = 0;
-    }
-
-    function drawConnections() {
-      ctx.lineWidth = .4;
-      for (let i = 0; i < particles.length; i += 3) {
-        const p = particles[i];
-        for (let j = i + 3; j < Math.min(i + 80, particles.length); j += 3) {
-          const q = particles[j];
-          const dx = p.x - q.x;
-          const dy = p.y - q.y;
-          const d2 = dx * dx + dy * dy;
-          if (d2 < 2800) {
-            const alpha = .05 * (1 - d2 / 2800);
-            ctx.strokeStyle = `rgba(214,140,30,${alpha})`;
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y);
-            ctx.stroke();
-          }
-        }
-      }
-    }
-
-    function drawCursorAura() {
-      if (!mouse.active) return;
-      const radius = 135;
-      const gradient = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, radius);
-      gradient.addColorStop(0, "rgba(255,205,110,.25)");
-      gradient.addColorStop(.25, "rgba(255,180,80,.10)");
-      gradient.addColorStop(1, "rgba(255,170,60,0)");
-      ctx.fillStyle = gradient;
-      ctx.beginPath();
-      ctx.arc(mouse.x, mouse.y, radius, 0, Math.PI * 2);
-      ctx.fill();
-
-      const core = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 24);
-      core.addColorStop(0, "rgba(255,248,225,.55)");
-      core.addColorStop(.2, "rgba(255,205,110,.25)");
-      core.addColorStop(1, "rgba(255,190,80,0)");
-      ctx.fillStyle = core;
-      ctx.beginPath();
-      ctx.arc(mouse.x, mouse.y, 24, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    function updateSparks() {
-      for (let i = sparks.length - 1; i >= 0; i--) {
-        const s = sparks[i];
-        s.x += s.vx; s.y += s.vy;
-        s.vx *= .97; s.vy *= .97;
-        s.life -= s.decay;
-
-        if (s.life <= 0) { sparks.splice(i, 1); continue; }
-
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = `rgba(255,170,40,${s.life})`;
-        ctx.fillStyle = `rgba(255,225,140,${s.life})`;
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.size * s.life, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.shadowBlur = 0;
-    }
-
-    function updateWaves() {
-      for (let i = waves.length - 1; i >= 0; i--) {
-        const w = waves[i];
-        w.radius += 7; w.life -= .022;
-        if (w.life <= 0) { waves.splice(i, 1); continue; }
-
-        ctx.beginPath();
-        ctx.arc(w.x, w.y, w.radius, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(255,160,40,${w.life * .35})`;
-        ctx.lineWidth = 2.5 * w.life;
-        ctx.shadowBlur = 20;
-        ctx.shadowColor = `rgba(255,180,60,${w.life})`;
-        ctx.stroke();
-        ctx.shadowBlur = 0;
-      }
-    }
-
-    let lastTime = 0;
-    function animate(time) {
-      const delta = Math.min(time - lastTime, 32);
-      lastTime = time;
-
-      drawBackground(time);
-      drawConnections();
-      updateParticles(time);
-      updateSparks();
-      updateWaves();
-      drawCursorAura();
-
-      mouse.vx *= .9;
-      mouse.vy *= .9;
-
-      requestAnimationFrame(animate);
-    }
-
-    resize();
-    requestAnimationFrame(animate);
-  </script>
 </body>
 </html>
