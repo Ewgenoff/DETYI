@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@700&family=Comfortaa:wght@700&family=Lora:ital,wght@0,600;0,700;1,600&family=Nunito:wght@700;800;900&family=PT+Serif:wght@700&family=Rubik:wght@700;900&display=swap" rel="stylesheet">
-  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=l8gOI4Xc9qPsgp0bB1k6brlJCgZlmM2AjD2ECRRmeFEs3nsGC4_SF9LpF556u26rWwgxTvL20vywLCX5jPW6K8v1ZzLE9gBxSkE6_WyDat61BGX6XZMv4WlMikQc7uraEdsIxk75MI8UCZ53tK2BbxZ0CZ1M9nMv53Lv6YI-c4bMgMSGhkZ7wa8y4hjclENCzYypWhTDD18pngZcVqHIr5CP5cOAG-TZdu6n623R3kqsgaNbAp_sJ-XMTcoPtw1dxwQDH0IXpmtNhAanCtmJOf4yvdnGsoQmF2eMS--vwTKstD7JKCCowKCG3SWJ3VdP_LtaEqMUqyhXd-S9GAv1ndCEa3CRHAPc-1MJbJ1I-8c" charset="UTF-8"></script><style>
+  <style>
     :root {
       --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 50%, #fce7f3 100%);
       --card-bg: #ffffff;
@@ -511,7 +511,7 @@
       overflow-y: auto;
     }
 
-    /* Навигация режимов (без лишних заголовков) */
+    /* Навигация режимов */
     .modes-categories-wrapper {
       display: flex;
       flex-direction: row;
@@ -716,7 +716,7 @@
       border: none;
       background: transparent;
       padding: 5px 14px;
-      border-radius: 9px;
+      border-radius: 99px;
       font-family: inherit;
       font-size: 13px;
       font-weight: 800;
@@ -992,6 +992,8 @@
       align-items: center;
       gap: 6px;
       opacity: 0.85;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     .kbd-chip {
@@ -1917,7 +1919,7 @@
 
     <main class="stage">
       
-      <!-- ШАПКА РЕЖИМОВ (компактная, без надписей категорий) -->
+      <!-- ШАПКА РЕЖИМОВ -->
       <div class="modes-categories-wrapper">
         
         <!-- Блок Алфавит -->
@@ -1961,7 +1963,7 @@
       <!-- ВИД 1: РЕЖИМ АЛФАВИТА -->
       <div class="alphabet-view-container" id="alphabet-view-container">
         
-        <!-- Тулбар: По группам / По алфавиту / Все / Помощник -->
+        <!-- Тулбар -->
         <div class="alphabet-toolbar">
           <span class="alphabet-toolbar-title">Режим просмотра букв:</span>
           <div class="alphabet-toggle-group">
@@ -2125,7 +2127,7 @@
                       </div>
                       <div class="cons-subgroup group-unpaired-voiceless">
                         <div class="cons-cell bg-split">х</div>
-                        <div class="cons-cell bg-blue-hard" title="Всегда твёрдый">ц</div>
+                        <div class="cons-cell bg-split">ц</div>
                         <div class="cons-cell bg-green-soft" title="Всегда мягкий">ч</div>
                         <div class="cons-cell bg-green-soft" title="Всегда мягкий">щ</div>
                       </div>
@@ -2208,6 +2210,10 @@
           <span class="kbd-chip">→</span>
           <span>или</span>
           <span class="kbd-chip">ПРОБЕЛ</span>
+          <span style="opacity: 0.5; margin: 0 4px;">•</span>
+          <span>Озвучка:</span>
+          <span class="kbd-chip">↑</span>
+          <span class="kbd-chip">↓</span>
         </div>
       </div>
 
@@ -2397,9 +2403,6 @@
 
     let activeLetters = new Set(['А', 'У', 'О', 'М', 'С', 'Х', 'Р', 'Ы', 'Л', 'Н']);
     
-    // Режимы тренировки:
-    // primaryMode: 'syllables', 'alphabet', 'one_syllable', 'words2', 'words3'
-    // При primaryMode === 'syllables' активны флаги слогов (залипание):
     let primaryMode = 'syllables';
     let syllableModes = {
       open: true,
@@ -2422,6 +2425,88 @@
 
     let startTime = Date.now();
     let cardTimestamps = [];
+
+    /* ОЗВУЧКА СЛОГОВ ИЗ ПАПКИ audio/ */
+    let currentSyllableAudio = null;
+    let currentSequenceId = 0;
+
+    function stopSyllableAudio() {
+      currentSequenceId++;
+      if (currentSyllableAudio) {
+        currentSyllableAudio.pause();
+        currentSyllableAudio.currentTime = 0;
+        currentSyllableAudio = null;
+      }
+    }
+
+    function playSingleSyllable(syllable, sequenceId) {
+      return new Promise((resolve) => {
+        if (sequenceId !== currentSequenceId) {
+          resolve();
+          return;
+        }
+        const text = syllable.trim();
+        if (!text) {
+          resolve();
+          return;
+        }
+
+        const upper = text.toUpperCase();
+        const lower = text.toLowerCase();
+
+        let audio = new Audio(`audio/${upper}.wav`);
+        currentSyllableAudio = audio;
+
+        let finished = false;
+        const finish = () => {
+          if (!finished) {
+            finished = true;
+            resolve();
+          }
+        };
+
+        audio.onended = finish;
+
+        const tryFallback = () => {
+          if (finished || sequenceId !== currentSequenceId) {
+            finish();
+            return;
+          }
+          const fallback = new Audio(`audio/${lower}.wav`);
+          currentSyllableAudio = fallback;
+          fallback.onended = finish;
+          fallback.onerror = finish;
+          fallback.play().catch(() => finish());
+        };
+
+        audio.onerror = tryFallback;
+
+        audio.play().catch(() => {
+          tryFallback();
+        });
+      });
+    }
+
+    async function playSyllableAudio() {
+      if (primaryMode === 'alphabet' || !currentText) return;
+      if (isSoundMuted) return;
+
+      stopSyllableAudio();
+      const sequenceId = currentSequenceId;
+
+      // Деление по слогам для слов или воспроизведение одного слога
+      const parts = currentText.split(/[-–]/).map(s => s.trim()).filter(Boolean);
+      if (parts.length === 0) return;
+
+      for (let i = 0; i < parts.length; i++) {
+        if (sequenceId !== currentSequenceId) break;
+        await playSingleSyllable(parts[i], sequenceId);
+        if (sequenceId !== currentSequenceId) break;
+        if (i < parts.length - 1) {
+          await new Promise(r => setTimeout(r, 80));
+        }
+      }
+    }
 
     function updateTimers() {
       const now = Date.now();
@@ -2978,6 +3063,7 @@
 
     function generateNext(resetHistory = false) {
       if (primaryMode === 'alphabet') return;
+      stopSyllableAudio();
 
       if (resetHistory) {
         historyStack = [];
@@ -3039,6 +3125,8 @@
       const now = Date.now();
       if (now - lastActionTime < THROTTLE_DELAY_MS) return;
       lastActionTime = now;
+
+      stopSyllableAudio();
 
       if (historyIndex > 0) {
         historyIndex--;
@@ -3178,6 +3266,8 @@
       if (now - lastActionTime < THROTTLE_DELAY_MS) return;
       lastActionTime = now;
 
+      stopSyllableAudio();
+
       playSoundEffect();
       readCount++;
       cardTimestamps.push(now);
@@ -3270,15 +3360,15 @@
       });
     }
 
-    /* Логика режимов со слогами с залипанием */
+    /* Логика режимов */
     function syncModeUI() {
-      // Сброс всех кнопок кроме слогов
+      stopSyllableAudio();
+
       document.getElementById('tab-alphabet').classList.toggle('active', primaryMode === 'alphabet');
       document.getElementById('tab-one_syllable').classList.toggle('active', primaryMode === 'one_syllable');
       document.getElementById('tab-words2').classList.toggle('active', primaryMode === 'words2');
       document.getElementById('tab-words3').classList.toggle('active', primaryMode === 'words3');
 
-      // Слоги подсвечиваются только если primaryMode === 'syllables'
       const inSyllables = (primaryMode === 'syllables');
       document.getElementById('tab-open').classList.toggle('active', inSyllables && syllableModes.open);
       document.getElementById('tab-reverse').classList.toggle('active', inSyllables && syllableModes.reverse);
@@ -3310,16 +3400,12 @@
 
     function toggleSyllableSubmode(sub) {
       if (primaryMode !== 'syllables') {
-        // Переход в слоги: включаем нажатый
         primaryMode = 'syllables';
         syllableModes[sub] = true;
       } else {
-        // Уже в слогах: залипание (toggle)
         if (syllableModes[sub]) {
-          // Если пытаемся выключить, проверяем, включен ли другой
           const other = (sub === 'open') ? 'reverse' : 'open';
           if (!syllableModes[other]) {
-            // Оба выключить нельзя — переключаем на другой
             syllableModes[other] = true;
           }
           syllableModes[sub] = false;
@@ -3377,6 +3463,10 @@
         e.preventDefault();
         if (e.repeat) return;
         nextCard();
+      } else if (e.code === 'ArrowUp' || e.key === 'ArrowUp' || e.code === 'ArrowDown' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (e.repeat) return;
+        playSyllableAudio();
       } else if (e.code === 'Escape') {
         closeHelpModal();
         closeStickerModal();
@@ -3395,7 +3485,6 @@
       } else {
         isPanelOpen = !lettersPanel.classList.contains('collapsed');
       }
-      // Если панель открыта — прячем хвостик; если закрыта — показываем
       if (isPanelOpen) {
         panelTabPull.classList.add('hidden');
       } else {
@@ -3417,7 +3506,7 @@
     function closeLettersPanel() {
       const isMobile = window.innerWidth <= 900;
       if (isMobile) {
-        lettersPanel.classList.remove('open');
+        lettersPanel.classList.add('open');
         panelBackdrop.classList.remove('active');
       } else {
         lettersPanel.classList.add('collapsed');
@@ -3425,7 +3514,6 @@
       syncTabPullVisibility();
     }
 
-    // Жест смахивания / потягивания для открытия панели с левого края
     let touchStartX = 0;
     let touchStartY = 0;
 
@@ -3438,11 +3526,9 @@
       const diffX = e.changedTouches[0].clientX - touchStartX;
       const diffY = e.changedTouches[0].clientY - touchStartY;
 
-      // Если смахнули вправо от левого края (< 40px)
       if (touchStartX < 40 && diffX > 45 && Math.abs(diffY) < 60) {
         openLettersPanel();
       }
-      // Если панель открыта и смахнули влево
       const isMobile = window.innerWidth <= 900;
       const isOpen = isMobile ? lettersPanel.classList.contains('open') : !lettersPanel.classList.contains('collapsed');
       if (isOpen && diffX < -50 && Math.abs(diffY) < 70) {
@@ -3450,7 +3536,6 @@
       }
     }, { passive: true });
 
-    // Начальное состояние для мобильных / десктопа
     if (window.innerWidth > 900) {
       lettersPanel.classList.remove('collapsed');
     } else {
