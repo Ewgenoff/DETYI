@@ -38,12 +38,12 @@
       flex-direction: column;
       color: var(--text-main);
       overflow-x: hidden;
-      font-family: "Century Schoolbook", "Школьная", "PT Serif", "Lora", serif;
+      font-family: "Century Schoolbook", "Школьный", "PT Serif", "Lora", serif;
       touch-action: pan-y;
     }
 
     body.font-schoolbook { 
-      font-family: "Century Schoolbook", "Школьная", "PT Serif", "Lora", serif; 
+      font-family: "Century Schoolbook", "Школьный", "PT Serif", "Lora", serif; 
     }
     body.font-comfortaa { font-family: 'Comfortaa', cursive, sans-serif; }
     body.font-nunito { font-family: 'Nunito', sans-serif; }
@@ -221,7 +221,6 @@
       overflow: hidden;
     }
 
-    /* Боковая панель букв */
     .letters-panel {
       width: 360px;
       background: #ffffff;
@@ -245,7 +244,6 @@
       bottom: 0;
     }
 
-    /* Шестеренка смещена выше к топу */
     .panel-tab-pull {
       position: fixed;
       left: 0;
@@ -504,7 +502,6 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    /* Навигация режимов */
     .modes-categories-wrapper {
       display: flex;
       flex-direction: row;
@@ -665,7 +662,6 @@
       color: #64748b;
     }
 
-    /* Подкарточная полоса со звуком справа */
     .card-sub-bar {
       display: flex;
       align-items: center;
@@ -1162,7 +1158,6 @@
       gap: 4px;
     }
 
-    /* Мобильная адаптация */
     @media (max-width: 900px) {
       header {
         padding: 6px 10px;
@@ -1364,7 +1359,6 @@
       box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
     }
 
-    /* Лента букв */
     .ribbon-wrapper {
       background: #ffffff;
       border: 2px solid #ea580c;
@@ -1630,7 +1624,6 @@
 </head>
 <body class="font-schoolbook">
 
-  <!-- Хвостик-ярлычок для открытия панели букв: расположен ближе к верху -->
   <button class="panel-tab-pull" id="panel-tab-pull" onclick="openLettersPanel()" title="Открыть изученные буквы (или клавиша Ctrl)">
     <span>⚙️</span>
   </button>
@@ -1677,7 +1670,7 @@
         <div class="help-section">
           <div class="help-section-title">🧩 Режимы тренировки</div>
           <ul class="help-list">
-            <li><b>Алфавит:</b> экран с парными буквами, сортировкой и «Лентой букв».</li>
+            <li><b>Алфавит:</b> экран с парными буквами и «Лентой букв».</li>
             <li><b>Прямые (169) / Обратные (60):</b> строгий орфоэпический фильтр.</li>
             <li><b>1 слог / 2 слога / 3 слога:</b> слова с делением по складам.</li>
           </ul>
@@ -1697,26 +1690,22 @@
     </div>
 
     <div class="stats-bar">
-      <!-- Счетчик пройденных карточек -->
       <div class="stat-badge star" title="Прочитано карточек за всё занятие">
         <span>⭐</span>
         <span id="star-count">0</span>
       </div>
 
-      <!-- Темп чтения -->
       <div class="stat-badge speed" id="speed-badge" title="Темп: карточек в минуту">
         <span>⚡</span>
         <span id="speed-count">0</span>
         <span style="font-size: 11px; opacity: 0.85;">/мин</span>
       </div>
 
-      <!-- Общее время занятия -->
       <div class="stat-badge time" title="Общее время занятия">
         <span>⏱</span>
         <span id="session-time">00:00</span>
       </div>
 
-      <!-- Смена регистра букв (Аа) -->
       <div class="case-toggle-wrap" title="Включить смену регистра букв">
         <label class="case-toggle-label" for="case-toggle">
           <span>Аа</span>
@@ -1727,12 +1716,10 @@
         </label>
       </div>
 
-      <!-- Общий звук эффектов -->
       <button class="btn-icon-header" id="sound-mute-btn" onclick="toggleSoundMute()" title="Включить / отключить звуковые эффекты">
         <span id="sound-mute-icon">🔊</span>
       </button>
 
-      <!-- Справка (Вопросик) -->
       <button class="btn-icon-header" onclick="openHelpModal()" title="Справка по программе">
         <span>❓</span>
       </button>
@@ -1741,7 +1728,6 @@
 
   <div class="app-layout">
     
-    <!-- Боковая панель букв -->
     <aside class="letters-panel collapsed" id="letters-panel">
       <div class="panel-header-row">
         <div class="panel-title-wrap">
@@ -1754,7 +1740,6 @@
         </button>
       </div>
 
-      <!-- Пресеты в столбик -->
       <div class="presets-box-column">
         <button class="preset-btn-col" onclick="applyPreset('step1')">
           <span>Этап 1: Базовые сонорные</span>
@@ -1774,7 +1759,6 @@
         </button>
       </div>
 
-      <!-- 1. Гласные буквы -->
       <div class="group-box">
         <div class="group-header">
           <span style="color: #ef4444;">●</span> Гласные буквы
@@ -1787,7 +1771,6 @@
         </div>
       </div>
 
-      <!-- 2. Сонорные согласные -->
       <div class="group-box">
         <div class="group-header">
           <span style="color: #2563eb;">●</span> Звонкие непарные согласные
@@ -1795,7 +1778,6 @@
         <div class="letters-grid" id="grid-consonants-sonor" style="grid-template-columns: repeat(4, 1fr);"></div>
       </div>
 
-      <!-- 3. Парные согласные -->
       <div class="group-box">
         <div class="group-header">
           <span style="color: #2563eb;">●</span> Парные согласные
@@ -1808,7 +1790,6 @@
         </div>
       </div>
 
-      <!-- 4. Непарные глухие и шипящие -->
       <div class="group-box">
         <div class="group-header">
           <span style="color: #2563eb;">●</span> Глухие непарные согласные
@@ -1816,7 +1797,6 @@
         <div class="letters-grid" id="grid-consonants-other"></div>
       </div>
 
-      <!-- 5. Знаки -->
       <div class="group-box">
         <div class="group-header">
           <span style="color: #64748b;">●</span> Знаки (не имеют звука)
@@ -1824,14 +1804,14 @@
         <div class="letters-grid" id="grid-signs" style="grid-template-columns: repeat(2, 1fr);"></div>
       </div>
 
-      <!-- ВЫБОР ШРИФТА -->
+      <!-- ВЫБОР ШРИФТА: "Школьный" -->
       <div class="group-box">
         <div class="group-header">
           <span>🔤</span> Шрифт текста
         </div>
         <div class="font-select-wrap">
           <select id="font-select" onchange="changeFont(this.value)">
-            <option value="schoolbook" selected>Школьная (Букварь Жукова)</option>
+            <option value="schoolbook" selected>Школьный (Букварь Жукова)</option>
             <option value="comfortaa">Comfortaa (округлый / карточки)</option>
             <option value="nunito">Nunito (мягкий гротеск)</option>
             <option value="balsamiq">Balsamiq Sans (детский печатный)</option>
@@ -1840,7 +1820,6 @@
         </div>
       </div>
 
-      <!-- ВЫБОР ЗВУКА КЛИКА -->
       <div class="group-box">
         <div class="group-header">
           <span>🔊</span> Звук нажатия
@@ -1865,7 +1844,6 @@
 
     <main class="stage">
       
-      <!-- ШАПКА РЕЖИМОВ -->
       <div class="modes-categories-wrapper">
         <div class="mode-group mode-group-alphabet">
           <button class="mode-tab" id="tab-alphabet" onclick="onAlphabetClick()">
@@ -1901,13 +1879,12 @@
         </div>
       </div>
 
-      <!-- ВИД 1: РЕЖИМ АЛФАВИТА -->
+      <!-- ВИД 1: РЕЖИМ АЛФАВИТА (пункт "По алфавиту" полностью убран) -->
       <div class="alphabet-view-container" id="alphabet-view-container">
         <div class="alphabet-toolbar">
           <span class="alphabet-toolbar-title">Режим просмотра букв:</span>
           <div class="alphabet-toggle-group">
             <button class="alpha-sort-btn active" id="btn-sort-groups" onclick="setAlphabetSort('groups')">По группам</button>
-            <button class="alpha-sort-btn" id="btn-sort-order" onclick="setAlphabetSort('order')">По алфавиту</button>
             <button class="alpha-sort-btn" id="btn-sort-all" onclick="setAlphabetSort('all')">Все</button>
             <button class="alpha-sort-btn" id="btn-sort-helper" onclick="setAlphabetSort('helper')">Помощник</button>
           </div>
@@ -1964,13 +1941,6 @@
             </div>
             <div class="alphabet-cards-row" id="alpha-row-signs"></div>
           </div>
-        </div>
-
-        <div id="alpha-order-view" class="alphabet-category-card" style="display: none;">
-          <div class="alphabet-category-header">
-            <span>🔤</span> Выбранные буквы по алфавиту (А — Я)
-          </div>
-          <div class="alphabet-order-grid" id="alpha-order-grid"></div>
         </div>
 
         <div id="alpha-all-view" class="alphabet-category-card" style="display: none;">
@@ -2112,7 +2082,6 @@
 
       </div>
 
-      <!-- ВИД 2: КАРТОЧКА СО СЛОГОМ / СЛОВОМ -->
       <div class="card-wrapper" id="card-wrapper">
         <div class="card-container-relative">
           <div class="syllable-card" id="syllable-card" onclick="onCardClick(event)">
@@ -2126,7 +2095,6 @@
           </div>
         </div>
 
-        <!-- Под карточкой: справа динамик озвучки карточки -->
         <div class="card-sub-bar">
           <button class="btn-speaker-card" id="btn-card-audio" onclick="onSpeakerCardClick(event)" title="Озвучить слог/слово">
             <span class="speaker-icon">🔊</span>
@@ -2182,28 +2150,72 @@
     const VOICED_LETTERS = new Set(['Й', 'Л', 'М', 'Н', 'Р', 'Б', 'В', 'Г', 'Д', 'Ж', 'З']);
     const VOICELESS_LETTERS = new Set(['П', 'Ф', 'К', 'Т', 'Ш', 'С', 'Х', 'Ц', 'Ч', 'Щ']);
 
-    const STICKER_ANIMALS = [
-      { icon: '🦁', name: 'Львёнок-грамотей' },
-      { icon: '🦊', name: 'Хитрый лисёнок' },
-      { icon: '🐼', name: 'Панда-умница' },
-      { icon: '🦉', name: 'Мудрая совушка' },
-      { icon: '🐬', name: 'Весёлый дельфин' },
-      { icon: '🐯', name: 'Шустрый тигрёнок' },
-      { icon: '🐻', name: 'Мишка-читатель' },
-      { icon: '🦄', name: 'Сказочный единорог' },
-      { icon: '🐶', name: 'Добрый пёсик' },
-      { icon: '🐱', name: 'Кот-учёный' },
-      { icon: '🐨', name: 'Милая коала' },
-      { icon: '🦝', name: 'Енот-всезнайка' },
-      { icon: '🦔', name: 'Любознательный ёжик' },
-      { icon: '🐰', name: 'Быстрый зайчик' },
-      { icon: '🦒', name: 'Внимательный жираф' },
-      { icon: '🐧', name: 'Пингвин-отличник' },
-      { icon: '🐿️', name: 'Ловкая белочка' },
-      { icon: '🦩', name: 'Изящный фламинго' },
-      { icon: '🐢', name: 'Мудрая черепаха' },
-      { icon: '🦈', name: 'Смелая акула' }
+    let STICKER_ANIMALS = [
+      { icon: '🦁', name: 'Львёнок-грамотей', audio: 'Animals/ЛЬВЁНОК_ГРАМОТЕЙ.wav' },
+      { icon: '🦊', name: 'Хитрый лисёнок', audio: 'Animals/ХИТРЫЙ_ЛИСЁНОК.wav' },
+      { icon: '🐼', name: 'Панда-умница', audio: 'Animals/ПАНДА_УМНИЦА.wav' },
+      { icon: '🦉', name: 'Мудрая совушка', audio: 'Animals/МУДРАЯ_СОВУШКА.wav' },
+      { icon: '🐬', name: 'Весёлый дельфин', audio: 'Animals/ВЕСЁЛЫЙ_ДЕЛЬФИН.wav' },
+      { icon: '🐯', name: 'Шустрый тигрёнок', audio: 'Animals/ШУСТРЫЙ_ТИГРЁНОК.wav' },
+      { icon: '🐻', name: 'Мишка-читатель', audio: 'Animals/МИШКА_ЧИТАТЕЛЬ.wav' },
+      { icon: '🦄', name: 'Сказочный единорог', audio: 'Animals/СКАЗОЧНЫЙ_ЕДИНОРОГ.wav' },
+      { icon: '🐶', name: 'Добрый пёсик', audio: 'Animals/ДОБРЫЙ_ПЁСИК.wav' },
+      { icon: '🐱', name: 'Кот-учёный', audio: 'Animals/КОТ_УЧЁНЫЙ.wav' },
+      { icon: '🐨', name: 'Милая коала', audio: 'Animals/МИЛАЯ_КОАЛА.wav' },
+      { icon: '🦝', name: 'Енот-всезнайка', audio: 'Animals/ЕНОТ_ВСЕЗНАЙКА.wav' },
+      { icon: '🦔', name: 'Любознательный ёжик', audio: 'Animals/ЛЮБОЗНАТЕЛЬНЫЙ_ЁЖИК.wav' },
+      { icon: '🐰', name: 'Быстрый зайчик', audio: 'Animals/БЫСТРЫЙ_ЗАЙЧИК.wav' },
+      { icon: '🦒', name: 'Внимательный жираф', audio: 'Animals/ВНИМАТЕЛЬНЫЙ_ЖИРАФ.wav' },
+      { icon: '🐧', name: 'Пингвин-отличник', audio: 'Animals/ПИНГВИН_ОТЛИЧНИК.wav' },
+      { icon: '🐿️', name: 'Ловкая белочка', audio: 'Animals/ЛОВКАЯ_БЕЛОЧКА.wav' },
+      { icon: '🦩', name: 'Изящный фламинго', audio: 'Animals/ИЗЯЩНЫЙ_ФЛАМИНГО.wav' },
+      { icon: '🐢', name: 'Мудрая черепаха', audio: 'Animals/МУДРАЯ_ЧЕРЕПАХА.wav' },
+      { icon: '🦈', name: 'Смелая акула', audio: 'Animals/СМЕЛАЯ_АКУЛА.wav' }
     ];
+
+    let SUPER_CHEERS = [
+      { text: 'Поздравляю!', audio: 'Super/ПОЗДРАВЛЯЮ.wav' },
+      { text: 'Ты молодец!', audio: 'Super/ТЫ_МОЛОДЕЦ.wav' },
+      { text: 'Урааа!', audio: 'Super/УРААА.wav' },
+      { text: 'Так держать!', audio: 'Super/ТАК_ДЕРЖАТЬ.wav' },
+      { text: 'Умница!', audio: 'Super/УМНИЦА.wav' },
+      { text: 'Супер!', audio: 'Super/СУПЕР.wav' },
+      { text: 'Отлично!', audio: 'Super/ОТЛИЧНО.wav' },
+      { text: 'Ты смог!', audio: 'Super/ТЫ_СМОГ.wav' },
+      { text: 'Красота!', audio: 'Super/КРАСОТА.wav' },
+      { text: 'Здорово!', audio: 'Super/ЗДОРОВО.wav' },
+      { text: 'Всё верно!', audio: 'Super/ВСЁ_ВЕРНО.wav' },
+      { text: 'Как быстро!', audio: 'Super/КАК_БЫСТРО.wav' },
+      { text: 'Вот это да!', audio: 'Super/ВОТ_ЭТО_ДА.wav' },
+      { text: 'Хорошо!', audio: 'Super/ХОРОШО.wav' },
+      { text: 'Ты справился!', audio: 'Super/ТЫ_СПРАВИЛСЯ.wav' },
+      { text: 'Горжусь тобой!', audio: 'Super/ГОРЖУСЬ_ТОБОЙ.wav' }
+    ];
+
+    let WORDS_ONE_SYLLABLE_3_4 = [];
+    let DICTIONARY_WORDS_2 = [];
+    let DICTIONARY_WORDS_3 = [];
+
+    // Загрузка базы слов и звуков из Words.json
+    async function loadWordsData() {
+      try {
+        const response = await fetch('Words.json');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.words1) WORDS_ONE_SYLLABLE_3_4 = data.words1;
+          if (data.words2) DICTIONARY_WORDS_2 = data.words2;
+          if (data.words3) DICTIONARY_WORDS_3 = data.words3;
+          if (data.animals) STICKER_ANIMALS = data.animals;
+          if (data.super) SUPER_CHEERS = data.super;
+          updateCategoryBadges();
+          if (primaryMode !== 'alphabet') {
+            generateNext(true);
+          }
+        }
+      } catch (e) {
+        console.warn("Words.json загружается через веб-сервер. Используются исходные значения.");
+      }
+    }
 
     let currentAnimalDeckIndex = 0;
     let isStickerModalOpen = false;
@@ -2216,234 +2228,8 @@
 
     const VOWELS_SET = new Set([...LETTERS.vowelsHard, ...LETTERS.vowelsSoft]);
 
-    /* База обратных слогов: 12 базовых согласных * 5 гласных = 60 слогов */
     const REVERSE_ALLOWED_CONSONANTS = new Set(['М', 'Н', 'Л', 'Р', 'С', 'Т', 'К', 'П', 'Б', 'В', 'Д', 'З']);
     const REVERSE_ALLOWED_VOWELS = new Set(['А', 'О', 'У', 'Ы', 'И']);
-
-    const WORDS_ONE_SYLLABLE_3_4 = [
-      // ─── ЖИВОТНЫЕ ───
-  'БАРС', 'БЫК', 'ВОЛК', 'ЁЖ', 'ЗВЕРЬ', 'ЗУБР', 'КОНЬ', 'КОРМ', 'КОТ', 'КРОТ',
-  'ЛЕВ', 'ЛИС', 'ЛОСЬ', 'ЛЬВЫ', 'МОРЖ', 'МЫШЬ', 'ПЁС', 'РЫСЬ', 'СЛОН', 'ТИГР',
-  // ─── ПТИЦЫ, РЫБЫ И НАСЕКОМЫЕ ───
-  'ГРАЧ', 'ГУСЬ', 'ДРОЗД', 'ЁРШ', 'ЖУК', 'КИТ', 'КЛЮВ', 'КРАБ', 'МОЛЬ', 'РАК',
-  'РОЙ', 'СЕЛЬДЬ', 'СКАТ', 'СОМ', 'СТРИЖ', 'ШМЕЛЬ',
-  // ─── РАСТЕНИЯ И ПРИРОДА ───
-  'ГРИБ', 'ГРУЗДЬ', 'ГРЯЗЬ', 'ДУБ', 'ЕЛЬ', 'КЛЁН', 'КУСТ', 'ЛЕС', 'ЛИСТ', 'ЛУГ',
-  'МАК', 'МОХ', 'ПЕНЬ', 'ПЛОД', 'ПРУД', 'РОЖЬ', 'САД', 'СТЕПЬ', 'СТВОЛ', 'ХОЛМ',
-  // ─── ПОГОДА И ВРЕМЯ ───
-  'ВЕК', 'ГОД', 'ГРАД', 'ГРОМ', 'ДЕНЬ', 'ДОЖДЬ', 'ЖАР', 'ЛЁД', 'МАЙ', 'МАРТ',
-  'НОЧЬ', 'СНЕГ', 'ЧАС', 'ШТОРМ',
-  // ─── ЕДА И НАПИТКИ ───
-  'БЛИН', 'БОБ', 'БОРЩ', 'ЖИР', 'КВАС', 'ЛУК', 'МЁД', 'МОРС', 'РИС', 'СОРТ',
-  'СОК', 'СОЛЬ', 'СУП', 'СЫР', 'ТОРТ', 'ФРУКТ', 'ХЛЕБ', 'ЧАЙ',
-  // ─── ДОМ И БЫТ ───
-  'ДВОР', 'ДВЕРЬ', 'ДОМ', 'ДУШ', 'ДЫМ', 'КЛЮЧ', 'ЛАК', 'ЛЮК', 'ПАР', 'ПЕЧЬ',
-  'ПОЛ', 'ПЫЛЬ', 'СКЛАД', 'СТОЛ', 'СТУЛ', 'ТАЗ', 'ФЕН', 'ШКАФ',
-  // ─── ОДЕЖДА И ВЕЩИ ───
-  'БАНТ', 'ЗОНТ', 'МЕХ', 'ПЛАЩ', 'ПУХ', 'ТРОСТЬ', 'ТЮЛЬ', 'ШАРФ', 'ШЁЛК', 'ШЕРСТЬ',
-  // ─── ИНСТРУМЕНТЫ И ТЕХНИКА ───
-  'БОЛТ', 'БУР', 'ВИНТ', 'ГАЗ', 'ГВОЗДЬ', 'ДИСК', 'ДРЕЛЬ', 'КОЛ', 'КРАН', 'ЛОМ',
-  'НОЖ', 'СЕТЬ', 'СТАЛЬ', 'ТОК', 'ФИЛЬТР', 'ШНУР',
-  // ─── ТРАНСПОРТ И АРМИЯ ───
-  'БАК', 'ВЗВОД', 'ГРУЗ', 'ДЖИП', 'ПЛОТ', 'ПОРТ', 'ПУСК', 'РУЛЬ', 'ТАНК', 'ТРОС',
-  'ФЛОТ',
-  // ─── ГОРОД И СТРАНА ───
-  'ГЕРБ', 'ГИМН', 'ЗНАК', 'КРЕМЛЬ', 'МИР', 'МОСТ', 'ПАРК', 'ПЛАН', 'РУСЬ', 'СТОЛБ',
-  'ФЛАГ', 'ЧЕК',
-  // ─── ЛЮДИ И СЕМЬЯ ───
-  'БРАТ', 'ВНУК', 'ВРАЧ', 'ГОСТЬ', 'ДЕД', 'ДОЧЬ', 'ДРУГ', 'МАТЬ', 'МУЖ', 'СПОР',
-  'СЫН', 'ШЕФ',
-  // ─── ТЕЛО И ЗДОРОВЬЕ ───
-  'БИНТ', 'БОК', 'БОЛЬ', 'ВКУС', 'ГЛАЗ', 'ЗУБ', 'ЙОД', 'КЛЫК', 'КОСТЬ',
-  'ЛОБ', 'НОС', 'ПОТ', 'РОГ', 'РОСТ', 'РОТ', 'СЛУХ', 'СОН', 'ХВОСТ',
-  // ─── ШКОЛА И ТВОРЧЕСТВО ───
-  'ВЕС', 'ГРАММ', 'КИСТЬ', 'КЛАСС', 'КЛЕЙ', 'КРЕСТ', 'КРУГ', 'КУБ', 'МЕЛ', 'НОЛЬ',
-  'ПЛЮС', 'РОМБ', 'СЕМЬ', 'СЛОГ', 'ТРУД', 'ТУШЬ', 'ШЕСТЬ',
-  // ─── ИГРЫ, СПОРТ И МУЗЫКА ───
-  'БЕГ', 'БОЙ', 'ВАЛЬС', 'ГОЛ', 'ЗАЛ', 'КЛАД', 'КВЕСТ', 'КОМ', 'МАРШ', 'МЯЧ',
-  'ПЛЯЖ', 'РОК', 'СПОРТ', 'СТАРТ', 'СТОП', 'ТИР', 'ФИЛЬМ', 'ХОР', 'ЦЕЛЬ', 'ЦИРК',
-  'ШАР',
-  // ─── СКАЗКИ, ЧУДЕСА И КОСМОС ───
-  'БАЛ', 'ГНОМ', 'ЗМЕЙ', 'МАРС', 'МЕЧ', 'РАЙ', 'ТРОН', 'ЦАРЬ', 'ШЛЕМ', 'ЩИТ',
-  'ШУТ',
-  // ─── ЦВЕТ, СВЕТ И ЗВУКИ ───
-  'БЛЕСК', 'БУМ', 'ВОЙ', 'ГУЛ', 'ЗВОН', 'ЗОВ', 'ЗВУК', 'КРИК', 'ЛУЧ', 'ПЛАЧ',
-  'РЕЧЬ', 'СВЕТ', 'СКРИП', 'СМЕХ', 'СТУК', 'ТЕНЬ', 'ТЬМА', 'ЦВЕТ', 'ХРУСТ', 'ШУМ',
-  // ─── МЕСТО И ДВИЖЕНИЕ ───
-  'ВЪЕЗД', 'ВИД', 'ВХОД', 'ДНО', 'КРАЙ', 'НИЗ', 'РЯД', 'СЛЕД', 'ЦЕНТР', 'ХОД',
-  'ШАГ',
-  // ─── МАЛЕНЬКИЕ СЛОВА ───
-  'ВДРУГ', 'ДАЙ', 'ДНЁМ', 'ЗДЕСЬ', 'МОЙ', 'САМ', 'ТАК', 'ТАМ', 'ТОТ', 'ТВОЙ',
-  // ─── ДЕЙСТВИЯ ───
-  'БЫЛ', 'ВЁЗ', 'ВЁЛ', 'ВЫЛ', 'ЕСТЬ', 'ЖИТЬ', 'ЛЁГ', 'ЛЬЁТ', 'НЁС', 'ПЕЛ',
-  'ПЬЁТ', 'ПЬЮТ', 'СЕЛ', 'СПАТЬ', 'СПИТ', 'СТАЛ', 'СЪЕЛ', 'СЪЕСТЬ', 'ШИТЬ', 'ШЁЛ',
-  // ─── ЧУВСТВА И КАЧЕСТВА ───
-  'ГРУСТЬ', 'ЖИЗНЬ', 'ЗЛОЙ', 'ЛЕНЬ', 'РИСК', 'УМ'
-    ];
-
-    const DICTIONARY_WORDS_2 = [
-      // ── ИМЕНА ──
-  'ВА-СЯ', 'ДИ-МА', 'РО-МА', 'ЛЕ-НА', 'ВЕ-РА', 'ВО-ВА', 'НИ-НА',
-  'СВЕ-ТА', 'О-ЛЯ', 'Ю-ЛЯ', 'КО-ЛЯ','НА-ДЯ','СА-ША','ЛЮ-ДА','ВА-НЯ',
-
-  // ── ЖИВОТНЫЕ: домашние ──
-  'КО-ЗА', 'КО-ЗЁЛ', 'КО-НИ', 'ПО-НИ', 'ЛА-МА', 'БА-РАН', 'ОВ-ЦА',
-  'БЫ-КИ', 'ТА-БУН', 'О-СЁЛ', 'КО-ТЫ', 'КОШ-КА', 'КОТ-ИК', 'МУР-КА',
-  'ПЁС-ИК', 'БАР-БОС', 'ЛАЙ-КА', 'ЖУЧ-КА', 'ЩЕ-НОК', 'БУД-КА',
-  'КРО-ЛИК', 'ХО-МЯК', 'ГУ-СИ', 'УТ-КА',
-
-  // ── ЖИВОТНЫЕ: дикие ──
-  'ЛИ-СА', 'ВОЛ-КИ', 'ЗАЙ-КА', 'ЗА-ЯЦ', 'БЕЛ-КА', 'Ё-ЖИК', 'МЫ-ШИ',
-  'МЫШ-КА', 'ПАН-ДА', 'ЗЕБ-РА', 'ЖИ-РАФ', 'ПУ-МА', 'СЛО-НЫ',
-  'ЛА-ПА', 'ЛАП-КИ', 'РО-ГА', 'НО-РА',
-
-  // ── ПТИЦЫ И НАСЕКОМЫЕ ──
-  'ПТИ-ЦА', 'СО-ВА', 'ЧАЙ-КА', 'А-ИСТ', 'О-РЁЛ', 'СО-КОЛ', 'ГРА-ЧИ',
-  'ДЯ-ТЕЛ', 'СКВО-РЕЦ', 'ПЕ-РО', 'МУ-ХА', 'МУ-ХИ', 'МУШ-КА', 'О-СА',
-  'ПЧЕ-ЛА', 'КО-МАР', 'ПА-УК',
-
-  // ── РЕКИ И МОРЯ ──
-  'РЫ-БА', 'РЫБ-КА', 'ЩУ-КА', 'РА-КИ', 'КИ-ТЫ', 'ДЕЛЬ-ФИН', 'ЖА-БА',
-
-  // ── ЕДА ──
-  'КА-ША', 'СА-ЛО', 'МУ-КА', 'СО-КИ', 'КО-ФЕ', 'ДЫ-НЯ', 'КИ-ВИ',
-  'ЛИ-МОН', 'ПИ-РОГ', 'СУ-ХАРЬ', 'СО-ДА', 'СУШ-КА', 'РЕ-ПА', 'РЕП-КА',
-  'ГРУ-ША', 'СЛИ-ВА', 'БА-НАН', 'АР-БУЗ', 'ВИШ-НЯ', 'О-РЕХ', 'ТЫК-ВА',
-  'ГО-РОХ', 'МАС-ЛО', 'КОМ-ПОТ', 'СА-ЛАТ', 'БУЛ-КА', 'ПРЯ-НИК',
-
-  // ── ОДЕЖДА ──
-  'ШУ-БА', 'ЮБ-КА', 'ШАП-КА', 'КЕП-КА', 'МАЙ-КА', 'ТАП-КИ', 'СА-ПОГ',
-  'БУ-СЫ', 'МО-ДА', 'ПАЛЬ-ТО', 'КУРТ-КА', 'ШОР-ТЫ', 'ЛЫ-ЖИ', 'КОНЬ-КИ',
-
-  // ── ДОМ И МЕБЕЛЬ ──
-  'ДО-МА', 'ДО-МИК', 'ХА-ТА', 'ДА-ЧА', 'ОК-НО', 'СТЕ-НА', 'КРЫ-ША',
-  'ПОЛ-КА', 'ДИ-ВАН', 'КОВ-ЁР', 'КОВ-РИК', 'ЛАМ-ПА', 'СТО-ЛИК',
-  'ГА-РАЖ', 'ЗА-БОР', 'ФО-НАРЬ', 'ВЕД-РО', 'МЕТ-ЛА', 'ВЕ-НИК',
-  'У-ТЮГ', 'ЩЁТ-КА',
-
-  // ── ПОСУДА И ВЕЩИ ──
-  'ВА-ЗА', 'ЧА-ША', 'ЧАШ-КА', 'ЛОЖ-КА', 'ВИЛ-КА', 'МИС-КА', 'БАН-КА',
-  'БОЧ-КА', 'КО-ТЁЛ', 'КУ-ВШИН', 'ЧАЙ-НИК', 'НО-ЖИК', 'ЛЕЙ-КА',
-  'МЫ-ЛО', 'ГУБ-КА', 'ВА-ТА', 'И-ГЛА', 'НИТ-КА', 'СЕТ-КА', 'СУМ-КА',
-  'РА-МА', 'ЧА-СЫ', 'ВЕ-СЫ', 'ЗА-МОК', 'ДУ-ХИ', 'ПИ-ЛА', 'МО-ЛОТ',
-  'ТО-ПОР', 'КАС-КА',
-
-  // ── ПРИРОДА: времена года и погода ──
-  'ЗИ-МА', 'ЛЕ-ТО', 'ВЕС-НА', 'О-СЕНЬ', 'МО-РОЗ', 'ГРО-ЗА', 'ВЕ-ТЕР',
-  'ТУ-ЧА', 'НЕ-БО', 'ЗВЕЗ-ДА', 'ЛУ-НА', 'ВЕ-ЧЕР', 'НОЧ-КА',
-
-  // ── ПРИРОДА: вода и земля ──
-  'ВО-ДА', 'РЕ-КА', 'МО-РЕ', 'ВОЛ-НА', 'ЛУ-ЖА', 'РО-СА', 'ГО-РА',
-  'ПО-ЛЕ', 'ПЕ-СОК', 'ЛЕС-ОК',
-
-  // ── ПРИРОДА: растения ──
-  'РО-ЗА', 'ЦВЕ-ТОК', 'МА-КИ', 'ТЮЛЬ-ПАН', 'ЛАН-ДЫШ', 'МЯ-ТА', 'ВЕТ-КА',
-  'ЛИС-ТИК', 'КУС-ТИК', 'ДУ-БЫ', 'ЛИ-ПА', 'И-ВА', 'ЁЛ-КА', 'СОС-НА',
-  'ШИШ-КА', 'КО-ЛОС', 'СЕ-НО', 'ТРА-ВА',
-
-  // ── ТРАНСПОРТ ──
-  'АВ-ТО', 'ФА-РА', 'ШИ-НА', 'СА-НИ', 'ПО-ЕЗД', 'ВА-ГОН', 'ТРАМ-ВАЙ',
-  'ТРАК-ТОР', 'ЛОД-КА',
-
-  // ── ТЕЛО ──
-  'ТЕ-ЛО', 'РУ-КА', 'РУ-КИ', 'НО-ГИ', 'У-ХО', 'У-ШИ', 'ГЛА-ЗА', 'ГУ-БЫ',
-  'ЗУ-БЫ', 'Я-ЗЫК', 'ВО-ЛОС', 'ЖИ-ВОТ', 'СПИ-НА', 'КО-ЖА', 'РА-НА',
-
-  // ── ШКОЛА ──
-  'ШКО-ЛА', 'КНИ-ГА', 'ПЕ-НАЛ', 'ЛАС-ТИК', 'КРАС-КИ', 'БУК-ВЫ', 'АЛЬ-БОМ',
-  'РУЧ-КА', 'ПАР-ТА', 'ТОЧ-КА', 'ЗВО-НОК',
-
-  // ── ИГРУШКИ И ИГРЫ ──
-  'КУК-ЛА', 'РО-БОТ', 'МЯ-ЧИК', 'ША-РЫ', 'ША-РИК', 'КУ-БИК', 'Ю-ЛА',
-  'ЛО-ТО', 'ДУД-КА', 'МАСК-А', 'САН-КИ', 'ИГ-РА',
-
-  // ── ПЕСНИ И СКАЗКИ ──
-  'НО-ТА', 'НО-ТЫ', 'ПЕС-НЯ', 'СКАЗ-КА',
-
-  // ── РАЗНОЕ (для отработки слогов) ──
-  'НО-ША', 'ДУ-МА', 'СИ-ЛА', 'ДУ-ША', 'ФО-ТО', 'ЧУ-ДО', 'ПЕ-НА', 'Я-МА',
-  'ТА-РА', 'ДЫ-РА', 'КИ-НО', 'ПО-РА', 'СУ-ХО', 'ЖА-РА', 'КА-ПА', 'КО-МА',
-  'РО-ТА', 'ДЫ-МОК', 'ХО-ЛОД', 'ГО-ЛОД', 'ГО-РОД', 'ПО-РОХ', 'ГО-ЛОС',
-  'КО-СА', 'ПУШ-КА', 'МОС-ТИК', 'МАР-КА'
-    ];
-
-    const DICTIONARY_WORDS_3 = [
-       // ── СЕМЬЯ И ЛЮДИ ──
-  'БА-БУШ-КА', 'ДЕ-ДУШ-КА', 'ДЕ-ВОЧ-КА', 'РЕ-БЯ-ТА', 'РЕ-БЁ-НОК',
-  'КА-РА-ПУЗ', 'ПО-ДРУ-ГА', 'НА-ТА-ША', 'ВО-ДИ-ТЕЛЬ', 'КОС-МО-НАВТ',
-
-  // ── ЖИВОТНЫЕ: домашние ──
-  'СО-БА-КА', 'СО-БАЧ-КА', 'КО-РО-ВА', 'КУ-РИ-ЦА', 'КУ-РОЧ-КА',
-  'ПЕ-ТУ-ШОК', 'ЦЫП-ЛЁ-НОК', 'КО-ЗЁ-НОК', 'ЛО-ШАД-КА', 'ТЕЛ-Ё-НОК',
-
-  // ── ЖИВОТНЫЕ: дикие ──
-  'ЛИ-СИ-ЦА', 'ВОЛ-ЧО-НОК', 'ЛИС-Ё-НОК', 'ЗАЙ-ЧО-НОК', 'БЕ-ЛОЧ-КА',
-  'ТИГ-РЁ-НОК', 'НО-СО-РОГ', 'БЕ-ГЕ-МОТ',
-
-  // ── ПТИЦЫ И НАСЕКОМЫЕ ──
-  'ВО-РО-НА', 'СО-РО-КА', 'СИ-НИ-ЦА', 'СО-ЛО-ВЕЙ', 'ВО-РО-БЕЙ',
-  'ПО-ПУ-ГАЙ', 'ПЕ-ЛИ-КАН', 'МУ-РА-ВЕЙ', 'КУ-ЗНЕ-ЧИК', 'БА-БОЧ-КА',
-  'СТРЕ-КО-ЗА',
-
-  // ── РЕКИ И МОРЯ ──
-  'А-КУ-ЛА', 'У-ЛИТ-КА', 'МЕ-ДУ-ЗА', 'ЛЯ-ГУШ-КА', 'КРО-КО-ДИЛ',
-
-  // ── МАЛЫШИ ЖИВОТНЫХ ──
-  'КО-ТЁ-НОК', 'У-ТЁ-НОК', 'ГУ-СЁ-НОК', 'МЫ-ШО-НОК',
-
-  // ── ЕДА ──
-  'МО-ЛО-КО', 'Я-ГО-ДА', 'Я-ГОД-КА', 'МА-ЛИ-НА', 'КА-ЛИ-НА', 'КЛУБ-НИ-КА',
-  'ЯБ-ЛО-КО', 'А-ПЕЛЬ-СИН', 'МАН-ДА-РИН', 'ВИ-НО-ГРАД', 'АН-АН-АС',
-  'БА-НА-НЫ', 'ЛИ-МО-НЫ', 'О-ГУ-РЕЦ', 'ПО-МИ-ДОР', 'КА-ПУС-ТА',
-  'РЕ-ДИС-КА', 'КА-БА-ЧОК', 'КА-РТОШ-КА', 'СМЕ-ТА-НА', 'КОЛ-БА-СА',
-  'СО-СИС-КА', 'ВА-РЕ-НЬЕ', 'ПЕ-ЧЕНЬ-Е', 'ВАТ-РУШ-КА', 'ПИ-РОЖ-ОК',
-  'КОН-ФЕ-ТА', 'ШО-КО-ЛАД', 'КА-РА-МЕЛЬ', 'СУ-ХА-РИК',
-
-  // ── ОДЕЖДА ──
-  'О-ДЕЖ-ДА', 'СА-ПО-ГИ', 'БО-ТИ-НОК', 'РУ-БАШ-КА', 'СА-РА-ФАН',
-  'КО-СЫН-КА', 'ПА-НА-МА', 'ВА-РЕЖ-КИ', 'ПЕР-ЧАТ-КИ', 'ПО-МА-ДА',
-
-  // ── ДОМ И ВЕЩИ ──
-  'ПО-СУ-ДА', 'ТА-РЕЛ-КА', 'КОР-ЗИН-КА', 'КО-РОБ-КА', 'ПО-ДУШ-КА',
-  'БУ-ТЫЛ-КА', 'СА-МО-ВАР', 'ЧЕ-МО-ДАН', 'КОМ-НА-ТА', 'КАР-ТИ-НА',
-  'БУ-МА-ГА', 'ПО-СЫЛ-КА', 'КА-ЛИТ-КА', 'ВО-РО-ТА', 'КО-ЛО-ДЕЦ',
-  'КО-ЧЕ-РГА', 'ЛО-ПАТ-КА', 'ПА-ЛАТ-КА', 'ФО-НА-РИК', 'ТЕЛ-Е-ФОН',
-  'МО-ЛО-ТОК', 'ГРЕ-БЕ-ШОК', 'КО-ЛО-КОЛ', 'ПРУ-ЖИ-НА',
-
-  // ── ГОРОД И МЕСТА ──
-  'У-ЛИ-ЦА', 'ДО-РО-ГА', 'АП-ТЕ-КА', 'МА-ГА-ЗИН', 'БОЛЬ-НИ-ЦА',
-  'СВЕ-ТО-ФОР', 'ПЕ-ШЕ-ХОД', 'СКА-МЕЙ-КА',
-
-  // ── ПРИРОДА ──
-  'ПО-ГО-ДА', 'СОЛ-НЫШ-КО', 'О-БЛА-КО', 'РА-ДУ-ГА', 'О-ЗЕ-РО', 'БО-ЛО-ТО',
-  'ЛУ-ЖИ-ЦА', 'КА-НА-ВА', 'ПО-ЛЯ-НА', 'ДЕ-РЕ-ВО', 'БЕ-РЁ-ЗА', 'О-СИ-НА',
-  'РЯ-БИ-НА', 'РО-МАШ-КА', 'СО-ЛО-МА', 'КО-ЛО-СОК', 'СНЕ-ЖИН-КА',
-  'СНЕ-ГО-ВИК', 'СНЕ-ГО-ПАД', 'ВО-ДО-ПАД', 'КО-МЕ-ТА', 'ПЛА-НЕ-ТА',
-
-  // ── ТРАНСПОРТ ──
-  'МА-ШИ-НА', 'АВ-ТО-БУС', 'ГРУ-ЗО-ВИК', 'МО-ТО-ЦИКЛ', 'СА-МО-КАТ',
-  'КО-ЛЯС-КА', 'КА-РЕ-ТА', 'СА-МО-ЛЁТ', 'ВЕР-ТО-ЛЁТ', 'РА-КЕ-ТА',
-  'ПА-РО-ВОЗ', 'ПА-РО-ХОД', 'ЛЕ-ДО-КОЛ', 'КО-РАБ-ЛИК', 'ПА-ЛУ-БА',
-  'СА-МО-СВАЛ', 'КО-ЛЕ-СО',
-
-  // ── ТЕЛО ──
-  'ГО-ЛО-ВА', 'БО-РО-ДА',
-
-  // ── ШКОЛА И ТВОРЧЕСТВО ──
-  'У-ЧЕ-НИК', 'У-ЧИТ-ЕЛЬ', 'АЗ-БУ-КА', 'ЛИ-НЕЙ-КА', 'КИС-ТОЧ-КА',
-  'КА-РАН-ДАШ', 'ФЛО-МАС-ТЕР', 'АЛЬ-БОМ-ЧИК', 'КАР-ТИН-КА', 'РИ-СУ-НОК',
-
-  // ── ИГРУШКИ И ИГРЫ ──
-  'ИГ-РУШ-КА', 'МАТ-РЁШ-КА', 'ПИ-РА-МИД-КА', 'КА-ЧЕ-ЛИ', 'КАР-У-СЕЛЬ',
-  'БА-РА-БАН', 'МУ-ЗЫ-КА', 'ЗА-ГАД-КА', 'ПЕ-СЕН-КА',
-
-  // ── ИЗ СКАЗОК ──
-  'КО-ЛО-БОК', 'ТЕ-РЕ-МОК', 'НЕ-ЗНАЙ-КА', 'ЦА-РИ-ЦА', 'КО-РО-НА',
-
-  // ── РАЗНОЕ ──
-  'РА-БО-ТА', 'ПО-БЕ-ДА', 'СА-ЛЮ-ТЫ', 'ПО-ДА-РОК', 'ГА-ЗЕ-ТА', 'МИ-НУ-ТА',
-  'МО-НЕ-ТА', 'НЕ-ДЕ-ЛЯ', 'СУБ-БО-ТА', 'ХО-РО-ШО', 'МО-ЛО-ДЕЦ', 'ГО-ЛО-СОК'
-    ];
 
     let activeLetters = new Set(['А', 'У', 'О', 'М', 'С', 'Х', 'Р', 'Ы', 'Л', 'Н']);
     let primaryMode = 'syllables';
@@ -2466,10 +2252,36 @@
     let startTime = Date.now();
     let cardTimestamps = [];
 
-    /* ОЗВУЧКА СЛОГОВ ИЗ ПАПКИ audio/ */
     let currentSyllableAudio = null;
     let currentSequenceId = 0;
+    let currentExtraAudio = null;
     const audioAvailabilityCache = new Map();
+
+    function stopExtraAudio() {
+      if (currentExtraAudio) {
+        currentExtraAudio.pause();
+        currentExtraAudio.currentTime = 0;
+        currentExtraAudio = null;
+      }
+    }
+
+    function playAudioFile(path) {
+      if (isSoundMuted || !path) return;
+      stopExtraAudio();
+      try {
+        const audio = new Audio(path);
+        currentExtraAudio = audio;
+        audio.play().catch(() => {});
+      } catch (e) {}
+    }
+
+    function playRandomCheerAudio() {
+      if (isSoundMuted || !SUPER_CHEERS || SUPER_CHEERS.length === 0) return;
+      const item = SUPER_CHEERS[Math.floor(Math.random() * SUPER_CHEERS.length)];
+      if (item && item.audio) {
+        playAudioFile(item.audio);
+      }
+    }
 
     function stopSyllableAudio() {
       currentSequenceId++;
@@ -2478,6 +2290,7 @@
         currentSyllableAudio.currentTime = 0;
         currentSyllableAudio = null;
       }
+      stopExtraAudio();
     }
 
     async function checkFileExists(url) {
@@ -2500,7 +2313,6 @@
       const parts = text.split(/[-–]/).map(s => s.trim()).filter(Boolean);
       if (parts.length === 0) return false;
 
-      // Проверяем первый слог/слово на наличие wav
       const syllable = parts[0].toUpperCase();
       const hasUpper = await checkFileExists(`audio/${syllable}.wav`);
       if (hasUpper) return true;
@@ -2777,40 +2589,21 @@
       mount('grid-signs', LETTERS.signs, 'sign');
     }
 
-    /* СТРОГИЙ ОРФОЭПИЧЕСКИЙ ФИЛЬТР: 169 открытых слогов при 33 буквах */
     function isValidOpenSyllable(c, v) {
       if (c === 'Ь' || c === 'Ъ' || c === 'Й') return false;
-      // В русской графике после согласных гласная Э не пишется (кроме МЭР, СЭР и заимствований)
       if (v === 'Э') return false;
-
-      // ЖИ - ШИ только с И
       if ((c === 'Ж' || c === 'Ш') && v === 'Ы') return false;
-
-      // ЧА - ЩА с буквой А, ЧУ - ЩУ с буквой У (запрет Ы, Я, Ю)
       if ((c === 'Ч' || c === 'Щ') && (v === 'Ы' || v === 'Я' || v === 'Ю')) return false;
-
-      // Заднеязычные Г, К, Х не сочетаются с Ы, а также с Я, Ю в исконных открытых слогах
       if (['Г', 'К', 'Х'].includes(c) && (v === 'Ы' || v === 'Я' || v === 'Ю')) return false;
-
-      // Буква Ц: не пишется с Я, Ю, Ё
       if (c === 'Ц' && (v === 'Я' || v === 'Ю' || v === 'Ё')) return false;
-
-      // Ж, Ш не сочетаются с Я, Ю
       if ((c === 'Ж' || c === 'Ш') && (v === 'Я' || v === 'Ю')) return false;
-
-      // ЩО в русском слогосложении исключено (пишется ЩЁ)
       if (c === 'Щ' && v === 'О') return false;
-
-      // Ф: не используется с мягкими гласными Я, Ю в учебных базовых складах
       if (c === 'Ф' && (v === 'Я' || v === 'Ю')) return false;
-
-      // ЗЮ исключается из базового букваря
       if (c === 'З' && v === 'Ю') return false;
 
       return true;
     }
 
-    /* СТРОГИЙ ОРФОЭПИЧЕСКИЙ ФИЛЬТР: 60 обратных слогов (5 гласных * 12 базовых согласных) */
     function isValidReverseSyllable(v, c) {
       if (!REVERSE_ALLOWED_CONSONANTS.has(c)) return false;
       if (!REVERSE_ALLOWED_VOWELS.has(v)) return false;
@@ -2937,25 +2730,6 @@
         return;
       }
 
-      if (alphabetSortMode === 'order') {
-        const orderGrid = document.getElementById('alpha-order-grid');
-        orderGrid.innerHTML = '';
-        const activeOrdered = RUSSIAN_ALPHABET.filter(ch => activeLetters.has(ch));
-
-        if (activeOrdered.length === 0) {
-          orderGrid.innerHTML = '<div class="alphabet-empty-msg" style="grid-column: 1/-1;">Нет выбранных букв. Отметьте буквы в меню слева.</div>';
-          return;
-        }
-
-        activeOrdered.forEach(ch => {
-          let type = 'consonant';
-          if (VOWELS_SET.has(ch)) type = 'vowel';
-          else if (ch === 'Ь' || ch === 'Ъ') type = 'sign';
-          orderGrid.appendChild(createAlphabetTile(ch, type, false));
-        });
-        return;
-      }
-
       const fillSimpleRow = (rowId, letterList, type, showSoundIcon = false) => {
         const row = document.getElementById(rowId);
         row.innerHTML = '';
@@ -3015,12 +2789,10 @@
     function setAlphabetSort(mode) {
       alphabetSortMode = mode;
       document.getElementById('btn-sort-groups').classList.toggle('active', mode === 'groups');
-      document.getElementById('btn-sort-order').classList.toggle('active', mode === 'order');
       document.getElementById('btn-sort-all').classList.toggle('active', mode === 'all');
       document.getElementById('btn-sort-helper').classList.toggle('active', mode === 'helper');
 
       document.getElementById('alpha-groups-view').style.display = mode === 'groups' ? 'flex' : 'none';
-      document.getElementById('alpha-order-view').style.display = mode === 'order' ? 'block' : 'none';
       document.getElementById('alpha-all-view').style.display = mode === 'all' ? 'block' : 'none';
       document.getElementById('alpha-helper-view').style.display = mode === 'helper' ? 'block' : 'none';
 
@@ -3162,7 +2934,7 @@
       syncTabPullVisibility();
     });
 
-    function launchConfetti() {
+    function launchConfetti(withCheer = false) {
       const canvas = initConfettiCanvas();
       if (!canvas) return;
       const card = document.getElementById('syllable-card');
@@ -3193,6 +2965,10 @@
 
       if (!confettiAnimationId) {
         renderConfettiFrame();
+      }
+
+      if (withCheer) {
+        playRandomCheerAudio();
       }
     }
 
@@ -3242,12 +3018,18 @@
       document.getElementById('sticker-message').textContent = `Отлично читаешь! Пройдено уже ${readCount} карточек!`;
       document.getElementById('sticker-modal').classList.add('open');
       isStickerModalOpen = true;
-      launchConfetti();
+      
+      launchConfetti(false);
+
+      if (animal.audio) {
+        playAudioFile(animal.audio);
+      }
     }
 
     function closeStickerModal() {
       document.getElementById('sticker-modal').classList.remove('open');
       isStickerModalOpen = false;
+      stopExtraAudio();
     }
 
     function onStickerBackdropClick(e) {
@@ -3269,12 +3051,11 @@
       document.getElementById('star-count').textContent = readCount;
       updateTimers();
 
-      if (readCount > 0 && readCount % 10 === 0) {
-        launchConfetti();
-      }
-
+      // Каждые 20 карточек — награда животное, а каждые 10 — салют с подбадриванием
       if (readCount > 0 && readCount % 20 === 0) {
         setTimeout(() => openStickerModal(), 200);
+      } else if (readCount > 0 && readCount % 10 === 0) {
+        launchConfetti(true);
       }
 
       if (historyIndex < historyStack.length - 1) {
@@ -3479,7 +3260,6 @@
       }
     }
 
-    // Обработка клавиатуры: Ctrl открывает/закрывает панель
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Control' || e.code === 'ControlLeft' || e.code === 'ControlRight') {
         e.preventDefault();
@@ -3551,6 +3331,7 @@
     syncTabPullVisibility();
 
     renderLetterGrids();
+    loadWordsData();
     updateCategoryBadges();
     syncModeUI();
   </script>
