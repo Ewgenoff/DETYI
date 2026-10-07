@@ -21,6 +21,8 @@
       --hard-blue: #1e88e5;
       --soft-green: #2e7d32;
       --yellow-letter: #ffea00;
+      --cell-border: #cbd5e1;
+      --active-blue: #3b82f6;
     }
 
     * {
@@ -791,51 +793,6 @@
       gap: 6px;
     }
 
-    .alphabet-sub-label {
-      font-size: 11px;
-      font-weight: 800;
-      color: #64748b;
-      margin-bottom: 3px;
-    }
-
-    .alphabet-cards-row {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      gap: 8px;
-      width: 100%;
-      align-items: center;
-    }
-
-    .alphabet-paired-container {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      width: 100%;
-    }
-
-    .alphabet-paired-subrow {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .alphabet-paired-subrow-label {
-      width: 68px;
-      font-size: 11.5px;
-      font-weight: 900;
-      color: #64748b;
-      text-transform: uppercase;
-      flex-shrink: 0;
-    }
-
-    .alphabet-paired-grid {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 8px;
-      flex: 1;
-    }
-
     .alphabet-letter-tile {
       flex: 1 1 0;
       min-width: 0;
@@ -889,14 +846,6 @@
       color: #94a3b8 !important;
     }
 
-    .alphabet-letter-tile.empty-slot {
-      opacity: 0.18;
-      background: transparent;
-      border-style: dashed;
-      cursor: default;
-      box-shadow: none;
-    }
-
     .tile-upper {
       font-size: 28px;
       font-weight: 900;
@@ -923,33 +872,6 @@
     .alphabet-letter-tile.sign .tile-upper,
     .alphabet-letter-tile.sign .tile-lower {
       color: #64748b;
-    }
-
-    .tile-badge-bell {
-      position: absolute;
-      top: 2px;
-      right: 4px;
-      font-size: 13px;
-      line-height: 1;
-      pointer-events: none;
-    }
-
-    .tile-badge-headphones {
-      position: absolute;
-      bottom: 2px;
-      right: 4px;
-      font-size: 13px;
-      line-height: 1;
-      pointer-events: none;
-    }
-
-    .alphabet-empty-msg {
-      font-size: 13px;
-      font-weight: 700;
-      color: #94a3b8;
-      padding: 8px 0;
-      text-align: center;
-      font-style: italic;
     }
 
     .alphabet-order-grid {
@@ -1158,6 +1080,171 @@
       gap: 4px;
     }
 
+    /* РЕЖИМ МАТРИЦЫ СЛОГОВ */
+    .matrix-view-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      max-width: 1180px;
+      margin: auto 0;
+      padding: 8px 0;
+    }
+
+    .matrix-nav-bar {
+      display: flex;
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 16px;
+      padding: 4px;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .matrix-subtab-btn {
+      border: none;
+      background: transparent;
+      padding: 8px 18px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #64748b;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+
+    .matrix-subtab-btn.active {
+      background: #2563eb;
+      color: #ffffff;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+    }
+
+    .matrix-wrapper-card {
+      background: #ffffff;
+      border: 3px solid #cbd5e1;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+      padding: 12px;
+      max-width: 100%;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .matrix-table {
+      border-collapse: separate;
+      border-spacing: 4px;
+      margin: 0 auto;
+    }
+
+    .matrix-table th, .matrix-table td {
+      width: 58px;
+      height: 48px;
+      text-align: center;
+      vertical-align: middle;
+      border-radius: 10px;
+      font-size: 20px;
+      font-weight: 900;
+      position: relative;
+      transition: all 0.12s ease;
+    }
+
+    .matrix-table th.vowel-header {
+      background: #fee2e2;
+      color: var(--vowel-color);
+      border: 2px solid #fca5a5;
+      font-size: 22px;
+    }
+
+    .matrix-table th.consonant-header {
+      background: #dbeafe;
+      color: var(--consonant-color);
+      border: 2px solid #93c5fd;
+      font-size: 22px;
+    }
+
+    .matrix-table .corner-cell {
+      background: #f1f5f9;
+      border: 2px dashed #cbd5e1;
+      font-size: 11px;
+      color: #64748b;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .matrix-table td.syllable-cell {
+      background: #ffffff;
+      border: 2px solid var(--cell-border);
+      color: #1e293b;
+      cursor: pointer;
+    }
+
+    .matrix-table td.syllable-cell:hover {
+      background: #eff6ff;
+      border-color: var(--active-blue);
+      transform: scale(1.08);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+      z-index: 10;
+    }
+
+    .matrix-table td.syllable-cell:active, .matrix-table td.syllable-cell.playing {
+      background: #fef08a !important;
+      border-color: #eab308 !important;
+      transform: scale(0.96);
+    }
+
+    .matrix-table td.disabled-cell {
+      background: #f8fafc;
+      border: 1px dashed #e2e8f0;
+      color: #cbd5e1;
+      font-size: 16px;
+      cursor: not-allowed;
+    }
+
+    .matrix-table td.inactive-syllable {
+      background: #f1f5f9 !important;
+      border-color: #e2e8f0 !important;
+      box-shadow: none !important;
+      cursor: default !important;
+      opacity: 0.55;
+    }
+
+    .matrix-table td.inactive-syllable .m-char {
+      color: #94a3b8 !important;
+    }
+
+    .matrix-table th.highlight-header {
+      background: #fde047 !important;
+      border-color: #ca8a04 !important;
+      color: #713f12 !important;
+      transform: scale(1.08);
+    }
+
+    .matrix-legend-bar {
+      margin-top: 4px;
+      display: flex;
+      gap: 16px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #475569;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .matrix-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot-vowel { width: 12px; height: 12px; background: var(--vowel-color); border-radius: 50%; }
+    .dot-cons-hard { width: 12px; height: 12px; background: var(--consonant-color); border-radius: 50%; }
+    .dot-cons-soft { width: 12px; height: 12px; background: var(--consonant-soft-color); border-radius: 50%; }
+
     @media (max-width: 900px) {
       header {
         padding: 6px 10px;
@@ -1225,8 +1312,8 @@
         gap: 3px;
       }
 
-      .mode-group-alphabet { flex: 1 1 28%; }
-      .mode-group-syllables { flex: 1 1 65%; }
+      .mode-group-alphabet { flex: 1 1 36%; }
+      .mode-group-syllables { flex: 1 1 60%; }
       .mode-group-words { flex: 1 1 100%; }
 
       .mode-tab {
@@ -1264,19 +1351,6 @@
         font-size: 42px;
       }
 
-      .alphabet-cards-row {
-        overflow-x: auto;
-        padding-bottom: 4px;
-      }
-
-      .alphabet-letter-tile {
-        flex: 0 0 50px;
-        height: 52px;
-      }
-
-      .tile-upper { font-size: 21px; }
-      .tile-lower { font-size: 17px; }
-
       .alphabet-order-grid {
         grid-template-columns: repeat(5, 1fr);
       }
@@ -1288,6 +1362,19 @@
 
       .hint-bar {
         display: none;
+      }
+
+      .matrix-table th, .matrix-table td {
+        width: 44px;
+        height: 38px;
+        font-size: 16px;
+      }
+      .matrix-table th.vowel-header, .matrix-table th.consonant-header {
+        font-size: 18px;
+      }
+      .matrix-subtab-btn {
+        padding: 6px 12px;
+        font-size: 12px;
       }
     }
 
@@ -1654,15 +1741,12 @@
         <div class="help-section">
           <div class="help-section-title">🎓 Методическая основа (Букварь Н. Жуковой)</div>
           <p>Буквы вводятся по принципу плавного звукослияния: сначала протяжные гласные и непарные звонкие согласные, позволяющие сразу читать первые осмысленные слова (МА-МА, МЫ-ЛО, РА-МА).</p>
-          <p style="margin-top: 6px;"><b>Цветовое кодирование и значки:</b></p>
+          <p style="margin-top: 6px;"><b>Цветовое кодирование:</b></p>
           <ul class="help-list">
             <li><b style="color: #ef4444;">Красный цвет</b> — гласные звуки.</li>
             <li><b style="color: #2563eb;">Синий цвет</b> — твёрдые согласные (Ж, Ш всегда твёрдые).</li>
-            <li><b style="color: #16a34a;">Зелёный цвет</b> — мягкие согласные (перед Е, Ё, И, Ю, Я, Ь; звуки Й, Ч, Щ — всегда мягкие).</li>
+            <li><b style="color: #16a34a;">Зелёный цвет</b> — мягкие согласные (перед Е, Ё, И, Ю, Я; звуки Ч, Щ — всегда мягкие).</li>
             <li><b style="color: #64748b;">Серый цвет</b> — знаки Ь и Ъ (не имеют звука).</li>
-            <li><b>🔔 Колокольчик:</b> звонкие согласные.</li>
-            <li><b>🎧 Наушники:</b> глухие согласные.</li>
-            <li><b>🔊 Динамик под карточкой:</b> активен, если найдена аудиозапись слога/слова.</li>
             <li><b>Ctrl:</b> открывает и закрывает боковое меню букв.</li>
           </ul>
         </div>
@@ -1670,8 +1754,9 @@
         <div class="help-section">
           <div class="help-section-title">🧩 Режимы тренировки</div>
           <ul class="help-list">
-            <li><b>Алфавит:</b> экран с парными буквами и «Лентой букв».</li>
-            <li><b>Прямые (169) / Обратные (60):</b> строгий орфоэпический фильтр.</li>
+            <li><b>Алфавит:</b> экран с алфавитным обзором и «Лентой букв».</li>
+            <li><b>Слоги (Матрица):</b> таблица слогов со звуковым воспроизведением.</li>
+            <li><b>Прямые / Обратные:</b> слоговые карточки.</li>
             <li><b>1 слог / 2 слога / 3 слога:</b> слова с делением по складам.</li>
           </ul>
         </div>
@@ -1804,7 +1889,7 @@
         <div class="letters-grid" id="grid-signs" style="grid-template-columns: repeat(2, 1fr);"></div>
       </div>
 
-      <!-- ВЫБОР ШРИФТА: "Школьный" -->
+      <!-- ВЫБОР ШРИФТА -->
       <div class="group-box">
         <div class="group-header">
           <span>🔤</span> Шрифт текста
@@ -1850,6 +1935,9 @@
             <span>Алфавит</span>
             <span class="count-badge" id="count-alphabet">0</span>
           </button>
+          <button class="mode-tab" id="tab-matrix" onclick="onMatrixClick()">
+            <span>Слоги</span>
+          </button>
         </div>
 
         <div class="mode-group mode-group-syllables">
@@ -1879,71 +1967,17 @@
         </div>
       </div>
 
-      <!-- ВИД 1: РЕЖИМ АЛФАВИТА (пункт "По алфавиту" полностью убран) -->
+      <!-- ВИД 1: РЕЖИМ АЛФАВИТА (режим "По группам" удален) -->
       <div class="alphabet-view-container" id="alphabet-view-container">
         <div class="alphabet-toolbar">
-          <span class="alphabet-toolbar-title">Режим просмотра букв:</span>
+          <span class="alphabet-toolbar-title">Режим просмотра:</span>
           <div class="alphabet-toggle-group">
-            <button class="alpha-sort-btn active" id="btn-sort-groups" onclick="setAlphabetSort('groups')">По группам</button>
-            <button class="alpha-sort-btn" id="btn-sort-all" onclick="setAlphabetSort('all')">Все</button>
-            <button class="alpha-sort-btn" id="btn-sort-helper" onclick="setAlphabetSort('helper')">Помощник</button>
+            <button class="alpha-sort-btn active" id="btn-sort-all" onclick="setAlphabetSort('all')">Все буквы</button>
+            <button class="alpha-sort-btn" id="btn-sort-helper" onclick="setAlphabetSort('helper')">Помощник (Лента)</button>
           </div>
         </div>
 
-        <div id="alpha-groups-view" style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
-          <div class="alphabet-category-card">
-            <div class="alphabet-category-header">
-              <span style="color: #ef4444;">●</span> Гласные буквы
-            </div>
-            <div>
-              <div class="alphabet-sub-label">Твердые:</div>
-              <div class="alphabet-cards-row" id="alpha-row-vowels-hard"></div>
-            </div>
-            <div style="margin-top: 6px;">
-              <div class="alphabet-sub-label">Смягчающие:</div>
-              <div class="alphabet-cards-row" id="alpha-row-vowels-soft"></div>
-            </div>
-          </div>
-
-          <div class="alphabet-category-card">
-            <div class="alphabet-category-header">
-              <span style="color: #2563eb;">●</span> Звонкие непарные согласные
-            </div>
-            <div class="alphabet-cards-row" id="alpha-row-consonants-sonor"></div>
-          </div>
-
-          <div class="alphabet-category-card">
-            <div class="alphabet-category-header">
-              <span style="color: #2563eb;">●</span> Парные согласные
-            </div>
-            <div class="alphabet-paired-container">
-              <div class="alphabet-paired-subrow">
-                <span class="alphabet-paired-subrow-label">Звонкие:</span>
-                <div class="alphabet-paired-grid" id="alpha-grid-paired-voiced"></div>
-              </div>
-              <div class="alphabet-paired-subrow">
-                <span class="alphabet-paired-subrow-label">Глухие:</span>
-                <div class="alphabet-paired-grid" id="alpha-grid-paired-voiceless"></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="alphabet-category-card">
-            <div class="alphabet-category-header">
-              <span style="color: #2563eb;">●</span> Глухие непарные согласные
-            </div>
-            <div class="alphabet-cards-row" id="alpha-row-consonants-other"></div>
-          </div>
-
-          <div class="alphabet-category-card">
-            <div class="alphabet-category-header">
-              <span style="color: #64748b;">●</span> Знаки (не имеют звука)
-            </div>
-            <div class="alphabet-cards-row" id="alpha-row-signs"></div>
-          </div>
-        </div>
-
-        <div id="alpha-all-view" class="alphabet-category-card" style="display: none;">
+        <div id="alpha-all-view" class="alphabet-category-card">
           <div class="alphabet-category-header">
             <span>🔤</span> Весь алфавит (неактивные буквы — серые)
           </div>
@@ -2068,20 +2102,32 @@
                 <div class="legend-swatch bg-green-soft"></div>
                 <span><strong>Зелёный:</strong> всегда мягкие звуки — [й'], [ч'], [щ']</span>
               </div>
-              <div class="legend-item">
-                <span style="font-size: 18px;">🔔</span>
-                <span><strong>Колокольчик:</strong> звонкие согласные</span>
-              </div>
-              <div class="legend-item">
-                <span style="font-size: 18px;">🎧</span>
-                <span><strong>Наушники:</strong> глухие согласные</span>
-              </div>
             </div>
           </div>
         </div>
 
       </div>
 
+      <!-- ВИД 2: РЕЖИМ СЛОГОВОЙ МАТРИЦЫ -->
+      <div class="matrix-view-container" id="matrix-view-container">
+        <div class="matrix-nav-bar">
+          <button class="matrix-subtab-btn active" id="btn-matrix-open" onclick="switchMatrixMode('open')">Открытые слоги (БА, КО, МУ)</button>
+          <button class="matrix-subtab-btn" id="btn-matrix-reverse" onclick="switchMatrixMode('reverse')">Обратные слоги (АБ, ОК, УМ)</button>
+        </div>
+
+        <div class="matrix-wrapper-card">
+          <table class="matrix-table" id="matrix-table"></table>
+        </div>
+
+        <div class="matrix-legend-bar">
+          <div class="matrix-legend-item"><div class="dot-vowel"></div> Красные — гласные</div>
+          <div class="matrix-legend-item"><div class="dot-cons-hard"></div> Синие — твёрдые согласные</div>
+          <div class="matrix-legend-item"><div class="dot-cons-soft"></div> Зелёные — мягкие согласные</div>
+          <div class="matrix-legend-item"><span style="color:#94a3b8; font-weight:900;">—</span> Прочерк — нет в русском языке</div>
+        </div>
+      </div>
+
+      <!-- ВИД 3: РЕЖИМ КАРТОЧЕК -->
       <div class="card-wrapper" id="card-wrapper">
         <div class="card-container-relative">
           <div class="syllable-card" id="syllable-card" onclick="onCardClick(event)">
@@ -2144,11 +2190,8 @@
     };
 
     const ALWAYS_SOFT = new Set(['Й', 'Ч', 'Щ']);
-    const ALWAYS_HARD = new Set(['Ж', 'Ш']);
+    const ALWAYS_HARD = new Set(['Ж', 'Ш', 'Ц']);
     const SOFTENING_LETTERS = new Set(['Е', 'Ё', 'И', 'Ю', 'Я', 'Ь']);
-
-    const VOICED_LETTERS = new Set(['Й', 'Л', 'М', 'Н', 'Р', 'Б', 'В', 'Г', 'Д', 'Ж', 'З']);
-    const VOICELESS_LETTERS = new Set(['П', 'Ф', 'К', 'Т', 'Ш', 'С', 'Х', 'Ц', 'Ч', 'Щ']);
 
     let STICKER_ANIMALS = [
       { icon: '🦁', name: 'Львёнок-грамотей', audio: 'Animals/ЛЬВЁНОК_ГРАМОТЕЙ.wav' },
@@ -2173,6 +2216,7 @@
       { icon: '🦈', name: 'Смелая акула', audio: 'Animals/СМЕЛАЯ_АКУЛА.wav' }
     ];
 
+    // Озвучка подбадривания из папки Super
     let SUPER_CHEERS = [
       { text: 'Поздравляю!', audio: 'Super/ПОЗДРАВЛЯЮ.wav' },
       { text: 'Ты молодец!', audio: 'Super/ТЫ_МОЛОДЕЦ.wav' },
@@ -2196,7 +2240,6 @@
     let DICTIONARY_WORDS_2 = [];
     let DICTIONARY_WORDS_3 = [];
 
-    // Загрузка базы слов и звуков из Words.json
     async function loadWordsData() {
       try {
         const response = await fetch('Words.json');
@@ -2208,12 +2251,12 @@
           if (data.animals) STICKER_ANIMALS = data.animals;
           if (data.super) SUPER_CHEERS = data.super;
           updateCategoryBadges();
-          if (primaryMode !== 'alphabet') {
+          if (!['alphabet', 'matrix'].includes(primaryMode)) {
             generateNext(true);
           }
         }
       } catch (e) {
-        console.warn("Words.json загружается через веб-сервер. Используются исходные значения.");
+        console.warn("Words.json загружается через сервер. Используются исходные значения.");
       }
     }
 
@@ -2227,18 +2270,17 @@
     ];
 
     const VOWELS_SET = new Set([...LETTERS.vowelsHard, ...LETTERS.vowelsSoft]);
-
     const REVERSE_ALLOWED_CONSONANTS = new Set(['М', 'Н', 'Л', 'Р', 'С', 'Т', 'К', 'П', 'Б', 'В', 'Д', 'З']);
     const REVERSE_ALLOWED_VOWELS = new Set(['А', 'О', 'У', 'Ы', 'И']);
 
     let activeLetters = new Set(['А', 'У', 'О', 'М', 'С', 'Х', 'Р', 'Ы', 'Л', 'Н']);
-    let primaryMode = 'syllables';
+    let primaryMode = 'syllables'; // 'alphabet', 'matrix', 'syllables', 'one_syllable', 'words2', 'words3'
     let syllableModes = { open: true, reverse: false };
 
     let currentText = '';
     let readCount = 0;
     let allowLowercase = false;
-    let alphabetSortMode = 'groups';
+    let alphabetSortMode = 'all';
 
     let historyStack = [];
     let historyIndex = -1;
@@ -2309,7 +2351,7 @@
     }
 
     async function checkCurrentCardAudioAvailable(text) {
-      if (!text || primaryMode === 'alphabet') return false;
+      if (!text || ['alphabet', 'matrix'].includes(primaryMode)) return false;
       const parts = text.split(/[-–]/).map(s => s.trim()).filter(Boolean);
       if (parts.length === 0) return false;
 
@@ -2323,7 +2365,7 @@
     async function updateSpeakerButtonState() {
       const btn = document.getElementById('btn-card-audio');
       if (!btn) return;
-      if (primaryMode === 'alphabet' || !currentText) {
+      if (['alphabet', 'matrix'].includes(primaryMode) || !currentText) {
         btn.classList.add('disabled');
         return;
       }
@@ -2392,7 +2434,7 @@
     }
 
     async function playSyllableAudio() {
-      if (primaryMode === 'alphabet' || !currentText) return;
+      if (['alphabet', 'matrix'].includes(primaryMode) || !currentText) return;
       stopSyllableAudio();
       const sequenceId = currentSequenceId;
 
@@ -2419,7 +2461,7 @@
       const speedBadge = document.getElementById('speed-badge');
       const speedCountEl = document.getElementById('speed-count');
 
-      if (primaryMode === 'alphabet') {
+      if (['alphabet', 'matrix'].includes(primaryMode)) {
         speedBadge.classList.add('paused');
         speedCountEl.textContent = '⏸';
         return;
@@ -2552,6 +2594,8 @@
         updateCategoryBadges();
         if (primaryMode === 'alphabet') {
           renderAlphabetView();
+        } else if (primaryMode === 'matrix') {
+          renderMatrix();
         } else {
           generateNext(true);
         }
@@ -2600,7 +2644,6 @@
       if (c === 'Щ' && v === 'О') return false;
       if (c === 'Ф' && (v === 'Я' || v === 'Ю')) return false;
       if (c === 'З' && v === 'Ю') return false;
-
       return true;
     }
 
@@ -2671,7 +2714,7 @@
       document.getElementById('count-words3').textContent = words3Count;
     }
 
-    function createAlphabetTile(upperChar, type, isInactive = false, showSoundIcon = false) {
+    function createAlphabetTile(upperChar, type, isInactive = false) {
       const tile = document.createElement('div');
       let effectiveType = type;
       if (ALWAYS_SOFT.has(upperChar)) {
@@ -2681,22 +2724,6 @@
       tile.title = isInactive ? `Буква ${upperChar} (не выбрана)` : `Буква ${upperChar}`;
       if (!isInactive) {
         tile.onclick = () => playSoundEffect();
-      }
-
-      if (showSoundIcon) {
-        if (VOICED_LETTERS.has(upperChar)) {
-          const bell = document.createElement('span');
-          bell.className = 'tile-badge-bell';
-          bell.textContent = '🔔';
-          bell.title = 'Звонкий согласный';
-          tile.appendChild(bell);
-        } else if (VOICELESS_LETTERS.has(upperChar)) {
-          const headphones = document.createElement('span');
-          headphones.className = 'tile-badge-headphones';
-          headphones.textContent = '🎧';
-          headphones.title = 'Глухой согласный';
-          tile.appendChild(headphones);
-        }
       }
 
       const upper = document.createElement('span');
@@ -2715,88 +2742,225 @@
     function renderAlphabetView() {
       if (alphabetSortMode === 'helper') return;
 
-      if (alphabetSortMode === 'all') {
-        const allGrid = document.getElementById('alpha-all-grid');
-        allGrid.innerHTML = '';
+      const allGrid = document.getElementById('alpha-all-grid');
+      allGrid.innerHTML = '';
 
-        RUSSIAN_ALPHABET.forEach(ch => {
-          let type = 'consonant';
-          if (VOWELS_SET.has(ch)) type = 'vowel';
-          else if (ch === 'Ь' || ch === 'Ъ') type = 'sign';
+      RUSSIAN_ALPHABET.forEach(ch => {
+        let type = 'consonant';
+        if (VOWELS_SET.has(ch)) type = 'vowel';
+        else if (ch === 'Ь' || ch === 'Ъ') type = 'sign';
 
-          const isActive = activeLetters.has(ch);
-          allGrid.appendChild(createAlphabetTile(ch, type, !isActive));
-        });
-        return;
-      }
-
-      const fillSimpleRow = (rowId, letterList, type, showSoundIcon = false) => {
-        const row = document.getElementById(rowId);
-        row.innerHTML = '';
-        const selected = letterList.filter(l => activeLetters.has(l));
-        if (selected.length === 0) {
-          const empty = document.createElement('div');
-          empty.className = 'alphabet-empty-msg';
-          empty.textContent = 'Нет выбранных букв';
-          row.appendChild(empty);
-          return;
-        }
-        selected.forEach(l => row.appendChild(createAlphabetTile(l, type, false, showSoundIcon)));
-      };
-
-      fillSimpleRow('alpha-row-vowels-hard', LETTERS.vowelsHard, 'vowel', false);
-      fillSimpleRow('alpha-row-vowels-soft', LETTERS.vowelsSoft, 'vowel', false);
-      fillSimpleRow('alpha-row-consonants-sonor', LETTERS.consonantsSonor, 'consonant', true);
-
-      const voicedGrid = document.getElementById('alpha-grid-paired-voiced');
-      const voicelessGrid = document.getElementById('alpha-grid-paired-voiceless');
-      voicedGrid.innerHTML = '';
-      voicelessGrid.innerHTML = '';
-
-      const pairs = [
-        { voiced: 'Б', voiceless: 'П' },
-        { voiced: 'В', voiceless: 'Ф' },
-        { voiced: 'Г', voiceless: 'К' },
-        { voiced: 'Д', voiceless: 'Т' },
-        { voiced: 'Ж', voiceless: 'Ш' },
-        { voiced: 'З', voiceless: 'С' }
-      ];
-
-      pairs.forEach(p => {
-        if (activeLetters.has(p.voiced)) {
-          voicedGrid.appendChild(createAlphabetTile(p.voiced, 'consonant', false, true));
-        } else {
-          const empty = document.createElement('div');
-          empty.className = 'alphabet-letter-tile empty-slot';
-          empty.innerHTML = `<span class="tile-upper">${p.voiced}</span>`;
-          voicedGrid.appendChild(empty);
-        }
-
-        if (activeLetters.has(p.voiceless)) {
-          voicelessGrid.appendChild(createAlphabetTile(p.voiceless, 'consonant', false, true));
-        } else {
-          const empty = document.createElement('div');
-          empty.className = 'alphabet-letter-tile empty-slot';
-          empty.innerHTML = `<span class="tile-upper">${p.voiceless}</span>`;
-          voicelessGrid.appendChild(empty);
-        }
+        const isActive = activeLetters.has(ch);
+        allGrid.appendChild(createAlphabetTile(ch, type, !isActive));
       });
-
-      fillSimpleRow('alpha-row-consonants-other', LETTERS.consonantsOther, 'consonant', true);
-      fillSimpleRow('alpha-row-signs', LETTERS.signs, 'sign', false);
     }
 
     function setAlphabetSort(mode) {
       alphabetSortMode = mode;
-      document.getElementById('btn-sort-groups').classList.toggle('active', mode === 'groups');
       document.getElementById('btn-sort-all').classList.toggle('active', mode === 'all');
       document.getElementById('btn-sort-helper').classList.toggle('active', mode === 'helper');
 
-      document.getElementById('alpha-groups-view').style.display = mode === 'groups' ? 'flex' : 'none';
       document.getElementById('alpha-all-view').style.display = mode === 'all' ? 'block' : 'none';
       document.getElementById('alpha-helper-view').style.display = mode === 'helper' ? 'block' : 'none';
 
       renderAlphabetView();
+    }
+
+    /* === ЛОГИКА МАТРИЦЫ СЛОГОВ === */
+    const MATRIX_CONSONANTS = ["Б", "В", "Г", "Д", "Ж", "З", "К", "Л", "М", "Н", "П", "Р", "С", "Т", "Ф", "Х", "Ц", "Ч", "Ш", "Щ"];
+    const MATRIX_VOWELS_OPEN = ["А", "О", "У", "Ы", "Э", "Я", "Е", "Ё", "И", "Ю"];
+    const MATRIX_VOWELS_REVERSE = ["А", "О", "У", "И", "Э"];
+    const MATRIX_CONSONANTS_REVERSE = ["Б", "В", "Д", "К", "Л", "М", "Н", "П", "Р", "С", "Т", "Х"];
+
+    function isInvalidOpen(c, v) {
+      if (['Ж', 'Ш'].includes(c) && ['Ы', 'Я', 'Ю'].includes(v)) return true;
+      if (['Ч', 'Щ'].includes(c) && ['Я', 'Ю', 'Ы'].includes(v)) return true;
+      if (['Г', 'К', 'Х'].includes(c) && ['Ы', 'Э', 'Я', 'Ю', 'Ё'].includes(v)) return true;
+      if (c === 'Ц' && ['Я', 'Ю', 'Ё', 'Э'].includes(v)) return true;
+      return false;
+    }
+
+    let matrixMode = 'open';
+    let matrixAudio = null;
+
+    function playMatrixSyllable(syl, cellElement) {
+      if (matrixAudio) {
+        matrixAudio.pause();
+        matrixAudio.currentTime = 0;
+      }
+
+      cellElement.classList.add('playing');
+      setTimeout(() => cellElement.classList.remove('playing'), 300);
+
+      const fileName = `${syl.toUpperCase()}.wav`;
+      const filePath = `audio/${encodeURIComponent(fileName)}`;
+
+      matrixAudio = new Audio(filePath);
+      matrixAudio.play().catch(err => {
+        console.warn(`Аудиофайл не найден: ${filePath}`);
+      });
+    }
+
+    function createColoredSyllableHTML(c, v, isReverse = false) {
+      const vSpan = `<span class="m-char" style="color: var(--vowel-color);">${v}</span>`;
+      
+      let isSoft = false;
+      if (ALWAYS_SOFT.has(c)) {
+        isSoft = true;
+      } else if (!ALWAYS_HARD.has(c)) {
+        if (!isReverse && SOFTENING_LETTERS.has(v)) {
+          isSoft = true;
+        }
+      }
+
+      const cColor = isSoft ? 'var(--consonant-soft-color)' : 'var(--consonant-color)';
+      const cSpan = `<span class="m-char" style="color: ${cColor};">${c}</span>`;
+
+      return isReverse ? (vSpan + cSpan) : (cSpan + vSpan);
+    }
+
+    function renderMatrix() {
+      const table = document.getElementById('matrix-table');
+      if (!table) return;
+      table.innerHTML = '';
+
+      if (matrixMode === 'open') {
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        
+        const corner = document.createElement('th');
+        corner.className = 'corner-cell';
+        corner.innerHTML = 'Согл.<br>↓ Глас.→';
+        headerRow.appendChild(corner);
+
+        MATRIX_VOWELS_OPEN.forEach((v, colIdx) => {
+          const th = document.createElement('th');
+          th.className = 'vowel-header';
+          th.id = `col-header-${colIdx}`;
+          th.textContent = v;
+          headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+        MATRIX_CONSONANTS.forEach((c, rowIdx) => {
+          const tr = document.createElement('tr');
+          
+          const thCons = document.createElement('th');
+          thCons.className = 'consonant-header';
+          thCons.id = `row-header-${rowIdx}`;
+          thCons.textContent = c;
+          tr.appendChild(thCons);
+
+          MATRIX_VOWELS_OPEN.forEach((v, colIdx) => {
+            const td = document.createElement('td');
+            const syl = c + v;
+
+            if (isInvalidOpen(c, v)) {
+              td.className = 'disabled-cell';
+              td.textContent = '—';
+              td.title = `Слога "${syl}" нет в правилах русского языка`;
+            } else {
+              const isActive = activeLetters.has(c) && activeLetters.has(v);
+              td.className = `syllable-cell ${isActive ? '' : 'inactive-syllable'}`;
+              td.innerHTML = createColoredSyllableHTML(c, v, false);
+
+              if (isActive) {
+                td.onclick = () => playMatrixSyllable(syl, td);
+                td.onmouseenter = () => {
+                  const r = document.getElementById(`row-header-${rowIdx}`);
+                  const cl = document.getElementById(`col-header-${colIdx}`);
+                  if (r) r.classList.add('highlight-header');
+                  if (cl) cl.classList.add('highlight-header');
+                };
+                td.onmouseleave = () => {
+                  const r = document.getElementById(`row-header-${rowIdx}`);
+                  const cl = document.getElementById(`col-header-${colIdx}`);
+                  if (r) r.classList.remove('highlight-header');
+                  if (cl) cl.classList.remove('highlight-header');
+                };
+              }
+            }
+            tr.appendChild(td);
+          });
+
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+
+      } else {
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        
+        const corner = document.createElement('th');
+        corner.className = 'corner-cell';
+        corner.innerHTML = 'Согл.<br>↓ Глас.→';
+        headerRow.appendChild(corner);
+
+        MATRIX_VOWELS_REVERSE.forEach((v, colIdx) => {
+          const th = document.createElement('th');
+          th.className = 'vowel-header';
+          th.id = `col-header-${colIdx}`;
+          th.textContent = v;
+          headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+        MATRIX_CONSONANTS_REVERSE.forEach((c, rowIdx) => {
+          const tr = document.createElement('tr');
+
+          const thCons = document.createElement('th');
+          thCons.className = 'consonant-header';
+          thCons.id = `row-header-${rowIdx}`;
+          thCons.textContent = c;
+          tr.appendChild(thCons);
+
+          MATRIX_VOWELS_REVERSE.forEach((v, colIdx) => {
+            const td = document.createElement('td');
+            const syl = v + c;
+            const isActive = activeLetters.has(c) && activeLetters.has(v);
+
+            td.className = `syllable-cell ${isActive ? '' : 'inactive-syllable'}`;
+            td.innerHTML = createColoredSyllableHTML(c, v, true);
+
+            if (isActive) {
+              td.onclick = () => playMatrixSyllable(syl, td);
+              td.onmouseenter = () => {
+                const r = document.getElementById(`row-header-${rowIdx}`);
+                const cl = document.getElementById(`col-header-${colIdx}`);
+                if (r) r.classList.add('highlight-header');
+                if (cl) cl.classList.add('highlight-header');
+              };
+              td.onmouseleave = () => {
+                const r = document.getElementById(`row-header-${rowIdx}`);
+                const cl = document.getElementById(`col-header-${colIdx}`);
+                if (r) r.classList.remove('highlight-header');
+                if (cl) cl.classList.remove('highlight-header');
+              };
+            }
+
+            tr.appendChild(td);
+          });
+
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+      }
+    }
+
+    function switchMatrixMode(mode) {
+      matrixMode = mode;
+      document.getElementById('btn-matrix-open').classList.toggle('active', mode === 'open');
+      document.getElementById('btn-matrix-reverse').classList.toggle('active', mode === 'reverse');
+      renderMatrix();
+    }
+
+    function onMatrixClick() {
+      primaryMode = 'matrix';
+      syncModeUI();
     }
 
     function applyCaseRule(text) {
@@ -2831,7 +2995,7 @@
     }
 
     function generateNext(resetHistory = false) {
-      if (primaryMode === 'alphabet') return;
+      if (['alphabet', 'matrix'].includes(primaryMode)) return;
       stopSyllableAudio();
 
       if (resetHistory) {
@@ -2890,7 +3054,7 @@
     }
 
     function prevCard(event) {
-      if (primaryMode === 'alphabet') return;
+      if (['alphabet', 'matrix'].includes(primaryMode)) return;
       if (event) event.stopPropagation();
 
       const now = Date.now();
@@ -3037,7 +3201,7 @@
     }
 
     function nextCard(event) {
-      if (primaryMode === 'alphabet') return;
+      if (['alphabet', 'matrix'].includes(primaryMode)) return;
       if (event) event.stopPropagation();
 
       const now = Date.now();
@@ -3051,10 +3215,12 @@
       document.getElementById('star-count').textContent = readCount;
       updateTimers();
 
-      // Каждые 20 карточек — награда животное, а каждые 10 — салют с подбадриванием
+      // Каждые 20 карточек (начиная с 20-й: 20, 40, 60...) - наклейка животного
       if (readCount > 0 && readCount % 20 === 0) {
         setTimeout(() => openStickerModal(), 200);
-      } else if (readCount > 0 && readCount % 10 === 0) {
+      } 
+      // Подбадривание: каждую двадцатую, начиная с 10-й (10, 30, 50, 70...)
+      else if (readCount >= 10 && (readCount - 10) % 20 === 0) {
         launchConfetti(true);
       }
 
@@ -3083,7 +3249,7 @@
       if (VOWELS_SET.has(charUpper) || charUpper === 'Ь' || charUpper === 'Ъ') return false;
 
       if (ALWAYS_SOFT.has(charUpper)) return true;
-      if (ALWAYS_HARD.has(charUpper) || charUpper === 'Ц') return false;
+      if (ALWAYS_HARD.has(charUpper)) return false;
 
       let nextChar = null;
       for (let j = index + 1; j < chars.length; j++) {
@@ -3139,6 +3305,7 @@
       stopSyllableAudio();
 
       document.getElementById('tab-alphabet').classList.toggle('active', primaryMode === 'alphabet');
+      document.getElementById('tab-matrix').classList.toggle('active', primaryMode === 'matrix');
       document.getElementById('tab-one_syllable').classList.toggle('active', primaryMode === 'one_syllable');
       document.getElementById('tab-words2').classList.toggle('active', primaryMode === 'words2');
       document.getElementById('tab-words3').classList.toggle('active', primaryMode === 'words3');
@@ -3148,14 +3315,22 @@
       document.getElementById('tab-reverse').classList.toggle('active', inSyllables && syllableModes.reverse);
 
       const alphaView = document.getElementById('alphabet-view-container');
+      const matrixView = document.getElementById('matrix-view-container');
       const cardView = document.getElementById('card-wrapper');
 
       if (primaryMode === 'alphabet') {
         cardView.style.display = 'none';
+        matrixView.style.display = 'none';
         alphaView.style.display = 'flex';
         renderAlphabetView();
+      } else if (primaryMode === 'matrix') {
+        cardView.style.display = 'none';
+        alphaView.style.display = 'none';
+        matrixView.style.display = 'flex';
+        renderMatrix();
       } else {
         alphaView.style.display = 'none';
+        matrixView.style.display = 'none';
         cardView.style.display = 'flex';
         generateNext(true);
       }
@@ -3206,6 +3381,8 @@
       updateCategoryBadges();
       if (primaryMode === 'alphabet') {
         renderAlphabetView();
+      } else if (primaryMode === 'matrix') {
+        renderMatrix();
       } else {
         generateNext(true);
       }
@@ -3275,7 +3452,7 @@
         return;
       }
 
-      if (primaryMode === 'alphabet') {
+      if (['alphabet', 'matrix'].includes(primaryMode)) {
         if (e.code === 'Escape') {
           closeHelpModal();
           closeLettersPanel();
