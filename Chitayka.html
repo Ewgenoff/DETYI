@@ -3308,8 +3308,16 @@
     }
 
     function openStickerModal() {
+      if (!STICKER_ANIMALS || STICKER_ANIMALS.length === 0) return;
+
+      // Выбираем случайное животное без повтора подряд
+      let randomIndex = Math.floor(Math.random() * STICKER_ANIMALS.length);
+      if (STICKER_ANIMALS.length > 1 && randomIndex === currentAnimalDeckIndex) {
+        randomIndex = (randomIndex + 1 + Math.floor(Math.random() * (STICKER_ANIMALS.length - 1))) % STICKER_ANIMALS.length;
+      }
+      currentAnimalDeckIndex = randomIndex;
+
       const animal = STICKER_ANIMALS[currentAnimalDeckIndex];
-      currentAnimalDeckIndex = (currentAnimalDeckIndex + 1) % STICKER_ANIMALS.length;
 
       document.getElementById('sticker-icon').textContent = animal.icon;
       document.getElementById('sticker-name').textContent = animal.name;
