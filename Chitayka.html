@@ -462,7 +462,20 @@
       border-color: #3b82f6;
       color: #1d4ed8;
     }
+/* Бейджи колокольчика и наушников в боковой панели */
+.letter-label {
+  position: relative; /* убедитесь, что позиционирование относительное */
+}
 
+.letter-badge-icon {
+  position: absolute;
+  top: 1px;
+  right: 2px;
+  font-size: 9px;
+  line-height: 1;
+  pointer-events: none;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+}
     .letter-item.consonant-soft .letter-label {
       color: #16a34a;
     }
@@ -2599,6 +2612,10 @@
       if (e.target.id === 'help-modal') closeHelpModal();
     }
 
+    // Списки звонких и глухих согласных для индикаторов
+    const PANEL_VOICED_CONSONANTS = new Set(['Б', 'В', 'Г', 'Д', 'Ж', 'З', 'Й', 'Л', 'М', 'Н', 'Р']);
+    const PANEL_VOICELESS_CONSONANTS = new Set(['П', 'Ф', 'К', 'Т', 'Ш', 'С', 'Х', 'Ц', 'Ч', 'Щ']);
+
     function createLetterCheckbox(char, type) {
       const item = document.createElement('div');
       item.className = `letter-item ${type}`;
@@ -2626,6 +2643,19 @@
       label.className = 'letter-label';
       label.htmlFor = `letter-${char}`;
       label.textContent = char;
+
+      // Добавление колокольчика (звонкие) или наушников (глухие)
+      if (PANEL_VOICED_CONSONANTS.has(char)) {
+        const iconSpan = document.createElement('span');
+        iconSpan.className = 'letter-badge-icon';
+        iconSpan.textContent = '🔔';
+        label.appendChild(iconSpan);
+      } else if (PANEL_VOICELESS_CONSONANTS.has(char)) {
+        const iconSpan = document.createElement('span');
+        iconSpan.className = 'letter-badge-icon';
+        iconSpan.textContent = '🎧';
+        label.appendChild(iconSpan);
+      }
 
       item.appendChild(input);
       item.appendChild(label);
