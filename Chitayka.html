@@ -443,7 +443,6 @@
       transition: background 0.1s ease, border-color 0.1s ease;
     }
 
-    /* Значки колокольчика и наушников в боковой панели */
     .letter-badge-icon {
       position: absolute;
       top: 1px;
@@ -886,7 +885,6 @@
       color: #64748b;
     }
 
-    /* ВЕСЬ АЛФАВИТ: 7 БУКВ В РЯД */
     .alphabet-order-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
@@ -1093,7 +1091,6 @@
       gap: 4px;
     }
 
-    /* РЕЖИМ МАТРИЦЫ СЛОГОВ */
     .matrix-view-container {
       display: none;
       flex-direction: column;
@@ -1136,7 +1133,6 @@
       box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
     }
 
-    /* Белая рамка плотно облегает таблицу слогов */
     .matrix-wrapper-card {
       background: #ffffff;
       border: 3px solid #cbd5e1;
@@ -1182,7 +1178,6 @@
       font-size: 22px;
     }
 
-    /* Колокольчик для звонких согласных в строках матрицы */
     .matrix-table th.consonant-header.voiced-cons::after {
       content: "🔔";
       position: absolute;
@@ -1271,14 +1266,13 @@
     .dot-cons-hard { width: 12px; height: 12px; background: var(--consonant-color); border-radius: 50%; }
     .dot-cons-soft { width: 12px; height: 12px; background: var(--consonant-soft-color); border-radius: 50%; }
 
-    /* Мелкий незаметный текст подбадривания в левом нижнем углу */
     .subtle-cheer-hint {
       position: fixed;
       left: 8px;
       bottom: 6px;
       font-size: 8px;
       font-family: inherit;
-      color: rgba(148, 163, 184, 0.08); /* 8% прозрачности: невидим ребенку */
+      color: rgba(148, 163, 184, 0.08);
       pointer-events: none;
       user-select: none;
       z-index: 5;
@@ -2236,7 +2230,6 @@
     const ALWAYS_HARD = new Set(['Ж', 'Ш', 'Ц']);
     const SOFTENING_LETTERS = new Set(['Е', 'Ё', 'И', 'Ю', 'Я', 'Ь']);
 
-    // Списки звонких и глухих согласных для колокольчиков и наушников
     const VOICED_CONSONANTS = new Set(['Б', 'В', 'Г', 'Д', 'Ж', 'З', 'Й', 'Л', 'М', 'Н', 'Р']);
     const VOICELESS_CONSONANTS = new Set(['П', 'Ф', 'К', 'Т', 'Ш', 'С', 'Х', 'Ц', 'Ч', 'Щ']);
 
@@ -2283,7 +2276,6 @@
       "Super/ГОРЖУСЬ_ТОБОЙ.wav"
     ];
 
-    // Сопоставление аудиофайлов с фразами для незаметного микро-текста
     const SUPER_PHRASES = {
       "ПОЗДРАВЛЯЮ.wav": "Поздравляю!",
       "ТЫ_МОЛОДЕЦ.wav": "Ты молодец!",
@@ -2370,49 +2362,91 @@
 
     function stopExtraAudio() {
       if (currentExtraAudio) {
-        currentExtraAudio.pause();
-        currentExtraAudio.currentTime = 0;
+        try {
+          currentExtraAudio.pause();
+          currentExtraAudio.currentTime = 0;
+        } catch (e) {}
         currentExtraAudio = null;
       }
     }
 
+    // Всеядное и надежное воспроизведение с поддержкой регистра папок и encodeURI
     function playAudioFile(path) {
       if (isSoundMuted || !path) return;
       stopExtraAudio();
-      try {
-        const audio = new Audio(path);
+
+      const cleanPath = path.replace(/\\/g, '/');
+      const candidates = [
+        encodeURI(cleanPath),
+        cleanPath,
+        encodeURI(cleanPath.replace(/^super\//i, 'Super/')),
+        encodeURI(cleanPath.replace(/^super\//i, 'super/'))
+      ];
+      const uniqueCandidates = [...new Set(candidates)];
+
+      function tryPlay(index) {
+        if (index >= uniqueCandidates.length) {
+          console.warn('Не удалось загрузить аудио:', path);
+          return;
+        }
+        const candidateUrl = uniqueCandidates[index];
+        const audio = new Audio(candidateUrl);
         currentExtraAudio = audio;
-        audio.play().catch(() => {});
-      } catch (e) {}
+
+        audio.onended = () => {
+          if (currentExtraAudio === audio) {
+            currentExtraAudio = null;
+          }
+        };
+
+        audio.onerror = () => {
+          tryPlay(index + 1);
+        };
+
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {});
+        }
+      }
+
+      tryPlay(0);
     }
 
+    let lastCheerIndex = -1;
     function playRandomCheerAudio() {
       if (!SUPER_CHEERS || SUPER_CHEERS.length === 0) return;
       
-      const item = SUPER_CHEERS[Math.floor(Math.random() * SUPER_CHEERS.length)];
+      let randomIndex = Math.floor(Math.random() * SUPER_CHEERS.length);
+      if (SUPER_CHEERS.length > 1 && randomIndex === lastCheerIndex) {
+        randomIndex = (randomIndex + 1 + Math.floor(Math.random() * (SUPER_CHEERS.length - 1))) % SUPER_CHEERS.length;
+      }
+      lastCheerIndex = randomIndex;
+
+      const item = SUPER_CHEERS[randomIndex];
       const audioPath = typeof item === 'string' ? item : item.audio;
       
-      // Показываем незаметный мелкий текст
       const hintEl = document.getElementById('subtle-cheer-text');
       if (hintEl && audioPath) {
         const fileName = audioPath.split('/').pop();
-        hintEl.textContent = SUPER_PHRASES[fileName] || "";
+        const decodedFileName = decodeURIComponent(fileName);
+        hintEl.textContent = SUPER_PHRASES[decodedFileName] || SUPER_PHRASES[fileName] || "";
       }
 
-      // Воспроизводим аудио
       if (!isSoundMuted && audioPath) {
         playAudioFile(audioPath);
       }
     }
 
+    // Останавливает ТОЛЬКО чтение слога карточки, не трогая похвалу и звуки наград
     function stopSyllableAudio() {
       currentSequenceId++;
       if (currentSyllableAudio) {
-        currentSyllableAudio.pause();
-        currentSyllableAudio.currentTime = 0;
+        try {
+          currentSyllableAudio.pause();
+          currentSyllableAudio.currentTime = 0;
+        } catch (e) {}
         currentSyllableAudio = null;
       }
-      stopExtraAudio();
     }
 
     async function checkFileExists(url) {
@@ -2436,9 +2470,9 @@
       if (parts.length === 0) return false;
 
       const syllable = parts[0].toUpperCase();
-      const hasUpper = await checkFileExists(`audio/${syllable}.wav`);
+      const hasUpper = await checkFileExists(`audio/${encodeURIComponent(syllable)}.wav`);
       if (hasUpper) return true;
-      const hasLower = await checkFileExists(`audio/${syllable.toLowerCase()}.wav`);
+      const hasLower = await checkFileExists(`audio/${encodeURIComponent(syllable.toLowerCase())}.wav`);
       return hasLower;
     }
 
@@ -2481,7 +2515,7 @@
         const upper = text.toUpperCase();
         const lower = text.toLowerCase();
 
-        let audio = new Audio(`audio/${upper}.wav`);
+        let audio = new Audio(`audio/${encodeURIComponent(upper)}.wav`);
         currentSyllableAudio = audio;
 
         let finished = false;
@@ -2499,7 +2533,7 @@
             finish();
             return;
           }
-          const fallback = new Audio(`audio/${lower}.wav`);
+          const fallback = new Audio(`audio/${encodeURIComponent(lower)}.wav`);
           currentSyllableAudio = fallback;
           fallback.onended = finish;
           fallback.onerror = finish;
@@ -2516,6 +2550,7 @@
     async function playSyllableAudio() {
       if (['alphabet', 'matrix'].includes(primaryMode) || !currentText) return;
       stopSyllableAudio();
+      stopExtraAudio();
       const sequenceId = currentSequenceId;
 
       const parts = currentText.split(/[-–]/).map(s => s.trim()).filter(Boolean);
@@ -2686,7 +2721,6 @@
       label.htmlFor = `letter-${char}`;
       label.textContent = char;
 
-      // Колокольчик для звонких, наушники для глухих в боковой панели
       if (VOICED_CONSONANTS.has(char)) {
         const iconSpan = document.createElement('span');
         iconSpan.className = 'letter-badge-icon';
@@ -2859,7 +2893,6 @@
       renderAlphabetView();
     }
 
-    /* === ЛОГИКА МАТРИЦЫ СЛОГОВ === */
     const MATRIX_CONSONANTS = ["Б", "В", "Г", "Д", "Ж", "З", "К", "Л", "М", "Н", "П", "Р", "С", "Т", "Ф", "Х", "Ц", "Ч", "Ш", "Щ"];
     const MATRIX_VOWELS_OPEN = ["А", "О", "У", "Ы", "Э", "Я", "Е", "Ё", "И", "Ю"];
     const MATRIX_VOWELS_REVERSE = ["А", "О", "У", "И", "Э"];
@@ -3200,6 +3233,10 @@
     });
 
     function launchConfetti(withCheer = false) {
+      if (withCheer) {
+        playRandomCheerAudio();
+      }
+
       const canvas = initConfettiCanvas();
       if (!canvas) return;
       const card = document.getElementById('syllable-card');
@@ -3230,10 +3267,6 @@
 
       if (!confettiAnimationId) {
         renderConfettiFrame();
-      }
-
-      if (withCheer) {
-        playRandomCheerAudio();
       }
     }
 
@@ -3316,7 +3349,6 @@
       document.getElementById('star-count').textContent = readCount;
       updateTimers();
 
-      // Очищаем незаметный микро-текст перед открытием новой карточки
       const hintEl = document.getElementById('subtle-cheer-text');
       if (hintEl) hintEl.textContent = '';
 
@@ -3324,9 +3356,12 @@
       if (readCount > 0 && readCount % 20 === 0) {
         setTimeout(() => openStickerModal(), 200);
       } 
-      // Каждые 20 карточек начиная с 10-й (10, 30, 50, 70...) - конфетти, микро-текст и звук
+      // Каждые 20 карточек начиная с 10-й (10, 30, 50, 70...) - салют и случайный звук из Super
       else if (readCount >= 10 && (readCount - 10) % 20 === 0) {
-        launchConfetti(true);
+        setTimeout(() => {
+          launchConfetti(false);
+          playRandomCheerAudio();
+        }, 150);
       }
 
       if (historyIndex < historyStack.length - 1) {
