@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Матрица слогов: Обучение чтению</title>
+  <style>
+    :root {
+      --vowel-color: #ef4444;
+      --consonant-color: #2563eb;
+      --bg: #f8fafc;
+      --cell-border: #cbd5e1;
+      --active-blue: #3b82f6;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #eff6ff 0%, #fefce8 50%, #fdf2f8 100%);
+      min-height: 100vh;
+      color: #1e293b;
+      padding: 20px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 900;
+      color: #1e40af;
+      margin-bottom: 6px;
+    }
+
+    .hint {
+      font-size: 14px;
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    /* Переключатель таблиц */
+    .tabs-nav {
+      display: flex;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(8px);
+      border: 2px solid #cbd5e1;
+      border-radius: 16px;
+      padding: 4px;
+      gap: 6px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .tab-btn {
+      border: none;
+      background: transparent;
+      padding: 10px 22px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 800;
+      color: #64748b;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .tab-btn.active {
+      background: #2563eb;
+      color: #ffffff;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+    }
+
+    /* Контейнер таблицы */
+    .matrix-wrapper {
+      background: #ffffff;
+      border: 3px solid #cbd5e1;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+      padding: 12px;
+      max-width: 98vw;
+      overflow-x: auto;
+    }
+
+    table {
+      border-collapse: separate;
+      border-spacing: 4px;
+      margin: 0 auto;
+    }
+
+    th, td {
+      width: 58px;
+      height: 48px;
+      text-align: center;
+      vertical-align: middle;
+      border-radius: 10px;
+      font-size: 20px;
+      font-weight: 900;
+      position: relative;
+      transition: all 0.12s ease;
+    }
+
+    /* Шапка с гласными (верх) */
+    th.vowel-header {
+      background: #fee2e2;
+      color: var(--vowel-color);
+      border: 2px solid #fca5a5;
+      font-size: 22px;
+    }
+
+    /* Колонка с согласными (слева) */
+    th.consonant-header {
+      background: #dbeafe;
+      color: var(--consonant-color);
+      border: 2px solid #93c5fd;
+      font-size: 22px;
+    }
+
+    .corner-cell {
+      background: #f1f5f9;
+      border: 2px dashed #cbd5e1;
+      font-size: 12px;
+      color: #64748b;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    /* Ячейка слога */
+    td.syllable-cell {
+      background: #ffffff;
+      border: 2px solid var(--cell-border);
+      color: #1e293b;
+      cursor: pointer;
+    }
+
+    td.syllable-cell:hover {
+      background: #eff6ff;
+      border-color: var(--active-blue);
+      transform: scale(1.08);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+      z-index: 10;
+    }
+
+    td.syllable-cell:active, td.syllable-cell.playing {
+      background: #fef08a !important;
+      border-color: #eab308 !important;
+      transform: scale(0.96);
+    }
+
+    /* Запрещенный/несуществующий слог */
+    td.disabled-cell {
+      background: #f8fafc;
+      border: 1px dashed #e2e8f0;
+      color: #cbd5e1;
+      font-size: 16px;
+      cursor: not-allowed;
+    }
+
+    /* Подсветка перекрестия строк и колонок */
+    th.highlight-header {
+      background: #fde047 !important;
+      border-color: #ca8a04 !important;
+      color: #713f12 !important;
+      transform: scale(1.08);
+    }
+
+    .legend-bar {
+      margin-top: 14px;
+      display: flex;
+      gap: 18px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #475569;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot-vowel { width: 12px; height: 12px; background: var(--vowel-color); border-radius: 50%; }
+    .dot-cons { width: 12px; height: 12px; background: var(--consonant-color); border-radius: 50%; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🔊 Слоговая матрица</h1>
+    <p class="hint">Нажмите на любой слог, чтобы услышать его произношение</p>
+  </header>
+
+  <!-- Переключатель: Открытые / Обратные -->
+  <div class="tabs-nav">
+    <button class="tab-btn active" id="btn-open" onclick="switchMode('open')">Открытые слоги (БА, КО, МУ)</button>
+    <button class="tab-btn" id="btn-reverse" onclick="switchMode('reverse')">Обратные слоги (АБ, ОК, УМ)</button>
+  </div>
+
+  <div class="matrix-wrapper">
+    <table id="matrix-table"></table>
+  </div>
+
+  <div class="legend-bar">
+    <div class="legend-item"><div class="dot-vowel"></div> Красные — гласные</div>
+    <div class="legend-item"><div class="dot-cons"></div> Синие — согласные</div>
+    <div class="legend-item"><span style="color:#94a3b8; font-weight:900;">—</span> Прочерк — слогов нет в русском языке</div>
+  </div>
+
+  <script>
+    // Базовые согласные (строки) и гласные (столбцы)
+    const CONSONANTS = ["Б", "В", "Г", "Д", "Ж", "З", "К", "Л", "М", "Н", "П", "Р", "С", "Т", "Ф", "Х", "Ц", "Ч", "Ш", "Щ"];
+    const VOWELS_OPEN = ["А", "О", "У", "Ы", "Э", "Я", "Е", "Ё", "И", "Ю"];
+    const VOWELS_REVERSE = ["А", "О", "У", "И", "Э"];
+    
+    // Согласные для обратных слогов, отсортированные по алфавиту
+    const CONSONANTS_REVERSE = ["Б", "В", "Д", "К", "Л", "М", "Н", "П", "Р", "С", "Т", "Х"];
+
+    // Правила недопустимых открытых слогов
+    function isInvalidOpen(c, v) {
+      if (['Ж', 'Ш'].includes(c) && ['Ы', 'Я', 'Ю'].includes(v)) return true;
+      if (['Ч', 'Щ'].includes(c) && ['Я', 'Ю', 'Ы'].includes(v)) return true;
+      if (['Г', 'К', 'Х'].includes(c) && ['Ы', 'Э', 'Я', 'Ю', 'Ё'].includes(v)) return true;
+      if (c === 'Ц' && ['Я', 'Ю', 'Ё', 'Э'].includes(v)) return true;
+      return false;
+    }
+
+    let currentMode = 'open';
+    let currentAudio = null;
+
+    // Воспроизведение звука из папки аудио/
+    function playSyllable(syl, cellElement) {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+
+      cellElement.classList.add('playing');
+      setTimeout(() => cellElement.classList.remove('playing'), 300);
+
+      const fileName = `${syl.toUpperCase()}.wav`;
+      const filePath = `audio/${encodeURIComponent(fileName)}`;
+
+      currentAudio = new Audio(filePath);
+      currentAudio.play().catch(err => {
+        console.warn(`Аудиофайл не найден или заблокирован: ${filePath}`, err);
+      });
+    }
+
+    // Построение таблицы
+    function renderMatrix() {
+      const table = document.getElementById('matrix-table');
+      table.innerHTML = '';
+
+      if (currentMode === 'open') {
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        
+        const corner = document.createElement('th');
+        corner.className = 'corner-cell';
+        corner.innerHTML = 'Согл.<br>↓ Глас.→';
+        headerRow.appendChild(corner);
+
+        VOWELS_OPEN.forEach((v, colIdx) => {
+          const th = document.createElement('th');
+          th.className = 'vowel-header';
+          th.id = `col-header-${colIdx}`;
+          th.textContent = v;
+          headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+        CONSONANTS.forEach((c, rowIdx) => {
+          const tr = document.createElement('tr');
+          
+          const thCons = document.createElement('th');
+          thCons.className = 'consonant-header';
+          thCons.id = `row-header-${rowIdx}`;
+          thCons.textContent = c;
+          tr.appendChild(thCons);
+
+          VOWELS_OPEN.forEach((v, colIdx) => {
+            const td = document.createElement('td');
+            const syl = c + v;
+
+            if (isInvalidOpen(c, v)) {
+              td.className = 'disabled-cell';
+              td.textContent = '—';
+              td.title = `Слога "${syl}" нет в правилах русского языка`;
+            } else {
+              td.className = 'syllable-cell';
+              td.textContent = syl;
+              td.onclick = () => playSyllable(syl, td);
+
+              td.onmouseenter = () => {
+                document.getElementById(`row-header-${rowIdx}`).classList.add('highlight-header');
+                document.getElementById(`col-header-${colIdx}`).classList.add('highlight-header');
+              };
+              td.onmouseleave = () => {
+                document.getElementById(`row-header-${rowIdx}`).classList.remove('highlight-header');
+                document.getElementById(`col-header-${colIdx}`).classList.remove('highlight-header');
+              };
+            }
+            tr.appendChild(td);
+          });
+
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+
+      } else {
+        // ОБРАТНЫЕ СЛОГИ: гласные по горизонтали, согласные по вертикали (по алфавиту)
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        
+        const corner = document.createElement('th');
+        corner.className = 'corner-cell';
+        corner.innerHTML = 'Согл.<br>↓ Глас.→';
+        headerRow.appendChild(corner);
+
+        VOWELS_REVERSE.forEach((v, colIdx) => {
+          const th = document.createElement('th');
+          th.className = 'vowel-header';
+          th.id = `col-header-${colIdx}`;
+          th.textContent = v;
+          headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+        CONSONANTS_REVERSE.forEach((c, rowIdx) => {
+          const tr = document.createElement('tr');
+
+          const thCons = document.createElement('th');
+          thCons.className = 'consonant-header';
+          thCons.id = `row-header-${rowIdx}`;
+          thCons.textContent = c;
+          tr.appendChild(thCons);
+
+          VOWELS_REVERSE.forEach((v, colIdx) => {
+            const td = document.createElement('td');
+            const syl = v + c;
+
+            td.className = 'syllable-cell';
+            td.textContent = syl;
+            td.onclick = () => playSyllable(syl, td);
+
+            td.onmouseenter = () => {
+              document.getElementById(`row-header-${rowIdx}`).classList.add('highlight-header');
+              document.getElementById(`col-header-${colIdx}`).classList.add('highlight-header');
+            };
+            td.onmouseleave = () => {
+              document.getElementById(`row-header-${rowIdx}`).classList.remove('highlight-header');
+              document.getElementById(`col-header-${colIdx}`).classList.remove('highlight-header');
+            };
+
+            tr.appendChild(td);
+          });
+
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+      }
+    }
+
+    function switchMode(mode) {
+      currentMode = mode;
+      document.getElementById('btn-open').classList.toggle('active', mode === 'open');
+      document.getElementById('btn-reverse').classList.toggle('active', mode === 'reverse');
+      renderMatrix();
+    }
+
+    renderMatrix();
+  </script>
+</body>
+</html>

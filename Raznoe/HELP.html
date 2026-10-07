@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Инструкция: Настройка озвучки тренажёра «Читай-ка» на новом ПК</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-light: #eff6ff;
+      --accent: #f59e0b;
+      --success: #10b981;
+      --danger: #ef4444;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --code-bg: #0f172a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 32px 16px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .hero-card {
+      background: linear-gradient(135deg, #1e40af 0%, #2563eb 50%, #3b82f6 100%);
+      color: #ffffff;
+      padding: 36px 30px;
+      border-radius: 24px;
+      margin-bottom: 28px;
+      box-shadow: 0 14px 30px -8px rgba(37, 99, 235, 0.35);
+    }
+
+    .hero-card h1 {
+      font-size: 26px;
+      font-weight: 900;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hero-card p {
+      font-size: 15.5px;
+      opacity: 0.95;
+      line-height: 1.55;
+    }
+
+    .meta-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .pill {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(6px);
+      padding: 5px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .step-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      padding: 26px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    }
+
+    .step-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 900;
+      font-size: 12.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      padding: 5px 12px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 900;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    h3 {
+      font-size: 16px;
+      font-weight: 800;
+      margin: 16px 0 8px;
+      color: #334155;
+    }
+
+    p, li {
+      color: #334155;
+      font-size: 15px;
+    }
+
+    ul, ol {
+      padding-left: 22px;
+      margin: 10px 0 14px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    .callout {
+      background: #fefce8;
+      border-left: 4px solid var(--accent);
+      padding: 12px 16px;
+      border-radius: 0 12px 12px 0;
+      margin: 14px 0;
+      font-size: 14.5px;
+    }
+
+    .callout-danger {
+      background: #fef2f2;
+      border-left-color: var(--danger);
+    }
+
+    .callout-success {
+      background: #ecfdf5;
+      border-left-color: var(--success);
+    }
+
+    .code-box {
+      background: var(--code-bg);
+      color: #e2e8f0;
+      padding: 16px;
+      border-radius: 14px;
+      font-family: Consolas, Monaco, "Courier New", monospace;
+      font-size: 13.5px;
+      overflow-x: auto;
+      margin: 12px 0;
+      line-height: 1.5;
+    }
+
+    .code-box code {
+      color: inherit;
+      white-space: pre;
+    }
+
+    .tree-box {
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-family: Consolas, monospace;
+      font-size: 14px;
+      color: #1e293b;
+      margin: 12px 0;
+      line-height: 1.6;
+    }
+
+    .tree-box b {
+      color: var(--primary);
+    }
+
+    .link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary);
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 9px 18px;
+      border-radius: 10px;
+      margin: 8px 0;
+      transition: background 0.15s;
+    }
+
+    .link-btn:hover {
+      background: var(--primary-dark);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <div class="hero-card">
+      <h1>🎙️ Справка: Развёртывание офлайн-озвучки для тренажёра «Читай-ка»</h1>
+      <p>Полное пошаговое руководство по переносу системы генерации звуков слогов и слов на любой компьютер с Windows с нуля. Голоса генерируются локально через нейросеть <b>Silero TTS (голос Бая)</b> и сохраняются в формате WAV.</p>
+      <div class="meta-pills">
+        <span class="pill">⚙️ Движок: Silero TTS v4 (RU)</span>
+        <span class="pill">👩 Голос: Бая (baya, 24 кГц)</span>
+        <span class="pill">💰 Стоимость: 0 ₽ (локально, без интернета после загрузки)</span>
+        <span class="pill">🚀 Запуск: по кнопке start.bat</span>
+      </div>
+    </div>
+
+    <!-- Структура папки -->
+    <div class="step-card">
+      <div class="step-badge">ФИНАЛЬНАЯ СТРУКТУРА</div>
+      <h2>Как должна выглядеть рабочая папка проекта</h2>
+      <p>Все файлы системы должны находиться в одной общей папке (например, <code>C:\Chitayka\</code>):</p>
+
+      <div class="tree-box">
+📁 <b>Папка проекта/</b><br>
+├── 📄 <b>Chitayka.html</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>(ваш основной тренажер для ребенка)</i><br>
+├── 📝 <b>Words.txt</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>(блокнот со списком слогов и слов)</i><br>
+├── 🐍 <b>generate_words.py</b> &nbsp;<i>(скрипт синтеза речи на Python)</i><br>
+├── ⚡ <b>start.bat</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>(файл запуска генерации в один клик)</i><br>
+└── 📁 <b>audio/</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>(папка с готовыми .wav файлами, создается скриптом)</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── 🎵 БА.wav<br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── 🎵 КО.wav<br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── 🎵 КОТ.wav<br>
+&nbsp;&nbsp;&nbsp;&nbsp;└── 🎵 МА-МА.wav
+      </div>
+    </div>
+
+    <!-- ШАГ 1: Установка Python -->
+    <div class="step-card">
+      <div class="step-badge">ШАГ 1 ИЗ 5</div>
+      <h2>Установка Python на новый компьютер</h2>
+      <ol>
+        <li>
+          Перейдите на официальный сайт и скачайте свежий установщик Python для Windows:
+          <br>
+          <a class="link-btn" href="https://www.python.org/downloads/" target="_blank">Скачать Python с python.org ↗</a>
+        </li>
+        <li>
+          Запустите скачанный файл инсталлятора <code>python-3.x.x.exe</code>.
+        </li>
+      </ol>
+
+      <div class="callout callout-danger">
+        ⚠️ <b>КРИТИЧЕСКИ ВАЖНО:</b> В самом первом окне установщика внизу <b>обязательно поставьте галочку</b>:
+        <br><br>
+        <code>☑ Add python.exe to PATH</code>
+        <br><br>
+        Если эту галочку не поставить, Windows выдаст ошибку <i>«Имя "pip" / "python" не распознано как имя командлета»</i>. После установки перезапустите окно терминала.
+      </div>
+    </div>
+
+    <!-- ШАГ 2: Установка библиотек -->
+    <div class="step-card">
+      <div class="step-badge">ШАГ 2 ИЗ 5</div>
+      <h2>Установка библиотек в командной строке</h2>
+      <p>Откройте Командную строку (нажмите <code>Win + R</code>, введите <code>cmd</code> и нажмите <b>Enter</b>). Скопируйте и выполните команду:</p>
+
+      <div class="code-box"><code>pip install torch torchaudio soundfile omegaconf</code></div>
+
+      <h3>Зачем нужен каждый компонент:</h3>
+      <ul>
+        <li><b>torch & torchaudio:</b> базовый движок нейросетей PyTorch для работы модели Silero.</li>
+        <li><b>soundfile:</b> библиотека для сохранения звука напрямую в файлы формата WAV без старых зависимостей вроде <code>pydub/audioop</code> (которые были удалены из Python 3.13+).</li>
+        <li><b>omegaconf:</b> библиотека конфигурации параметров речи, необходимая движку Silero TTS.</li>
+      </ul>
+    </div>
+
+    <!-- ШАГ 3: Файлы генератора -->
+    <div class="step-card">
+      <div class="step-badge">ШАГ 3 ИЗ 5</div>
+      <h2>Создание файлов скрипта и запуска</h2>
+
+      <h3>1. Файл <code>Words.txt</code></h3>
+      <p>Создайте текстовый документ <code>Words.txt</code> и впишите нужные слова и слоги по одному на строку:</p>
+      <div class="code-box"><code>БА
+БО
+БУ
+КО
+ДЕ
+ЖИ
+КОТ
+ДОМ
+МА-МА
+СОБАКА</code></div>
+      <div class="callout">
+        💡 <b>Подсказка по ударениям:</b> Для редких или двусмысленных слов знак плюса ставится перед ударной гласной (например, <code>з+амок</code> или <code>зам+ок</code>). Для прямых двухбуквенных слогов вроде <code>КО</code> или <code>БУ</code> скрипт расставит ударения автоматически.
+      </div>
+
+      <h3>2. Файл <code>generate_words.py</code></h3>
+      <p>Создайте файл <code>generate_words.py</code> через Блокнот и сохраните следующий код:</p>
+      <div class="code-box"><code>import os
+import sys
+import ssl
+import torch
+import soundfile as sf
+
+# Обход проверки SSL-сертификатов при загрузке модели
+ssl._create_default_https_context = ssl._create_unverified_context
+
+WORDS_FILE = "Words.txt"
+AUDIO_DIR = "audio"
+VOICE = "baya"
+SAMPLE_RATE = 24000
+
+VOWELS_SET = set("аоуэыяеёию")
+
+def prepare_text_and_stress(raw_word):
+    clean = raw_word.strip()
+    spoken_text = clean.replace("-", "").replace("–", "").lower()
+
+    # 1. Если знак плюса уже стоит вручную
+    if "+" in spoken_text:
+        return spoken_text, False
+
+    # 2. Прямой слог из 2 букв (КО, БУ, ДЕ) — ставим ударение принудительно (к+о, б+у)
+    if len(spoken_text) == 2 and spoken_text[1] in VOWELS_SET:
+        return f"{spoken_text[0]}+{spoken_text[1]}", False
+
+    # 3. Обратный слог из 2 букв (УН, АМ, ОС) — ставим ударение (+ун, +ам)
+    if len(spoken_text) == 2 and spoken_text[0] in VOWELS_SET:
+        return f"+{spoken_text[0]}{spoken_text[1]}", False
+
+    # 4. Длинные слова — нейросеть сама ставит правильное ударение
+    return spoken_text, True
+
+def main():
+    print("=" * 60)
+    print("   Генератор озвучки слогов и слов (Silero TTS - Baya)")
+    print("=" * 60)
+
+    if not os.path.exists(WORDS_FILE):
+        print(f"Файл {WORDS_FILE} не найден. Создаю новый файл...")
+        with open(WORDS_FILE, "w", encoding="utf-8") as f:
+            f.write("БА\nБО\nБУ\nКОТ\nДОМ\nМА-МА\n")
+
+    words = []
+    with open(WORDS_FILE, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith("#"):
+                words.append(line)
+
+    if not words:
+        print(f"В файле {WORDS_FILE} нет слов для озвучки!")
+        return
+
+    print(f"Слов/слогов в очереди: {len(words)}")
+    os.makedirs(AUDIO_DIR, exist_ok=True)
+
+    print("Загрузка русской нейросети Silero TTS (голос: Бая)...")
+    device = torch.device("cpu")
+    torch.set_num_threads(4)
+
+    model, _ = torch.hub.load(
+        repo_or_dir="snakers4/silero-models",
+        model="silero_tts",
+        language="ru",
+        speaker="v4_ru",
+        trust_repo=True
+    )
+    model.to(device)
+
+    print("\nНачинаем генерацию...")
+    success_count = 0
+
+    for i, word in enumerate(words, start=1):
+        phrase, auto_accent = prepare_text_and_stress(word)
+        clean_name = word.replace("-", "").replace("–", "").strip().upper()
+        main_filename = os.path.join(AUDIO_DIR, f"{clean_name}.wav")
+
+        try:
+            audio = model.apply_tts(
+                text=phrase,
+                speaker=VOICE,
+                sample_rate=SAMPLE_RATE,
+                put_accent=auto_accent
+            )
+
+            sf.write(main_filename, audio.numpy(), SAMPLE_RATE, format="WAV")
+
+            # Для слов с дефисом создаем копию с дефисом для точного совпадения
+            if "-" in word or "–" in word:
+                hyphen_filename = os.path.join(AUDIO_DIR, f"{word.strip().upper()}.wav")
+                sf.write(hyphen_filename, audio.numpy(), SAMPLE_RATE, format="WAV")
+
+            print(f"[{i}/{len(words)}] Озвучено: {word} -> {main_filename}")
+            success_count += 1
+        except Exception as e:
+            print(f"[{i}/{len(words)}] Ошибка в слове '{word}': {e}")
+
+    print("\n" + "=" * 60)
+    print(f"ГОТОВО! Создано {success_count} аудиофайлов в папке '{AUDIO_DIR}/'")
+    print("=" * 60)
+
+if __name__ == "__main__":
+    main()
+</code></div>
+
+      <h3>3. Файл <code>start.bat</code></h3>
+      <p>Создайте текстовый файл, переименуйте его в <code>start.bat</code> и сохраните строки:</p>
+      <div class="code-box"><code>@echo off
+chcp 65001 > nul
+title Озвучка слов (Silero TTS - Baya)
+echo Запуск озвучки из файла Words.txt...
+echo.
+
+python generate_words.py
+if %errorlevel% neq 0 (
+    echo.
+    echo Запуск через py...
+    py generate_words.py
+)
+
+echo.
+pause
+</code></div>
+    </div>
+
+    <!-- ШАГ 4: Интеграция в Chitayka.html -->
+    <div class="step-card">
+      <div class="step-badge">ШАГ 4 ИЗ 5</div>
+      <h2>Подключение к странице Chitayka.html</h2>
+      <p>В файле <code>Chitayka.html</code> в блоке <code>&lt;script&gt;</code> должны присутствовать следующие элементы:</p>
+
+      <h3>1. Функция воспроизведения:</h3>
+      <div class="code-box"><code>let currentAudio = null;
+
+function speakCurrentSyllable() {
+  if (!currentText) return;
+
+  // Очищаем от дефисов и пробелов: "МА-МА" -> "МАМА", "ко" -> "КО"
+  const cleanKey = currentText.replace(/[-–\s]/g, '').toUpperCase();
+
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+  }
+
+  currentAudio = new Audio(`audio/${cleanKey}.wav`);
+  currentAudio.play().catch(err => {
+    console.warn(`Файл audio/${cleanKey}.wav не найден:`, err);
+  });
+}
+</code></div>
+
+      <h3>2. Обработка клавиш со стрелками Вверх / Вниз:</h3>
+      <div class="code-box"><code>window.addEventListener('keydown', (e) => {
+  // Нажатие СТРЕЛКИ ВВЕРХ или СТРЕЛКИ ВНИЗ — озвучить текущую карточку
+  if (e.code === 'ArrowUp' || e.code === 'ArrowDown') {
+    e.preventDefault();
+    speakCurrentSyllable();
+    return;
+  }
+
+  // Стрелки Влево/Вправо и Пробел листают карточки дальше
+  if (e.code === 'ArrowLeft') {
+    e.preventDefault();
+    if (e.repeat) return;
+    prevCard();
+  } else if (e.code === 'Space' || e.code === 'ArrowRight') {
+    e.preventDefault();
+    if (e.repeat) return;
+    nextCard();
+  }
+});
+</code></div>
+    </div>
+
+    <!-- ШАГ 5: Типичные ошибки -->
+    <div class="step-card">
+      <div class="step-badge">ШАГ 5 ИЗ 5</div>
+      <h2>Решение возможных проблем при переносе</h2>
+
+      <h3>1. «Имя "pip" не распознано как имя командлета»</h3>
+      <p><b>Причина:</b> При установке Python не была включена галочка «Add Python to PATH».</p>
+      <p><b>Решение:</b> Переустановите Python, обязательно отметив эту галочку, либо запустите установку библиотек через системный лаунчер: <code>py -m pip install torch torchaudio soundfile omegaconf</code>.</p>
+
+      <h3>2. «The repository snakers4_silero-models does not belong to the list of trusted repositories (y/N)?»</h3>
+      <p><b>Решение:</b> В коде скрипта уже добавлен параметр <code>trust_repo=True</code>, поэтому модель загрузится автоматически без вопросов безопасности в консоли.</p>
+
+      <h3>3. «SSLCertVerificationError: certificate verify failed»</h3>
+      <p><b>Причина:</b> Несовпадение даты на компьютере либо отсутствие корневых сертификатов в Windows.</p>
+      <p><b>Решение:</b> В скрипт уже включена директива <code>ssl._create_default_https_context = ssl._create_unverified_context</code>, которая предотвращает сбои проверки сертификатов при загрузке модели.</p>
+
+      <div class="callout callout-success">
+        🎉 <b>Итог:</b> Для добавления новых слов достаточно открыть <code>Words.txt</code>, вписать слова и запустить <code>start.bat</code>. Все файлы появятся в папке <code>audio/</code>, а страница <code>Chitayka.html</code> сразу воспроизведёт их по нажатию клавиш со стрелками.
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
