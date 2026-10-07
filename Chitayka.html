@@ -439,7 +439,19 @@
       font-size: 17px;
       font-weight: 900;
       cursor: pointer;
+      position: relative;
       transition: background 0.1s ease, border-color 0.1s ease;
+    }
+
+    /* Значки колокольчика и наушников в боковой панели */
+    .letter-badge-icon {
+      position: absolute;
+      top: 1px;
+      right: 2px;
+      font-size: 9px;
+      line-height: 1;
+      pointer-events: none;
+      filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
     }
 
     .letter-item.vowel .letter-label { color: #dc2626; }
@@ -462,20 +474,7 @@
       border-color: #3b82f6;
       color: #1d4ed8;
     }
-/* Бейджи колокольчика и наушников в боковой панели */
-.letter-label {
-  position: relative; /* убедитесь, что позиционирование относительное */
-}
 
-.letter-badge-icon {
-  position: absolute;
-  top: 1px;
-  right: 2px;
-  font-size: 9px;
-  line-height: 1;
-  pointer-events: none;
-  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
-}
     .letter-item.consonant-soft .letter-label {
       color: #16a34a;
     }
@@ -1137,7 +1136,7 @@
       box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
     }
 
-    /* Белая рамка теперь плотно облегает таблицу слогов */
+    /* Белая рамка плотно облегает таблицу слогов */
     .matrix-wrapper-card {
       background: #ffffff;
       border: 3px solid #cbd5e1;
@@ -1271,6 +1270,19 @@
     .dot-vowel { width: 12px; height: 12px; background: var(--vowel-color); border-radius: 50%; }
     .dot-cons-hard { width: 12px; height: 12px; background: var(--consonant-color); border-radius: 50%; }
     .dot-cons-soft { width: 12px; height: 12px; background: var(--consonant-soft-color); border-radius: 50%; }
+
+    /* Мелкий незаметный текст подбадривания в левом нижнем углу */
+    .subtle-cheer-hint {
+      position: fixed;
+      left: 8px;
+      bottom: 6px;
+      font-size: 8px;
+      font-family: inherit;
+      color: rgba(148, 163, 184, 0.08); /* 8% прозрачности: невидим ребенку */
+      pointer-events: none;
+      user-select: none;
+      z-index: 5;
+    }
 
     @media (max-width: 900px) {
       header {
@@ -1737,6 +1749,9 @@
   </style>
 </head>
 <body class="font-schoolbook">
+
+  <!-- Микро-текст подбадривания в левом нижнем углу -->
+  <div class="subtle-cheer-hint" id="subtle-cheer-text"></div>
 
   <button class="panel-tab-pull" id="panel-tab-pull" onclick="openLettersPanel()" title="Открыть изученные буквы (или клавиша Ctrl)">
     <span>⚙️</span>
@@ -2221,8 +2236,9 @@
     const ALWAYS_HARD = new Set(['Ж', 'Ш', 'Ц']);
     const SOFTENING_LETTERS = new Set(['Е', 'Ё', 'И', 'Ю', 'Я', 'Ь']);
 
-    // Множество звонких согласных для колокольчика
+    // Списки звонких и глухих согласных для колокольчиков и наушников
     const VOICED_CONSONANTS = new Set(['Б', 'В', 'Г', 'Д', 'Ж', 'З', 'Й', 'Л', 'М', 'Н', 'Р']);
+    const VOICELESS_CONSONANTS = new Set(['П', 'Ф', 'К', 'Т', 'Ш', 'С', 'Х', 'Ц', 'Ч', 'Щ']);
 
     let STICKER_ANIMALS = [
       { icon: '🦁', name: 'Львёнок-грамотей', audio: 'Animals/ЛЬВЁНОК_ГРАМОТЕЙ.wav' },
@@ -2267,6 +2283,26 @@
       "Super/ГОРЖУСЬ_ТОБОЙ.wav"
     ];
 
+    // Сопоставление аудиофайлов с фразами для незаметного микро-текста
+    const SUPER_PHRASES = {
+      "ПОЗДРАВЛЯЮ.wav": "Поздравляю!",
+      "ТЫ_МОЛОДЕЦ.wav": "Ты молодец!",
+      "УРААА.wav": "Урааа!",
+      "ТАК_ДЕРЖАТЬ.wav": "Так держать!",
+      "УМНИЦА.wav": "Умница!",
+      "СУПЕР.wav": "Супер!",
+      "ОТЛИЧНО.wav": "Отлично!",
+      "ТЫ_СМОГ.wav": "Ты смог!",
+      "КРАСОТА.wav": "Красота!",
+      "ЗДОРОВО.wav": "Здорово!",
+      "ВСЁ_ВЕРНО.wav": "Всё верно!",
+      "КАК_БЫСТРО.wav": "Как быстро!",
+      "ВОТ_ЭТО_ДА.wav": "Вот это да!",
+      "ХОРОШО.wav": "Хорошо!",
+      "ТЫ_СПРАВИЛСЯ.wav": "Ты справился!",
+      "ГОРЖУСЬ_ТОБОЙ.wav": "Горжусь тобой!"
+    };
+
     let WORDS_ONE_SYLLABLE_3_4 = [];
     let DICTIONARY_WORDS_2 = [];
     let DICTIONARY_WORDS_3 = [];
@@ -2281,7 +2317,6 @@
           if (data.words3) DICTIONARY_WORDS_3 = data.words3;
           if (data.animals) STICKER_ANIMALS = data.animals;
           if (data.super) {
-            // Поддержка как строкового массива ["Super/..."], так и объектов {audio: "..."}
             SUPER_CHEERS = data.super.map(item => (typeof item === 'string' ? item : item.audio));
           }
           updateCategoryBadges();
@@ -2352,10 +2387,21 @@
     }
 
     function playRandomCheerAudio() {
-      if (isSoundMuted || !SUPER_CHEERS || SUPER_CHEERS.length === 0) return;
-      const path = SUPER_CHEERS[Math.floor(Math.random() * SUPER_CHEERS.length)];
-      if (path) {
-        playAudioFile(path);
+      if (!SUPER_CHEERS || SUPER_CHEERS.length === 0) return;
+      
+      const item = SUPER_CHEERS[Math.floor(Math.random() * SUPER_CHEERS.length)];
+      const audioPath = typeof item === 'string' ? item : item.audio;
+      
+      // Показываем незаметный мелкий текст
+      const hintEl = document.getElementById('subtle-cheer-text');
+      if (hintEl && audioPath) {
+        const fileName = audioPath.split('/').pop();
+        hintEl.textContent = SUPER_PHRASES[fileName] || "";
+      }
+
+      // Воспроизводим аудио
+      if (!isSoundMuted && audioPath) {
+        playAudioFile(audioPath);
       }
     }
 
@@ -2612,10 +2658,6 @@
       if (e.target.id === 'help-modal') closeHelpModal();
     }
 
-    // Списки звонких и глухих согласных для индикаторов
-    const PANEL_VOICED_CONSONANTS = new Set(['Б', 'В', 'Г', 'Д', 'Ж', 'З', 'Й', 'Л', 'М', 'Н', 'Р']);
-    const PANEL_VOICELESS_CONSONANTS = new Set(['П', 'Ф', 'К', 'Т', 'Ш', 'С', 'Х', 'Ц', 'Ч', 'Щ']);
-
     function createLetterCheckbox(char, type) {
       const item = document.createElement('div');
       item.className = `letter-item ${type}`;
@@ -2644,13 +2686,13 @@
       label.htmlFor = `letter-${char}`;
       label.textContent = char;
 
-      // Добавление колокольчика (звонкие) или наушников (глухие)
-      if (PANEL_VOICED_CONSONANTS.has(char)) {
+      // Колокольчик для звонких, наушники для глухих в боковой панели
+      if (VOICED_CONSONANTS.has(char)) {
         const iconSpan = document.createElement('span');
         iconSpan.className = 'letter-badge-icon';
         iconSpan.textContent = '🔔';
         label.appendChild(iconSpan);
-      } else if (PANEL_VOICELESS_CONSONANTS.has(char)) {
+      } else if (VOICELESS_CONSONANTS.has(char)) {
         const iconSpan = document.createElement('span');
         iconSpan.className = 'letter-badge-icon';
         iconSpan.textContent = '🎧';
@@ -3274,11 +3316,15 @@
       document.getElementById('star-count').textContent = readCount;
       updateTimers();
 
+      // Очищаем незаметный микро-текст перед открытием новой карточки
+      const hintEl = document.getElementById('subtle-cheer-text');
+      if (hintEl) hintEl.textContent = '';
+
       // Каждые 20 карточек (20, 40, 60...) - наклейка животного
       if (readCount > 0 && readCount % 20 === 0) {
         setTimeout(() => openStickerModal(), 200);
       } 
-      // Каждые 20 карточек начиная с 10-й (10, 30, 50, 70...) - конфетти + случайный звук Super без текста
+      // Каждые 20 карточек начиная с 10-й (10, 30, 50, 70...) - конфетти, микро-текст и звук
       else if (readCount >= 10 && (readCount - 10) % 20 === 0) {
         launchConfetti(true);
       }
