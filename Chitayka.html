@@ -874,9 +874,10 @@
       color: #64748b;
     }
 
+    /* ВЕСЬ АЛФАВИТ: 7 БУКВ В РЯД */
     .alphabet-order-grid {
       display: grid;
-      grid-template-columns: repeat(11, 1fr);
+      grid-template-columns: repeat(7, 1fr);
       gap: 8px;
       width: 100%;
     }
@@ -1123,6 +1124,7 @@
       box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
     }
 
+    /* Белая рамка теперь плотно облегает таблицу слогов */
     .matrix-wrapper-card {
       background: #ffffff;
       border: 3px solid #cbd5e1;
@@ -1130,7 +1132,8 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.06);
       padding: 12px;
       max-width: 100%;
-      width: 100%;
+      width: fit-content;
+      margin: 0 auto;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
     }
@@ -1165,6 +1168,17 @@
       color: var(--consonant-color);
       border: 2px solid #93c5fd;
       font-size: 22px;
+    }
+
+    /* Колокольчик для звонких согласных в строках матрицы */
+    .matrix-table th.consonant-header.voiced-cons::after {
+      content: "🔔";
+      position: absolute;
+      top: 1px;
+      right: 3px;
+      font-size: 10px;
+      line-height: 1;
+      filter: drop-shadow(0 1px 1px rgba(0,0,0,0.15));
     }
 
     .matrix-table .corner-cell {
@@ -1352,7 +1366,7 @@
       }
 
       .alphabet-order-grid {
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(4, 1fr);
       }
 
       .btn-nav-arrow {
@@ -1967,7 +1981,7 @@
         </div>
       </div>
 
-      <!-- ВИД 1: РЕЖИМ АЛФАВИТА (режим "По группам" удален) -->
+      <!-- ВИД 1: РЕЖИМ АЛФАВИТА -->
       <div class="alphabet-view-container" id="alphabet-view-container">
         <div class="alphabet-toolbar">
           <span class="alphabet-toolbar-title">Режим просмотра:</span>
@@ -2123,6 +2137,7 @@
           <div class="matrix-legend-item"><div class="dot-vowel"></div> Красные — гласные</div>
           <div class="matrix-legend-item"><div class="dot-cons-hard"></div> Синие — твёрдые согласные</div>
           <div class="matrix-legend-item"><div class="dot-cons-soft"></div> Зелёные — мягкие согласные</div>
+          <div class="matrix-legend-item"><span>🔔</span> Звонкие согласные</div>
           <div class="matrix-legend-item"><span style="color:#94a3b8; font-weight:900;">—</span> Прочерк — нет в русском языке</div>
         </div>
       </div>
@@ -2193,6 +2208,9 @@
     const ALWAYS_HARD = new Set(['Ж', 'Ш', 'Ц']);
     const SOFTENING_LETTERS = new Set(['Е', 'Ё', 'И', 'Ю', 'Я', 'Ь']);
 
+    // Множество звонких согласных для колокольчика
+    const VOICED_CONSONANTS = new Set(['Б', 'В', 'Г', 'Д', 'Ж', 'З', 'Й', 'Л', 'М', 'Н', 'Р']);
+
     let STICKER_ANIMALS = [
       { icon: '🦁', name: 'Львёнок-грамотей', audio: 'Animals/ЛЬВЁНОК_ГРАМОТЕЙ.wav' },
       { icon: '🦊', name: 'Хитрый лисёнок', audio: 'Animals/ХИТРЫЙ_ЛИСЁНОК.wav' },
@@ -2216,24 +2234,24 @@
       { icon: '🦈', name: 'Смелая акула', audio: 'Animals/СМЕЛАЯ_АКУЛА.wav' }
     ];
 
-    // Озвучка подбадривания из папки Super
+    // Аудиофайлы подбадривания из папки Super
     let SUPER_CHEERS = [
-      { text: 'Поздравляю!', audio: 'Super/ПОЗДРАВЛЯЮ.wav' },
-      { text: 'Ты молодец!', audio: 'Super/ТЫ_МОЛОДЕЦ.wav' },
-      { text: 'Урааа!', audio: 'Super/УРААА.wav' },
-      { text: 'Так держать!', audio: 'Super/ТАК_ДЕРЖАТЬ.wav' },
-      { text: 'Умница!', audio: 'Super/УМНИЦА.wav' },
-      { text: 'Супер!', audio: 'Super/СУПЕР.wav' },
-      { text: 'Отлично!', audio: 'Super/ОТЛИЧНО.wav' },
-      { text: 'Ты смог!', audio: 'Super/ТЫ_СМОГ.wav' },
-      { text: 'Красота!', audio: 'Super/КРАСОТА.wav' },
-      { text: 'Здорово!', audio: 'Super/ЗДОРОВО.wav' },
-      { text: 'Всё верно!', audio: 'Super/ВСЁ_ВЕРНО.wav' },
-      { text: 'Как быстро!', audio: 'Super/КАК_БЫСТРО.wav' },
-      { text: 'Вот это да!', audio: 'Super/ВОТ_ЭТО_ДА.wav' },
-      { text: 'Хорошо!', audio: 'Super/ХОРОШО.wav' },
-      { text: 'Ты справился!', audio: 'Super/ТЫ_СПРАВИЛСЯ.wav' },
-      { text: 'Горжусь тобой!', audio: 'Super/ГОРЖУСЬ_ТОБОЙ.wav' }
+      "Super/ПОЗДРАВЛЯЮ.wav",
+      "Super/ТЫ_МОЛОДЕЦ.wav",
+      "Super/УРААА.wav",
+      "Super/ТАК_ДЕРЖАТЬ.wav",
+      "Super/УМНИЦА.wav",
+      "Super/СУПЕР.wav",
+      "Super/ОТЛИЧНО.wav",
+      "Super/ТЫ_СМОГ.wav",
+      "Super/КРАСОТА.wav",
+      "Super/ЗДОРОВО.wav",
+      "Super/ВСЁ_ВЕРНО.wav",
+      "Super/КАК_БЫСТРО.wav",
+      "Super/ВОТ_ЭТО_ДА.wav",
+      "Super/ХОРОШО.wav",
+      "Super/ТЫ_СПРАВИЛСЯ.wav",
+      "Super/ГОРЖУСЬ_ТОБОЙ.wav"
     ];
 
     let WORDS_ONE_SYLLABLE_3_4 = [];
@@ -2249,7 +2267,10 @@
           if (data.words2) DICTIONARY_WORDS_2 = data.words2;
           if (data.words3) DICTIONARY_WORDS_3 = data.words3;
           if (data.animals) STICKER_ANIMALS = data.animals;
-          if (data.super) SUPER_CHEERS = data.super;
+          if (data.super) {
+            // Поддержка как строкового массива ["Super/..."], так и объектов {audio: "..."}
+            SUPER_CHEERS = data.super.map(item => (typeof item === 'string' ? item : item.audio));
+          }
           updateCategoryBadges();
           if (!['alphabet', 'matrix'].includes(primaryMode)) {
             generateNext(true);
@@ -2274,7 +2295,7 @@
     const REVERSE_ALLOWED_VOWELS = new Set(['А', 'О', 'У', 'Ы', 'И']);
 
     let activeLetters = new Set(['А', 'У', 'О', 'М', 'С', 'Х', 'Р', 'Ы', 'Л', 'Н']);
-    let primaryMode = 'syllables'; // 'alphabet', 'matrix', 'syllables', 'one_syllable', 'words2', 'words3'
+    let primaryMode = 'syllables';
     let syllableModes = { open: true, reverse: false };
 
     let currentText = '';
@@ -2319,9 +2340,9 @@
 
     function playRandomCheerAudio() {
       if (isSoundMuted || !SUPER_CHEERS || SUPER_CHEERS.length === 0) return;
-      const item = SUPER_CHEERS[Math.floor(Math.random() * SUPER_CHEERS.length)];
-      if (item && item.audio) {
-        playAudioFile(item.audio);
+      const path = SUPER_CHEERS[Math.floor(Math.random() * SUPER_CHEERS.length)];
+      if (path) {
+        playAudioFile(path);
       }
     }
 
@@ -2848,9 +2869,13 @@
           const tr = document.createElement('tr');
           
           const thCons = document.createElement('th');
-          thCons.className = 'consonant-header';
+          const isVoiced = VOICED_CONSONANTS.has(c);
+          thCons.className = `consonant-header ${isVoiced ? 'voiced-cons' : ''}`;
           thCons.id = `row-header-${rowIdx}`;
           thCons.textContent = c;
+          if (isVoiced) {
+            thCons.title = `Буква ${c} — звонкая согласная`;
+          }
           tr.appendChild(thCons);
 
           MATRIX_VOWELS_OPEN.forEach((v, colIdx) => {
@@ -2913,9 +2938,13 @@
           const tr = document.createElement('tr');
 
           const thCons = document.createElement('th');
-          thCons.className = 'consonant-header';
+          const isVoiced = VOICED_CONSONANTS.has(c);
+          thCons.className = `consonant-header ${isVoiced ? 'voiced-cons' : ''}`;
           thCons.id = `row-header-${rowIdx}`;
           thCons.textContent = c;
+          if (isVoiced) {
+            thCons.title = `Буква ${c} — звонкая согласная`;
+          }
           tr.appendChild(thCons);
 
           MATRIX_VOWELS_REVERSE.forEach((v, colIdx) => {
@@ -3215,11 +3244,11 @@
       document.getElementById('star-count').textContent = readCount;
       updateTimers();
 
-      // Каждые 20 карточек (начиная с 20-й: 20, 40, 60...) - наклейка животного
+      // Каждые 20 карточек (20, 40, 60...) - наклейка животного
       if (readCount > 0 && readCount % 20 === 0) {
         setTimeout(() => openStickerModal(), 200);
       } 
-      // Подбадривание: каждую двадцатую, начиная с 10-й (10, 30, 50, 70...)
+      // Каждые 20 карточек начиная с 10-й (10, 30, 50, 70...) - конфетти + случайный звук Super без текста
       else if (readCount >= 10 && (readCount - 10) % 20 === 0) {
         launchConfetti(true);
       }
