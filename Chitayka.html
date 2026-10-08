@@ -818,6 +818,13 @@
       gap: 4px;
       cursor: pointer;
       position: relative;
+      transition: transform 0.1s ease, border-color 0.12s ease;
+    }
+
+    .alphabet-letter-tile:active, .alphabet-letter-tile.playing {
+      transform: scale(0.94);
+      border-color: #2563eb !important;
+      background: #eff6ff !important;
     }
 
     .alphabet-letter-tile.vowel {
@@ -847,9 +854,14 @@
     .alphabet-letter-tile.inactive {
       background: #f1f5f9 !important;
       border-color: #e2e8f0 !important;
-      opacity: 0.55;
+      opacity: 0.65;
       box-shadow: none !important;
-      cursor: default;
+      cursor: pointer;
+    }
+
+    .alphabet-letter-tile.inactive:hover {
+      opacity: 0.95;
+      border-color: #cbd5e1 !important;
     }
 
     .alphabet-letter-tile.inactive .tile-upper,
@@ -1553,10 +1565,23 @@
       font-weight: 900;
       border-right: 1px solid rgba(255,255,255,0.4);
       position: relative;
+      cursor: pointer;
+      transition: transform 0.1s ease, filter 0.1s ease;
     }
 
     .ribbon-cell:last-child {
       border-right: none;
+    }
+
+    .ribbon-cell:hover, .cons-cell:not(.bg-empty):hover, .sign-row:hover {
+      filter: brightness(1.08);
+      box-shadow: 0 0 8px rgba(0,0,0,0.18);
+      z-index: 2;
+    }
+
+    .ribbon-cell:active, .cons-cell:not(.bg-empty):active, .sign-row:active {
+      transform: scale(0.94);
+      filter: brightness(0.92);
     }
 
     .bg-vowel {
@@ -1641,6 +1666,8 @@
       color: var(--yellow-letter);
       text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
       border-right: 1px solid rgba(255,255,255,0.4);
+      cursor: pointer;
+      transition: transform 0.1s ease, filter 0.1s ease;
     }
 
     .cons-cell:last-child {
@@ -1657,6 +1684,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      cursor: default !important;
     }
 
     .bg-icon {
@@ -1695,6 +1723,8 @@
       font-size: 32px;
       font-weight: 900;
       color: #334155;
+      cursor: pointer;
+      transition: transform 0.1s ease, filter 0.1s ease;
     }
 
     .sign-row:first-of-type {
@@ -1744,7 +1774,6 @@
 </head>
 <body class="font-schoolbook">
 
-  <!-- Микро-текст подбадривания в левом нижнем углу -->
   <div class="subtle-cheer-hint" id="subtle-cheer-text"></div>
 
   <button class="panel-tab-pull" id="panel-tab-pull" onclick="openLettersPanel()" title="Открыть изученные буквы (или клавиша Ctrl)">
@@ -1790,10 +1819,10 @@
         <div class="help-section">
           <div class="help-section-title">🧩 Режимы тренировки</div>
           <ul class="help-list">
-            <li><b>Алфавит:</b> экран с алфавитным обзором и «Лентой букв».</li>
+            <li><b>Алфавит:</b> экран с алфавитным обзором и озвучкой каждой буквы из audioletters.</li>
             <li><b>Слоги (Матрица):</b> таблица слогов со звуковым воспроизведением.</li>
             <li><b>Прямые / Обратные:</b> слоговые карточки.</li>
-            <li><b>1 слог / 2 слога / 3 слога:</b> слова с делением по складам.</li>
+            <li><b>1 слог / 2 слога / 3 слога:</b> слова с делением по складам и интеллектуальной озвучкой.</li>
           </ul>
         </div>
 
@@ -1925,7 +1954,6 @@
         <div class="letters-grid" id="grid-signs" style="grid-template-columns: repeat(2, 1fr);"></div>
       </div>
 
-      <!-- ВЫБОР ШРИФТА -->
       <div class="group-box">
         <div class="group-header">
           <span>🔤</span> Шрифт текста
@@ -2015,7 +2043,7 @@
 
         <div id="alpha-all-view" class="alphabet-category-card">
           <div class="alphabet-category-header">
-            <span>🔤</span> Весь алфавит (неактивные буквы — серые)
+            <span>🔤</span> Весь алфавит (нажмите на любую букву для озвучки)
           </div>
           <div class="alphabet-order-grid" id="alpha-all-grid"></div>
         </div>
@@ -2256,7 +2284,6 @@
       { icon: '🦈', name: 'Смелая акула', audio: 'Animals/СМЕЛАЯ_АКУЛА.wav' }
     ];
 
-    // Аудиофайлы подбадривания из папки Super
     let SUPER_CHEERS = [
       "Super/ПОЗДРАВЛЯЮ.wav",
       "Super/ТЫ_МОЛОДЕЦ.wav",
@@ -2304,7 +2331,6 @@
         const response = await fetch('Words.json');
         if (response.ok) {
           const data = await response.json();
-          // Поддерживаем как ключ words1, так и случай, если JSON оформлен как обычный массив
           if (data.words1) WORDS_ONE_SYLLABLE_3_4 = data.words1;
           else if (Array.isArray(data)) WORDS_ONE_SYLLABLE_3_4 = data;
 
@@ -2320,7 +2346,7 @@
           }
         }
       } catch (e) {
-        console.warn("Words.json загружается через веб-сервер. При локальном открытии по file:// браузер может блокировать fetch CORS-политикой.");
+        console.warn("Words.json загружается через локальный сервер или HTTP.");
       }
     }
 
@@ -2361,6 +2387,7 @@
     let currentSyllableAudio = null;
     let currentSequenceId = 0;
     let currentExtraAudio = null;
+    let currentLetterAudio = null;
     const audioAvailabilityCache = new Map();
 
     function stopExtraAudio() {
@@ -2373,7 +2400,6 @@
       }
     }
 
-    // Воспроизведение с поддержкой регистра папок и encodeURI
     function playAudioFile(path) {
       if (isSoundMuted || !path) return;
       stopExtraAudio();
@@ -2440,7 +2466,6 @@
       }
     }
 
-    // Останавливает воспроизведение слога/слова на карточке
     function stopSyllableAudio() {
       currentSequenceId++;
       if (currentSyllableAudio) {
@@ -2467,26 +2492,67 @@
       }
     }
 
-    async function checkCurrentCardAudioAvailable(text) {
-      if (!text || ['alphabet', 'matrix'].includes(primaryMode)) return false;
+    async function checkCardFileExists(folder, baseName) {
+      const text = baseName.trim();
+      if (!text) return false;
+      const upper = text.toUpperCase();
+      const lower = text.toLowerCase();
+      const capitalized = text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+      const variants = [...new Set([upper, lower, capitalized, text])];
 
-      // Если режим "1 слог" — проверяем наличие целого слова в папке audio1slog/
-      if (primaryMode === 'one_syllable') {
-        const wordUpper = text.trim().toUpperCase();
-        const wordLower = text.trim().toLowerCase();
-        const hasUpper = await checkFileExists(`audio1slog/${encodeURIComponent(wordUpper)}.wav`);
-        if (hasUpper) return true;
-        return await checkFileExists(`audio1slog/${encodeURIComponent(wordLower)}.wav`);
+      for (const v of variants) {
+        const url = `${folder}/${encodeURIComponent(v)}.wav`;
+        if (await checkFileExists(url)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    /**
+     * Определение папки озвучивания для слога:
+     * - 1 буква гласная -> audioletters
+     * - 2 буквы (СГ или ГС) -> audio
+     * - другие варианты слогов и букв -> audio_slogi
+     */
+    function getFolderForSyllable(syllable) {
+      if (!syllable) return 'audio';
+      const clean = syllable.trim().toUpperCase();
+
+      if (clean.length === 1 && VOWELS_SET.has(clean)) {
+        return 'audioletters';
       }
 
-      // Для остальных режимов (слоги и многосложные слова) — ищем первый склад в папке audio/
+      if (clean.length === 2) {
+        const isV0 = VOWELS_SET.has(clean[0]);
+        const isV1 = VOWELS_SET.has(clean[1]);
+        const isSign0 = (clean[0] === 'Ь' || clean[0] === 'Ъ');
+        const isSign1 = (clean[1] === 'Ь' || clean[1] === 'Ъ');
+
+        const isConsonant0 = !isV0 && !isSign0;
+        const isConsonant1 = !isV1 && !isSign1;
+
+        if ((isConsonant0 && isV1) || (isV0 && isConsonant1)) {
+          return 'audio';
+        }
+      }
+
+      return 'audio_slogi';
+    }
+
+    async function checkCurrentCardAudioAvailable(text) {
+      if (!text || ['alphabet', 'matrix'].includes(primaryMode)) return false;
+      if (window.location.protocol === 'file:') return true;
+
+      if (primaryMode === 'one_syllable') {
+        return await checkCardFileExists('audio1slog', text);
+      }
+
       const parts = text.split(/[-–]/).map(s => s.trim()).filter(Boolean);
       if (parts.length === 0) return false;
 
-      const syllable = parts[0].toUpperCase();
-      const hasUpper = await checkFileExists(`audio/${encodeURIComponent(syllable)}.wav`);
-      if (hasUpper) return true;
-      return await checkFileExists(`audio/${encodeURIComponent(syllable.toLowerCase())}.wav`);
+      const folder = getFolderForSyllable(parts[0]);
+      return await checkCardFileExists(folder, parts[0]);
     }
 
     async function updateSpeakerButtonState() {
@@ -2502,9 +2568,7 @@
         btn.title = "Озвучить карточку";
       } else {
         btn.classList.add('disabled');
-        btn.title = primaryMode === 'one_syllable' 
-          ? "Озвучка для этого слова не найдена в папке audio1slog/"
-          : "Озвучка для этого слова/слога не найдена в папке audio/";
+        btn.title = "Озвучка не найдена";
       }
     }
 
@@ -2515,9 +2579,12 @@
       playSyllableAudio();
     }
 
+    /**
+     * Воспроизведение одного слога с независимым регистром ввода и имени файла
+     */
     function playSingleSyllable(syllable, sequenceId, folder = 'audio') {
       return new Promise((resolve) => {
-        if (sequenceId !== currentSequenceId) {
+        if (sequenceId !== null && sequenceId !== currentSequenceId) {
           resolve();
           return;
         }
@@ -2529,11 +2596,14 @@
 
         const upper = text.toUpperCase();
         const lower = text.toLowerCase();
+        const capitalized = text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 
-        let audio = new Audio(`${folder}/${encodeURIComponent(upper)}.wav`);
-        currentSyllableAudio = audio;
+        const variants = [...new Set([upper, lower, capitalized, text])];
+        const candidateUrls = variants.map(v => `${folder}/${encodeURIComponent(v)}.wav`);
 
+        let index = 0;
         let finished = false;
+
         const finish = () => {
           if (!finished) {
             finished = true;
@@ -2541,46 +2611,122 @@
           }
         };
 
-        audio.onended = finish;
+        const timer = setTimeout(() => {
+          finish();
+        }, 4000);
 
-        const tryFallback = () => {
-          if (finished || sequenceId !== currentSequenceId) {
+        function tryNext() {
+          if (finished || (sequenceId !== null && sequenceId !== currentSequenceId)) {
+            clearTimeout(timer);
             finish();
             return;
           }
-          const fallback = new Audio(`${folder}/${encodeURIComponent(lower)}.wav`);
-          currentSyllableAudio = fallback;
-          fallback.onended = finish;
-          fallback.onerror = finish;
-          fallback.play().catch(() => finish());
+          if (index >= candidateUrls.length) {
+            clearTimeout(timer);
+            finish();
+            return;
+          }
+
+          const url = candidateUrls[index++];
+          const audio = new Audio(url);
+          currentSyllableAudio = audio;
+
+          audio.onended = () => {
+            clearTimeout(timer);
+            finish();
+          };
+
+          audio.onerror = () => {
+            tryNext();
+          };
+
+          const promise = audio.play();
+          if (promise !== undefined) {
+            promise.catch(() => {
+              tryNext();
+            });
+          }
+        }
+
+        tryNext();
+      });
+    }
+
+    /**
+     * Воспроизведение буквы из audioletters при нажатии в Алфавите
+     */
+    function playLetterAudio(letter) {
+      if (isSoundMuted || !letter) return;
+      const char = letter.trim();
+      if (!char) return;
+
+      if (currentLetterAudio) {
+        try {
+          currentLetterAudio.pause();
+          currentLetterAudio.currentTime = 0;
+        } catch (e) {}
+        currentLetterAudio = null;
+      }
+      stopSyllableAudio();
+      stopExtraAudio();
+
+      const upper = char.toUpperCase();
+      const lower = char.toLowerCase();
+      const capitalized = char.charAt(0).toUpperCase() + char.slice(1).toLowerCase();
+
+      const variants = [...new Set([upper, lower, capitalized, char])];
+      const candidateUrls = variants.map(v => `audioletters/${encodeURIComponent(v)}.wav`);
+
+      let index = 0;
+      function tryNext() {
+        if (index >= candidateUrls.length) {
+          console.warn(`Аудио буквы не найдено в audioletters: ${char}`);
+          return;
+        }
+        const url = candidateUrls[index++];
+        const audio = new Audio(url);
+        currentLetterAudio = audio;
+
+        audio.onended = () => {
+          if (currentLetterAudio === audio) {
+            currentLetterAudio = null;
+          }
         };
 
-        audio.onerror = tryFallback;
-        audio.play().catch(() => {
-          tryFallback();
-        });
-      });
+        audio.onerror = () => {
+          tryNext();
+        };
+
+        const promise = audio.play();
+        if (promise !== undefined) {
+          promise.catch(() => {
+            tryNext();
+          });
+        }
+      }
+
+      tryNext();
     }
 
     async function playSyllableAudio() {
       if (['alphabet', 'matrix'].includes(primaryMode) || !currentText) return;
+      if (isSoundMuted) return;
       stopSyllableAudio();
       stopExtraAudio();
       const sequenceId = currentSequenceId;
 
-      // Озвучка для режима «1 слог» из папки audio1slog/ целиком по слову
       if (primaryMode === 'one_syllable') {
         await playSingleSyllable(currentText, sequenceId, 'audio1slog');
         return;
       }
 
-      // Озвучка по слогам для 2 и 3 слогов, а также слоговых карточек
       const parts = currentText.split(/[-–]/).map(s => s.trim()).filter(Boolean);
       if (parts.length === 0) return;
 
       for (let i = 0; i < parts.length; i++) {
         if (sequenceId !== currentSequenceId) break;
-        await playSingleSyllable(parts[i], sequenceId, 'audio');
+        const folder = getFolderForSyllable(parts[i]);
+        await playSingleSyllable(parts[i], sequenceId, folder);
         if (sequenceId !== currentSequenceId) break;
         if (i < parts.length - 1) {
           await new Promise(r => setTimeout(r, 70));
@@ -2870,10 +3016,13 @@
         effectiveType = 'consonant-soft';
       }
       tile.className = `alphabet-letter-tile ${effectiveType} ${isInactive ? 'inactive' : ''}`;
-      tile.title = isInactive ? `Буква ${upperChar} (не выбрана)` : `Буква ${upperChar}`;
-      if (!isInactive) {
-        tile.onclick = () => playSoundEffect();
-      }
+      tile.title = `Буква ${upperChar}`;
+      
+      tile.onclick = () => {
+        playLetterAudio(upperChar);
+        tile.classList.add('playing');
+        setTimeout(() => tile.classList.remove('playing'), 250);
+      };
 
       const upper = document.createElement('span');
       upper.className = 'tile-upper';
@@ -2904,6 +3053,20 @@
       });
     }
 
+    function attachRibbonAudioClicks() {
+      const cells = document.querySelectorAll('.ribbon-table .ribbon-cell, .ribbon-table .cons-cell, .ribbon-table .sign-row');
+      cells.forEach(cell => {
+        if (cell.classList.contains('bg-empty')) return;
+        const txt = cell.textContent.trim().toUpperCase();
+        if (txt && RUSSIAN_ALPHABET.includes(txt)) {
+          cell.onclick = (e) => {
+            e.stopPropagation();
+            playLetterAudio(txt);
+          };
+        }
+      });
+    }
+
     function setAlphabetSort(mode) {
       alphabetSortMode = mode;
       document.getElementById('btn-sort-all').classList.toggle('active', mode === 'all');
@@ -2912,7 +3075,11 @@
       document.getElementById('alpha-all-view').style.display = mode === 'all' ? 'block' : 'none';
       document.getElementById('alpha-helper-view').style.display = mode === 'helper' ? 'block' : 'none';
 
-      renderAlphabetView();
+      if (mode === 'all') {
+        renderAlphabetView();
+      } else {
+        attachRibbonAudioClicks();
+      }
     }
 
     const MATRIX_CONSONANTS = ["Б", "В", "Г", "Д", "Ж", "З", "К", "Л", "М", "Н", "П", "Р", "С", "Т", "Ф", "Х", "Ц", "Ч", "Ш", "Щ"];
@@ -2932,21 +3099,33 @@
     let matrixAudio = null;
 
     function playMatrixSyllable(syl, cellElement) {
+      if (isSoundMuted || !syl) return;
       if (matrixAudio) {
-        matrixAudio.pause();
-        matrixAudio.currentTime = 0;
+        try {
+          matrixAudio.pause();
+          matrixAudio.currentTime = 0;
+        } catch (e) {}
+        matrixAudio = null;
       }
 
       cellElement.classList.add('playing');
       setTimeout(() => cellElement.classList.remove('playing'), 300);
 
-      const fileName = `${syl.toUpperCase()}.wav`;
-      const filePath = `audio/${encodeURIComponent(fileName)}`;
+      const text = syl.trim();
+      const upper = text.toUpperCase();
+      const lower = text.toLowerCase();
+      const capitalized = text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+      const variants = [...new Set([upper, lower, capitalized, text])];
+      const candidateUrls = variants.map(v => `audio/${encodeURIComponent(v)}.wav`);
 
-      matrixAudio = new Audio(filePath);
-      matrixAudio.play().catch(err => {
-        console.warn(`Аудиофайл не найден: ${filePath}`);
-      });
+      let idx = 0;
+      function tryNext() {
+        if (idx >= candidateUrls.length) return;
+        const audio = new Audio(candidateUrls[idx++]);
+        matrixAudio = audio;
+        audio.play().catch(() => tryNext());
+      }
+      tryNext();
     }
 
     function createColoredSyllableHTML(c, v, isReverse = false) {
@@ -3381,12 +3560,9 @@
       const hintEl = document.getElementById('subtle-cheer-text');
       if (hintEl) hintEl.textContent = '';
 
-      // Каждые 20 карточек (20, 40, 60...) - наклейка животного
       if (readCount > 0 && readCount % 20 === 0) {
         setTimeout(() => openStickerModal(), 200);
-      } 
-      // Каждые 20 карточек начиная с 10-й (10, 30, 50, 70...) - салют и звук из Super
-      else if (readCount >= 10 && (readCount - 10) % 20 === 0) {
+      } else if (readCount >= 10 && (readCount - 10) % 20 === 0) {
         setTimeout(() => {
           launchConfetti(false);
           playRandomCheerAudio();
@@ -3492,6 +3668,7 @@
         matrixView.style.display = 'none';
         alphaView.style.display = 'flex';
         renderAlphabetView();
+        attachRibbonAudioClicks();
       } else if (primaryMode === 'matrix') {
         cardView.style.display = 'none';
         alphaView.style.display = 'none';
@@ -3680,6 +3857,7 @@
     loadWordsData();
     updateCategoryBadges();
     syncModeUI();
+    attachRibbonAudioClicks();
   </script>
 </body>
 </html>
