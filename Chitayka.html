@@ -2304,7 +2304,10 @@
         const response = await fetch('Words.json');
         if (response.ok) {
           const data = await response.json();
+          // Поддерживаем как ключ words1, так и случай, если JSON оформлен как обычный массив
           if (data.words1) WORDS_ONE_SYLLABLE_3_4 = data.words1;
+          else if (Array.isArray(data)) WORDS_ONE_SYLLABLE_3_4 = data;
+          
           if (data.words2) DICTIONARY_WORDS_2 = data.words2;
           if (data.words3) DICTIONARY_WORDS_3 = data.words3;
           if (data.animals) STICKER_ANIMALS = data.animals;
@@ -2317,7 +2320,101 @@
           }
         }
       } catch (e) {
-        console.warn("Words.json загружается через сервер. Используются исходные значения.");
+        console.warn("Words.json загружается через веб-сервер. При локальном открытии по file:// браузер может блокировать fetch CORS-политикой.");
+      }
+    }
+
+    async function checkCurrentCardAudioAvailable(text) {
+      if (!text || ['alphabet', 'matrix'].includes(primaryMode)) return false;
+
+      // Если режим "1 слог" — проверяем наличие целого слова в папке audio1slog/
+      if (primaryMode === 'one_syllable') {
+        const wordUpper = text.trim().toUpperCase();
+        const wordLower = text.trim().toLowerCase();
+        const hasUpper = await checkFileExists(`audio1slog/${encodeURIComponent(wordUpper)}.wav`);
+        if (hasUpper) return true;
+        return await checkFileExists(`audio1slog/${encodeURIComponent(wordLower)}.wav`);
+      }
+
+      // Для остальных режимов (слоги и многосложные слова) — ищем в папке audio/
+      const parts = text.split(/[-–]/).map(s => s.trim()).filter(Boolean);
+      if (parts.length === 0) return false;
+
+      const syllable = parts[0].toUpperCase();
+      const hasUpper = await checkFileExists(`audio/${encodeURIComponent(syllable)}.wav`);
+      if (hasUpper) return true;
+      return await checkFileExists(`audio/${encodeURIComponent(syllable.toLowerCase())}.wav`);
+    }
+
+    function playSingleSyllable(syllable, sequenceId, folder = 'audio') {
+      return new Promise((resolve) => {
+        if (sequenceId !== currentSequenceId) {
+          resolve();
+          return;
+        }
+        const text = syllable.trim();
+        if (!text) {
+          resolve();
+          return;
+        }
+
+        const upper = text.toUpperCase();
+        const lower = text.toLowerCase();
+
+        let audio = new Audio(`${folder}/${encodeURIComponent(upper)}.wav`);
+        currentSyllableAudio = audio;
+
+        let finished = false;
+        const finish = () => {
+          if (!finished) {
+            finished = true;
+            resolve();
+          }
+        };
+
+        audio.onended = finish;
+
+        const tryFallback = () => {
+          if (finished || sequenceId !== currentSequenceId) {
+            finish();
+            return;
+          }
+          const fallback = new Audio(`${folder}/${encodeURIComponent(lower)}.wav`);
+          currentSyllableAudio = fallback;
+          fallback.onended = finish;
+          fallback.onerror = finish;
+          fallback.play().catch(() => finish());
+        };
+
+        audio.onerror = tryFallback;
+        audio.play().catch(() => {
+          tryFallback();
+        });
+      });
+    }
+
+    async function playSyllableAudio() {
+      if (['alphabet', 'matrix'].includes(primaryMode) || !currentText) return;
+      stopSyllableAudio();
+      stopExtraAudio();
+      const sequenceId = currentSequenceId;
+
+      // Озвучка для режима «1 слог» из папки audio1slog
+      if (primaryMode === 'one_syllable') {
+        await playSingleSyllable(currentText, sequenceId, 'audio1slog');
+        return;
+      }
+
+      // Озвучка по слогам для 2 и 3 слогов, а также слоговых карточек
+      const parts = currentText.split(/[-–]/).map(s => s.trim()).filter(Boolean);
+      if (parts.length === 0) return;
+      for (let i = 0; i < parts.length; i++) {
+        if (sequenceId !== currentSequenceId) break;
+        await playSingleSyllable(parts[i], sequenceId, 'audio');
+        if (sequenceId !== currentSequenceId) break;
+        if (i < parts.length - 1) {
+          await new Promise(r => setTimeout(r, 70));
+        }
       }
     }
 
