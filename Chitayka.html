@@ -816,15 +816,7 @@
       align-items: center;
       justify-content: center;
       gap: 4px;
-      cursor: pointer;
       position: relative;
-      transition: transform 0.1s ease, border-color 0.12s ease;
-    }
-
-    .alphabet-letter-tile:active, .alphabet-letter-tile.playing {
-      transform: scale(0.94);
-      border-color: #2563eb !important;
-      background: #eff6ff !important;
     }
 
     .alphabet-letter-tile.vowel {
@@ -856,12 +848,6 @@
       border-color: #e2e8f0 !important;
       opacity: 0.65;
       box-shadow: none !important;
-      cursor: pointer;
-    }
-
-    .alphabet-letter-tile.inactive:hover {
-      opacity: 0.95;
-      border-color: #cbd5e1 !important;
     }
 
     .alphabet-letter-tile.inactive .tile-upper,
@@ -1145,6 +1131,60 @@
       box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
     }
 
+    /* ПЕРЕКЛЮЧАТЕЛЬ ПОРЯДКА ГЛАСНЫХ (ПО УМОЛЧАНИЮ / ПО ЗАЙЦЕВУ) */
+    .matrix-order-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #ffffff;
+      border: 2px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 6px 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      flex-wrap: wrap;
+    }
+
+    .matrix-order-label {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--text-muted);
+    }
+
+    .matrix-order-toggle-group {
+      display: flex;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 3px;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .matrix-order-btn {
+      border: none;
+      background: transparent;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .matrix-order-btn:hover {
+      color: var(--text-main);
+    }
+
+    .matrix-order-btn.active {
+      background: #2563eb;
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+    }
+
     .matrix-wrapper-card {
       background: #ffffff;
       border: 3px solid #cbd5e1;
@@ -1409,6 +1449,20 @@
         display: none;
       }
 
+      .matrix-order-toolbar {
+        padding: 5px 8px;
+        gap: 6px;
+      }
+      .matrix-order-btn {
+        padding: 5px 8px;
+        font-size: 11px;
+        white-space: normal;
+        text-align: center;
+      }
+      .matrix-order-label {
+        font-size: 12px;
+      }
+
       .matrix-table th, .matrix-table td {
         width: 44px;
         height: 38px;
@@ -1565,23 +1619,10 @@
       font-weight: 900;
       border-right: 1px solid rgba(255,255,255,0.4);
       position: relative;
-      cursor: pointer;
-      transition: transform 0.1s ease, filter 0.1s ease;
     }
 
     .ribbon-cell:last-child {
       border-right: none;
-    }
-
-    .ribbon-cell:hover, .cons-cell:not(.bg-empty):hover, .sign-row:hover {
-      filter: brightness(1.08);
-      box-shadow: 0 0 8px rgba(0,0,0,0.18);
-      z-index: 2;
-    }
-
-    .ribbon-cell:active, .cons-cell:not(.bg-empty):active, .sign-row:active {
-      transform: scale(0.94);
-      filter: brightness(0.92);
     }
 
     .bg-vowel {
@@ -1666,8 +1707,6 @@
       color: var(--yellow-letter);
       text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
       border-right: 1px solid rgba(255,255,255,0.4);
-      cursor: pointer;
-      transition: transform 0.1s ease, filter 0.1s ease;
     }
 
     .cons-cell:last-child {
@@ -1723,8 +1762,6 @@
       font-size: 32px;
       font-weight: 900;
       color: #334155;
-      cursor: pointer;
-      transition: transform 0.1s ease, filter 0.1s ease;
     }
 
     .sign-row:first-of-type {
@@ -1819,10 +1856,10 @@
         <div class="help-section">
           <div class="help-section-title">🧩 Режимы тренировки</div>
           <ul class="help-list">
-            <li><b>Алфавит:</b> экран с алфавитным обзором и озвучкой каждой буквы из audioletters.</li>
-            <li><b>Слоги (Матрица):</b> таблица слогов со звуковым воспроизведением.</li>
+            <li><b>Алфавит:</b> экран с алфавитным обзором букв (все буквы и лента букв).</li>
+            <li><b>Слоги (Матрица):</b> таблица слогов с переключением порядка (по умолчанию / по Зайцеву).</li>
             <li><b>Прямые / Обратные:</b> слоговые карточки.</li>
-            <li><b>1 слог / 2 слога / 3 слога:</b> слова с делением по складам и интеллектуальной озвучкой.</li>
+            <li><b>1 слог / 2 слога / 3 слога:</b> слова с делением по складам и озвучкой.</li>
           </ul>
         </div>
 
@@ -2043,7 +2080,7 @@
 
         <div id="alpha-all-view" class="alphabet-category-card">
           <div class="alphabet-category-header">
-            <span>🔤</span> Весь алфавит (нажмите на любую букву для озвучки)
+            <span>🔤</span> Весь алфавит
           </div>
           <div class="alphabet-order-grid" id="alpha-all-grid"></div>
         </div>
@@ -2177,6 +2214,19 @@
         <div class="matrix-nav-bar">
           <button class="matrix-subtab-btn active" id="btn-matrix-open" onclick="switchMatrixMode('open')">Открытые слоги (БА, КО, МУ)</button>
           <button class="matrix-subtab-btn" id="btn-matrix-reverse" onclick="switchMatrixMode('reverse')">Обратные слоги (АБ, ОК, УМ)</button>
+        </div>
+
+        <!-- Переключатель порядка гласных (по умолчанию / по Зайцеву) -->
+        <div class="matrix-order-toolbar" id="matrix-order-toolbar">
+          <span class="matrix-order-label">Порядок гласных:</span>
+          <div class="matrix-order-toggle-group">
+            <button class="matrix-order-btn active" id="btn-order-default" onclick="setMatrixVowelOrder('default')">
+              А – О – У – Ы – Э – И – Е – Ё – Ю – Я (по умолчанию)
+            </button>
+            <button class="matrix-order-btn" id="btn-order-zaytsev" onclick="setMatrixVowelOrder('zaytsev')">
+              А–Я, О–Ё, У–Ю, Ы–И, Э–Е (по Зайцеву)
+            </button>
+          </div>
         </div>
 
         <div class="matrix-wrapper-card">
@@ -2360,8 +2410,6 @@
     ];
 
     const VOWELS_SET = new Set([...LETTERS.vowelsHard, ...LETTERS.vowelsSoft]);
-    const REVERSE_ALLOWED_CONSONANTS = new Set(['М', 'Н', 'Л', 'Р', 'С', 'Т', 'К', 'П', 'Б', 'В', 'Д', 'З']);
-    const REVERSE_ALLOWED_VOWELS = new Set(['А', 'О', 'У', 'Ы', 'И']);
 
     let activeLetters = new Set(['А', 'У', 'О', 'М', 'С', 'Х', 'Р', 'Ы', 'Л', 'Н']);
     let primaryMode = 'syllables';
@@ -2387,7 +2435,6 @@
     let currentSyllableAudio = null;
     let currentSequenceId = 0;
     let currentExtraAudio = null;
-    let currentLetterAudio = null;
     const audioAvailabilityCache = new Map();
 
     function stopExtraAudio() {
@@ -2509,12 +2556,6 @@
       return false;
     }
 
-    /**
-     * Определение папки озвучивания для слога:
-     * - 1 буква гласная -> audioletters
-     * - 2 буквы (СГ или ГС) -> audio
-     * - другие варианты слогов и букв -> audio_slogi
-     */
     function getFolderForSyllable(syllable) {
       if (!syllable) return 'audio';
       const clean = syllable.trim().toUpperCase();
@@ -2579,9 +2620,6 @@
       playSyllableAudio();
     }
 
-    /**
-     * Воспроизведение одного слога с независимым регистром ввода и имени файла
-     */
     function playSingleSyllable(syllable, sequenceId, folder = 'audio') {
       return new Promise((resolve) => {
         if (sequenceId !== null && sequenceId !== currentSequenceId) {
@@ -2650,62 +2688,6 @@
 
         tryNext();
       });
-    }
-
-    /**
-     * Воспроизведение буквы из audioletters при нажатии в Алфавите
-     */
-    function playLetterAudio(letter) {
-      if (isSoundMuted || !letter) return;
-      const char = letter.trim();
-      if (!char) return;
-
-      if (currentLetterAudio) {
-        try {
-          currentLetterAudio.pause();
-          currentLetterAudio.currentTime = 0;
-        } catch (e) {}
-        currentLetterAudio = null;
-      }
-      stopSyllableAudio();
-      stopExtraAudio();
-
-      const upper = char.toUpperCase();
-      const lower = char.toLowerCase();
-      const capitalized = char.charAt(0).toUpperCase() + char.slice(1).toLowerCase();
-
-      const variants = [...new Set([upper, lower, capitalized, char])];
-      const candidateUrls = variants.map(v => `audioletters/${encodeURIComponent(v)}.wav`);
-
-      let index = 0;
-      function tryNext() {
-        if (index >= candidateUrls.length) {
-          console.warn(`Аудио буквы не найдено в audioletters: ${char}`);
-          return;
-        }
-        const url = candidateUrls[index++];
-        const audio = new Audio(url);
-        currentLetterAudio = audio;
-
-        audio.onended = () => {
-          if (currentLetterAudio === audio) {
-            currentLetterAudio = null;
-          }
-        };
-
-        audio.onerror = () => {
-          tryNext();
-        };
-
-        const promise = audio.play();
-        if (promise !== undefined) {
-          promise.catch(() => {
-            tryNext();
-          });
-        }
-      }
-
-      tryNext();
     }
 
     async function playSyllableAudio() {
@@ -2928,24 +2910,36 @@
       mount('grid-signs', LETTERS.signs, 'sign');
     }
 
+    /* БАЗОВЫЕ НАБОРЫ ДЛЯ МАТРИЦЫ И КАРТОЧЕК */
+    const MATRIX_CONSONANTS = ["Б", "В", "Г", "Д", "Ж", "З", "К", "Л", "М", "Н", "П", "Р", "С", "Т", "Ф", "Х", "Ц", "Ч", "Ш", "Щ"];
+    
+    // Порядок гласных по умолчанию (твёрдые -> мягкие)
+    const MATRIX_VOWELS_DEFAULT = ["А", "О", "У", "Ы", "Э", "И", "Е", "Ё", "Ю", "Я"];
+    // Порядок гласных по Зайцеву (пары твёрдая–мягкая)
+    const MATRIX_VOWELS_ZAYTSEV = ["А", "Я", "О", "Ё", "У", "Ю", "Ы", "И", "Э", "Е"];
+    
+    let matrixVowelOrder = 'default';
+
+    const MATRIX_VOWELS_REVERSE = ["А", "О", "У", "И", "Э"];
+    const MATRIX_CONSONANTS_REVERSE = ["Б", "В", "Д", "К", "Л", "М", "Н", "П", "Р", "С", "Т", "Х"];
+
+    function isInvalidOpen(c, v) {
+      if (['Ж', 'Ш'].includes(c) && ['Ы', 'Я', 'Ю'].includes(v)) return true;
+      if (['Ч', 'Щ'].includes(c) && ['Я', 'Ю', 'Ы'].includes(v)) return true;
+      if (['Г', 'К', 'Х'].includes(c) && ['Ы', 'Э', 'Я', 'Ю', 'Ё'].includes(v)) return true;
+      if (c === 'Ц' && ['Я', 'Ю', 'Ё', 'Э'].includes(v)) return true;
+      return false;
+    }
+
+    // Все слоги, существующие в матрице, теперь полностью доступны и в карточках (ровно 169 слогов)
     function isValidOpenSyllable(c, v) {
-      if (c === 'Ь' || c === 'Ъ' || c === 'Й') return false;
-      if (v === 'Э') return false;
-      if ((c === 'Ж' || c === 'Ш') && v === 'Ы') return false;
-      if ((c === 'Ч' || c === 'Щ') && (v === 'Ы' || v === 'Я' || v === 'Ю')) return false;
-      if (['Г', 'К', 'Х'].includes(c) && (v === 'Ы' || v === 'Я' || v === 'Ю')) return false;
-      if (c === 'Ц' && (v === 'Я' || v === 'Ю' || v === 'Ё')) return false;
-      if ((c === 'Ж' || c === 'Ш') && (v === 'Я' || v === 'Ю')) return false;
-      if (c === 'Щ' && v === 'О') return false;
-      if (c === 'Ф' && (v === 'Я' || v === 'Ю')) return false;
-      if (c === 'З' && v === 'Ю') return false;
-      return true;
+      if (!MATRIX_CONSONANTS.includes(c)) return false;
+      if (!MATRIX_VOWELS_DEFAULT.includes(v)) return false;
+      return !isInvalidOpen(c, v);
     }
 
     function isValidReverseSyllable(v, c) {
-      if (!REVERSE_ALLOWED_CONSONANTS.has(c)) return false;
-      if (!REVERSE_ALLOWED_VOWELS.has(v)) return false;
-      return true;
+      return MATRIX_VOWELS_REVERSE.includes(v) && MATRIX_CONSONANTS_REVERSE.includes(c);
     }
 
     function getAvailableSyllables(allowOpen, allowReverse) {
@@ -3009,6 +3003,7 @@
       document.getElementById('count-words3').textContent = words3Count;
     }
 
+    // Создание плитки буквы в Алфавите без озвучки
     function createAlphabetTile(upperChar, type, isInactive = false) {
       const tile = document.createElement('div');
       let effectiveType = type;
@@ -3017,12 +3012,6 @@
       }
       tile.className = `alphabet-letter-tile ${effectiveType} ${isInactive ? 'inactive' : ''}`;
       tile.title = `Буква ${upperChar}`;
-      
-      tile.onclick = () => {
-        playLetterAudio(upperChar);
-        tile.classList.add('playing');
-        setTimeout(() => tile.classList.remove('playing'), 250);
-      };
 
       const upper = document.createElement('span');
       upper.className = 'tile-upper';
@@ -3053,20 +3042,6 @@
       });
     }
 
-    function attachRibbonAudioClicks() {
-      const cells = document.querySelectorAll('.ribbon-table .ribbon-cell, .ribbon-table .cons-cell, .ribbon-table .sign-row');
-      cells.forEach(cell => {
-        if (cell.classList.contains('bg-empty')) return;
-        const txt = cell.textContent.trim().toUpperCase();
-        if (txt && RUSSIAN_ALPHABET.includes(txt)) {
-          cell.onclick = (e) => {
-            e.stopPropagation();
-            playLetterAudio(txt);
-          };
-        }
-      });
-    }
-
     function setAlphabetSort(mode) {
       alphabetSortMode = mode;
       document.getElementById('btn-sort-all').classList.toggle('active', mode === 'all');
@@ -3077,22 +3052,7 @@
 
       if (mode === 'all') {
         renderAlphabetView();
-      } else {
-        attachRibbonAudioClicks();
       }
-    }
-
-    const MATRIX_CONSONANTS = ["Б", "В", "Г", "Д", "Ж", "З", "К", "Л", "М", "Н", "П", "Р", "С", "Т", "Ф", "Х", "Ц", "Ч", "Ш", "Щ"];
-    const MATRIX_VOWELS_OPEN = ["А", "О", "У", "Ы", "Э", "Я", "Е", "Ё", "И", "Ю"];
-    const MATRIX_VOWELS_REVERSE = ["А", "О", "У", "И", "Э"];
-    const MATRIX_CONSONANTS_REVERSE = ["Б", "В", "Д", "К", "Л", "М", "Н", "П", "Р", "С", "Т", "Х"];
-
-    function isInvalidOpen(c, v) {
-      if (['Ж', 'Ш'].includes(c) && ['Ы', 'Я', 'Ю'].includes(v)) return true;
-      if (['Ч', 'Щ'].includes(c) && ['Я', 'Ю', 'Ы'].includes(v)) return true;
-      if (['Г', 'К', 'Х'].includes(c) && ['Ы', 'Э', 'Я', 'Ю', 'Ё'].includes(v)) return true;
-      if (c === 'Ц' && ['Я', 'Ю', 'Ё', 'Э'].includes(v)) return true;
-      return false;
     }
 
     let matrixMode = 'open';
@@ -3160,7 +3120,9 @@
         corner.innerHTML = 'Согл.<br>↓ Глас.→';
         headerRow.appendChild(corner);
 
-        MATRIX_VOWELS_OPEN.forEach((v, colIdx) => {
+        const currentVowelsOpen = (matrixVowelOrder === 'zaytsev') ? MATRIX_VOWELS_ZAYTSEV : MATRIX_VOWELS_DEFAULT;
+
+        currentVowelsOpen.forEach((v, colIdx) => {
           const th = document.createElement('th');
           th.className = 'vowel-header';
           th.id = `col-header-${colIdx}`;
@@ -3184,7 +3146,7 @@
           }
           tr.appendChild(thCons);
 
-          MATRIX_VOWELS_OPEN.forEach((v, colIdx) => {
+          currentVowelsOpen.forEach((v, colIdx) => {
             const td = document.createElement('td');
             const syl = c + v;
 
@@ -3286,10 +3248,25 @@
       }
     }
 
+    function setMatrixVowelOrder(order) {
+      matrixVowelOrder = order;
+      const btnDef = document.getElementById('btn-order-default');
+      const btnZayt = document.getElementById('btn-order-zaytsev');
+      if (btnDef) btnDef.classList.toggle('active', order === 'default');
+      if (btnZayt) btnZayt.classList.toggle('active', order === 'zaytsev');
+      renderMatrix();
+    }
+
     function switchMatrixMode(mode) {
       matrixMode = mode;
       document.getElementById('btn-matrix-open').classList.toggle('active', mode === 'open');
       document.getElementById('btn-matrix-reverse').classList.toggle('active', mode === 'reverse');
+      
+      const orderToolbar = document.getElementById('matrix-order-toolbar');
+      if (orderToolbar) {
+        orderToolbar.style.display = (mode === 'open') ? 'flex' : 'none';
+      }
+
       renderMatrix();
     }
 
@@ -3668,11 +3645,14 @@
         matrixView.style.display = 'none';
         alphaView.style.display = 'flex';
         renderAlphabetView();
-        attachRibbonAudioClicks();
       } else if (primaryMode === 'matrix') {
         cardView.style.display = 'none';
         alphaView.style.display = 'none';
         matrixView.style.display = 'flex';
+        const orderToolbar = document.getElementById('matrix-order-toolbar');
+        if (orderToolbar) {
+          orderToolbar.style.display = (matrixMode === 'open') ? 'flex' : 'none';
+        }
         renderMatrix();
       } else {
         alphaView.style.display = 'none';
@@ -3770,7 +3750,7 @@
         lettersPanel.classList.add('collapsed');
         panelBackdrop.classList.remove('active');
       } else {
-        lettersPanel.classList.add('collapsed');
+        lettersPanel.classList.remove('collapsed');
       }
       syncTabPullVisibility();
     }
@@ -3857,7 +3837,6 @@
     loadWordsData();
     updateCategoryBadges();
     syncModeUI();
-    attachRibbonAudioClicks();
   </script>
 </body>
 </html>
