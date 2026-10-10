@@ -3,16 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Снимает блокировку 403 Forbidden с серверов изображений -->
 <meta name="referrer" content="no-referrer">
-<title>Деревья и кустарники — Иллюстрированное пособие для детей 5 лет</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=auvsv4HAyZQ_njQsK4Uaz_Oo4RpO05NlbaRVljbtlanFAWGLO6RGh8VrFsS2_E95VAK2kIYgL58JC1t6NU0hEjm4KpeblphzGGhJ9stkkAWsD6yFxFsgXjBtbLJSTAkZklPA7uuzcXDzWgkE5ykwt-97dZHJzrm8zd5W-8E62acsY0n152O8wzLZnmrg-KVdjRo5pkzlOBON5Ca15Jdd4MexRjUJQWH_-Y4PqwiyIBjywUF3oZO4eH1MA6ns0Yg4suBxYKkXp7Z5cHriE_IeGdKEmBstKi8Vpg_2Wzk-62XE1FDEhBkyjuntDd0B-v1l1PFaQwkl2sW9CE0rlEGYVoF0cPVk3LYgx7wiFjn-DFc" charset="UTF-8"></script><style>
+<title>Деревья и кустарники — Атлас для детей 5 лет</title>
+<style>
   :root {
     --primary: #166534;
-    --primary-light: #dcfce7;
     --conifer: #0369a1;
-    --conifer-light: #e0f2fe;
     --shrub: #b45309;
-    --shrub-light: #fef3c7;
     --bg: #f8fafc;
     --card-bg: #ffffff;
     --text: #1f2937;
@@ -21,7 +19,7 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
     background-color: var(--bg);
     color: var(--text);
     line-height: 1.6;
@@ -37,8 +35,8 @@
     box-shadow: 0 10px 25px -5px rgba(22, 101, 52, 0.25);
     margin-bottom: 28px;
   }
-  header h1 { font-size: 2.2rem; margin-bottom: 8px; }
-  header p { font-size: 1.15rem; opacity: 0.95; }
+  header h1 { font-size: 2.1rem; margin-bottom: 8px; }
+  header p { font-size: 1.1rem; opacity: 0.95; }
   
   .filter-bar {
     display: flex;
@@ -55,7 +53,7 @@
     border-radius: 14px;
   }
   .filter-btn {
-    padding: 10px 20px;
+    padding: 10px 18px;
     font-size: 0.95rem;
     font-weight: 600;
     border-radius: 9999px;
@@ -90,8 +88,7 @@
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   }
   .info-card.conifer-border { border-left-color: var(--conifer); }
-  .info-card.shrub-border { border-left-color: var(--shrub); }
-  .info-card h3 { font-size: 1.25rem; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .info-card h3 { font-size: 1.25rem; margin-bottom: 10px; }
   
   .grid {
     display: grid;
@@ -114,7 +111,7 @@
     box-shadow: 0 12px 24px rgba(0,0,0,0.1);
   }
   .card-img-wrap {
-    height: 190px;
+    height: 200px;
     position: relative;
     overflow: hidden;
     background: #e2e8f0;
@@ -123,6 +120,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
     transition: transform 0.3s ease;
   }
   .plant-card:hover .card-img-wrap img {
@@ -137,7 +135,6 @@
     font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   }
   .badge-deciduous { background: #dcfce7; color: #166534; }
@@ -154,7 +151,6 @@
     font-size: 1.35rem;
     font-weight: 700;
     margin-bottom: 4px;
-    color: var(--text);
   }
   .card-sci {
     font-size: 0.85rem;
@@ -168,7 +164,6 @@
   }
   .detail-label {
     font-weight: 700;
-    color: var(--text);
     display: flex;
     align-items: center;
     gap: 6px;
@@ -215,9 +210,8 @@
     padding: 18px;
   }
   .quiz-card h4 {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     margin-bottom: 8px;
-    color: #1e293b;
   }
   details summary {
     cursor: pointer;
@@ -234,12 +228,6 @@
     color: #166534;
     font-size: 0.92rem;
   }
-
-  @media print {
-    .filter-bar, header button { display: none !important; }
-    body { background: white; padding: 0; }
-    .plant-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
-  }
 </style>
 </head>
 <body>
@@ -253,7 +241,7 @@
   <div class="info-banner">
     <div class="info-card">
       <h3>🌳 Дерево или кустарник?</h3>
-      <p><strong>Дерево — это богатырь с ОДНИМ толстым стволом!</strong> Ветки у него начинаются высоко над землёй и делают широкую крону-шатёр.</p>
+      <p><strong>Дерево — это великан с ОДНИМ толстым стволом!</strong> Ветки у него начинаются высоко над землёй и делают широкую крону-шатёр.</p>
       <p style="margin-top: 8px;"><strong>Кустарник — это крепыш со МНОЖЕСТВОМ стволиков!</strong> У него нет одного ствола, прямо из земли кустиком тянутся тонкие веточки.</p>
     </div>
     <div class="info-card conifer-border">
@@ -268,7 +256,7 @@
     <button class="filter-btn" onclick="filterPlants('deciduous')">🍃 Лиственные деревья (8)</button>
     <button class="filter-btn" onclick="filterPlants('coniferous')">🌲 Хвойные деревья (5)</button>
     <button class="filter-btn" onclick="filterPlants('shrub')">🌺 Кустарники (4)</button>
-    <button class="filter-btn" onclick="scrollToQuiz()">🎯 Игры и викторина</button>
+    <button class="filter-btn" onclick="scrollToQuiz()">🎯 Викторина для малыша</button>
   </div>
 
   <div class="grid" id="plantsGrid">
@@ -276,7 +264,7 @@
     <!-- 1. БЕРЕЗА -->
     <div class="plant-card" data-category="deciduous">
       <div class="card-img-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Betula_pendula_001.jpg/640px-Betula_pendula_001.jpg" alt="Берёза повислая" loading="lazy">
+        <img referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Betula_pendula_001.jpg/640px-Betula_pendula_001.jpg" alt="Берёза повислая" loading="lazy">
         <span class="card-badge badge-deciduous">Лиственное дерево</span>
       </div>
       <div class="card-body">
@@ -288,7 +276,7 @@
         </div>
         <div class="detail-row">
           <div class="detail-label">🍃 Листья:</div>
-          <div class="detail-val">Маленькие, похожи на треугольнички или ромбики с зубчиками. Весной они клейкие и пахучие.</div>
+          <div class="detail-val">Маленькие, треугольные или похожие на ромбики с зубчиками. Весной они клейкие и пахучие.</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🌰 Плоды и семена:</div>
@@ -296,7 +284,7 @@
         </div>
         <div class="kid-fact">
           <strong>💡 Секрет для малыша:</strong>
-          Берёза — единственное в мире дерево с белым стволом! Белая кора отражает горячие лучи солнца, чтобы ствол не обгорел.
+          Берёза — единственное в мире дерево с белым стволом! Белая кора отражает лучи солнца, чтобы ствол не обгорел.
         </div>
       </div>
     </div>
@@ -304,7 +292,7 @@
     <!-- 2. ДУБ -->
     <div class="plant-card" data-category="deciduous">
       <div class="card-img-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Quercus_robur_leaves_acorns.jpg/640px-Quercus_robur_leaves_acorns.jpg" alt="Дуб черешчатый" loading="lazy">
+        <img referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Quercus_robur_leaves_acorns.jpg/640px-Quercus_robur_leaves_acorns.jpg" alt="Дуб черешчатый" loading="lazy">
         <span class="card-badge badge-deciduous">Лиственное дерево</span>
       </div>
       <div class="card-body">
@@ -332,7 +320,7 @@
     <!-- 3. КЛЕН -->
     <div class="plant-card" data-category="deciduous">
       <div class="card-img-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Acer_platanoides_002.jpg/640px-Acer_platanoides_002.jpg" alt="Клён остролистный" loading="lazy">
+        <img referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Acer_platanoides_002.jpg/640px-Acer_platanoides_002.jpg" alt="Клён остролистный" loading="lazy">
         <span class="card-badge badge-deciduous">Лиственное дерево</span>
       </div>
       <div class="card-body">
@@ -340,19 +328,19 @@
         <div class="card-sci">Acer platanoides</div>
         <div class="detail-row">
           <div class="detail-label">🪵 Ствол и кора:</div>
-          <div class="detail-val">Стройный ствол. У молодых деревьев гладкая серая кора, у взрослых — с тонкими продольными бороздками.</div>
+          <div class="detail-val">Стройный ствол. У молодых деревьев кора гладкая, у взрослых — с тонкими продольными бороздками.</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🍃 Листья:</div>
-          <div class="detail-val">Похожи на раскрытую ладошку с пятью острыми кончиками. Осенью вспыхивают ярко-жёлтым и алым огнём.</div>
+          <div class="detail-val">Похожи на раскрытую детскую ладошку с пятью острыми кончиками. Осенью вспыхивают золотым и алым огнём.</div>
         </div>
         <div class="detail-row">
-          <div class="detail-label">🌰 Плоды и семена:</div>
-          <div class="detail-val">Парные крылатки-«вертолётики». Падая с высоты, они быстро крутятся и летят далеко по ветру.</div>
+          <div class="detail-label">🌰 Плоды:</div>
+          <div class="detail-val">Парные крылатки-«вертолётики». Падая с высоты, они весело кружатся и летят по ветру.</div>
         </div>
         <div class="kid-fact">
           <strong>💡 Секрет для малыша:</strong>
-          Крылатку клёна можно расщепить снизу и прилепить себе на нос — получится смешной клюв!
+          Крылатку клёна можно расщепить снизу и прилепить на нос — получится забавный клювик!
         </div>
       </div>
     </div>
@@ -360,7 +348,7 @@
     <!-- 4. ЛИПА -->
     <div class="plant-card" data-category="deciduous">
       <div class="card-img-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Tilia_cordata_leaf.jpg/640px-Tilia_cordata_leaf.jpg" alt="Липа мелколистная" loading="lazy">
+        <img referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Tilia_cordata_leaf.jpg/640px-Tilia_cordata_leaf.jpg" alt="Липа мелколистная" loading="lazy">
         <span class="card-badge badge-deciduous">Лиственное дерево</span>
       </div>
       <div class="card-body">
@@ -372,15 +360,15 @@
         </div>
         <div class="detail-row">
           <div class="detail-label">🍃 Листья:</div>
-          <div class="detail-val">Идеальной формы сердечка с аккуратными мелкими зубчиками по краям. Мягкие и шелковистые.</div>
+          <div class="detail-val">Идеальной формы сердечка с аккуратными мелкими зубчиками. Мягкие и шелковистые.</div>
         </div>
         <div class="detail-row">
-          <div class="detail-label">🌰 Плоды и цветы:</div>
-          <div class="detail-val">Летом цветёт жёлтыми медовыми цветами. Плоды — круглые маленькие орешки на длинной ножке с крылышком-парусом.</div>
+          <div class="detail-label">🌰 Цветы и плоды:</div>
+          <div class="detail-val">Летом цветёт желтыми душистыми цветами. Плоды — круглые орешки на ножке с крылышком-парусом.</div>
         </div>
         <div class="kid-fact">
           <strong>💡 Секрет для малыша:</strong>
-          Когда цветёт липа, весь парк пахнет вкусным сладким мёдом, а в ветвях жужжат тысячи пчёл!
+          Когда цветёт липа, весь парк пахнет мёдом, а в кроне дружно жужжат сотни пчёл!
         </div>
       </div>
     </div>
@@ -388,7 +376,7 @@
     <!-- 5. РЯБИНА -->
     <div class="plant-card" data-category="deciduous">
       <div class="card-img-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Sorbus_aucuparia_berries.jpg/640px-Sorbus_aucuparia_berries.jpg" alt="Рябина обыкновенная" loading="lazy">
+        <img referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Sorbus_aucuparia_berries.jpg/640px-Sorbus_aucuparia_berries.jpg" alt="Рябина обыкновенная" loading="lazy">
         <span class="card-badge badge-deciduous">Лиственное дерево</span>
       </div>
       <div class="card-body">
@@ -400,7 +388,7 @@
         </div>
         <div class="detail-row">
           <div class="detail-label">🍃 Листья:</div>
-          <div class="detail-val">Перистые: на одной длинной веточке сидит сразу от 9 до 15 маленьких продолговатых листиков.</div>
+          <div class="detail-val">Перистые: на одной веточке сидит сразу от 9 до 15 маленьких продолговатых листиков.</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🌰 Плоды:</div>
@@ -408,7 +396,7 @@
         </div>
         <div class="kid-fact">
           <strong>💡 Секрет для малыша:</strong>
-          Зимой ягоды рябины не осыпаются — это главная зимняя столовая для снегирей и свиристелей!
+          Зимой ягоды рябины не осыпаются — это главная зимняя столовая для красногрудых снегирей!
         </div>
       </div>
     </div>
@@ -416,7 +404,7 @@
     <!-- 6. ИВА -->
     <div class="plant-card" data-category="deciduous">
       <div class="card-img-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Salix_alba_Morton_08849.jpg/640px-Salix_alba_Morton_08849.jpg" alt="Ива плакучая" loading="lazy">
+        <img referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Salix_alba_Morton_08849.jpg/640px-Salix_alba_Morton_08849.jpg" alt="Ива плакучая" loading="lazy">
         <span class="card-badge badge-deciduous">Лиственное дерево</span>
       </div>
       <div class="card-body">
@@ -424,19 +412,19 @@
         <div class="card-sci">Salix alba</div>
         <div class="detail-row">
           <div class="detail-label">🪵 Ствол и кора:</div>
-          <div class="detail-val">Ствол часто склонён к речке или пруду. Ветки тонкие, гибкие, свисают вниз длинными струями.</div>
+          <div class="detail-val">Ствол часто склонён к воде. Ветки длинные, тонкие и гибкие, свисают вниз зелёными струями.</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🍃 Листья:</div>
-          <div class="detail-val">Узкие, длинные, серебристо-зелёные, похожие на маленькие лодочки или шёлковые ленточки.</div>
+          <div class="detail-val">Узкие, серебристо-зелёные, похожие на маленькие лодочки или шелковистые ленточки.</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🌰 Цветы:</div>
-          <div class="detail-val">Весной первой выпускает пушистые мягкие комочки — вербочки («котики» или «барашки»).</div>
+          <div class="detail-val">Ранней весной распускаются пушистые серые комочки — вербочки («котики»).</div>
         </div>
         <div class="kid-fact">
           <strong>💡 Секрет для малыша:</strong>
-          Ива — большая водохлёбка! Она почти всегда растёт у берегов прудов, рек и озёр.
+          Ива — большая любительница воды и почти всегда растёт на берегах рек и прудов.
         </div>
       </div>
     </div>
@@ -444,7 +432,7 @@
     <!-- 7. ОСИНА -->
     <div class="plant-card" data-category="deciduous">
       <div class="card-img-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Populus_tremula_leaves.jpg/640px-Populus_tremula_leaves.jpg" alt="Осина" loading="lazy">
+        <img referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Populus_tremula_leaves.jpg/640px-Populus_tremula_leaves.jpg" alt="Осина" loading="lazy">
         <span class="card-badge badge-deciduous">Лиственное дерево</span>
       </div>
       <div class="card-body">
@@ -452,19 +440,19 @@
         <div class="card-sci">Populus tremula</div>
         <div class="detail-row">
           <div class="detail-label">🪵 Ствол и кора:</div>
-          <div class="detail-val">Ровный гладкий ствол приятного зеленовато-серого оттенка. Внизу кора темнеет.</div>
+          <div class="detail-val">Ровный гладкий ствол приятного оливково-серого оттенка. Внизу кора темнеет.</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🍃 Листья:</div>
-          <div class="detail-val">Округлые листочки на очень тонких сплюснутых ножках. Поэтому они колышутся и шелестят от малейшего дуновения.</div>
+          <div class="detail-val">Круглые листья на тонких приплюснутых ножках. Поэтому они тихо шепчутся и колышутся даже без ветра.</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🌰 Плоды:</div>
-          <div class="detail-val">Пушистые серёжки с микроскопическими летучими семенами.</div>
+          <div class="detail-val">Пушистые серёжки, которые рассеивают по ветру крошечные семена с пухом.</div>
         </div>
         <div class="kid-fact">
           <strong>💡 Секрет для малыша:</strong>
-          Поговорка «дрожит как осиновый лист» родилась потому, что листья осины тихонько шуршат и пляшут даже в безветренный день!
+          Поговорка «дрожит как осиновый лист» появилась потому, что листья осины шуршат при самом лёгком дыхании ветерка!
         </div>
       </div>
     </div>
@@ -472,7 +460,7 @@
     <!-- 8. КАШТАН -->
     <div class="plant-card" data-category="deciduous">
       <div class="card-img-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Castanea_sativa_and_Aesculus_hippocastanum_fruits.jpg/640px-Castanea_sativa_and_Aesculus_hippocastanum_fruits.jpg" alt="Конский каштан" loading="lazy">
+        <img referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Castanea_sativa_and_Aesculus_hippocastanum_fruits.jpg/640px-Castanea_sativa_and_Aesculus_hippocastanum_fruits.jpg" alt="Конский каштан" loading="lazy">
         <span class="card-badge badge-deciduous">Лиственное дерево</span>
       </div>
       <div class="card-body">
@@ -480,19 +468,19 @@
         <div class="card-sci">Aesculus hippocastanum</div>
         <div class="detail-row">
           <div class="detail-label">🪵 Ствол и кора:</div>
-          <div class="detail-val">Крепкий толстый ствол с тёмно-коричневой чешуйчатой корой и пышной раскидистой кроной.</div>
+          <div class="detail-val">Крепкий ствол с чешуйчатой тёмной корой и широкой раскидистой кроной.</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🍃 Листья:</div>
-          <div class="detail-val">Пальчатые: 5 или 7 больших листочков соединены в одной точке, образуя большой зелёный веер.</div>
+          <div class="detail-val">Веерные: 5–7 широких листочков соединены в одной точке, образуя большой раскрытый веер.</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🌰 Плоды:</div>
-          <div class="detail-val">Зелёные колючие шарики-ёжики, внутри которых прячутся гладкие, блестящие шоколадные орехи-каштаны.</div>
+          <div class="detail-val">Зелёные ёжики с шипами, внутри которых прячутся гладкие блестящие шоколадные каштаны.</div>
         </div>
         <div class="kid-fact">
           <strong>💡 Секрет для малыша:</strong>
-          Весной каштан цветёт высокими белыми пирамидками-свечками, словно праздничная новогодняя ёлка!
+          Весной каштан цветёт белыми пирамидками-свечками, словно на дереве зажгли праздничные гирлянды!
         </div>
       </div>
     </div>
@@ -500,7 +488,7 @@
     <!-- 9. СОСНА -->
     <div class="plant-card" data-category="coniferous">
       <div class="card-img-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Pinus_sylvestris_cone.jpg/640px-Pinus_sylvestris_cone.jpg" alt="Сосна обыкновенная" loading="lazy">
+        <img referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Pinus_sylvestris_cone.jpg/640px-Pinus_sylvestris_cone.jpg" alt="Сосна обыкновенная" loading="lazy">
         <span class="card-badge badge-coniferous">Хвойное дерево</span>
       </div>
       <div class="card-body">
@@ -508,19 +496,19 @@
         <div class="card-sci">Pinus sylvestris</div>
         <div class="detail-row">
           <div class="detail-label">🪵 Ствол и кора:</div>
-          <div class="detail-val">Высокий прямой ствол, как мачта корабля! Снизу кора серо-бурая, а сверху — золотисто-рыжая, светится на солнце.</div>
+          <div class="detail-val">Высокий прямой ствол, как мачта! Снизу кора серая, а сверху — золотисто-рыжая, светится на солнце.</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🌲 Хвоя:</div>
-          <div class="detail-val">Длинные сизо-зелёные иголки, которые ВСЕГДА растут дружными парами (по две хвоинки из одной чешуйки).</div>
+          <div class="detail-val">Длинные сизые иголочки, которые ВСЕГДА растут дружными парами (по 2 хвоинки из одной почки).</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🌰 Плоды:</div>
-          <div class="detail-val">Твёрдые круглые шишки. В сырость чешуйки закрываются, а на солнышке раскрываются веером.</div>
+          <div class="detail-val">Твёрдые круглые шишки. В сырость чешуйки закрываются, а на сухом воздухе раскрываются.</div>
         </div>
         <div class="kid-fact">
           <strong>💡 Секрет для малыша:</strong>
-          Сосна пахнет целебной смолой. Если положить сосновую шишку на батарею, она с треском раскроет свои чешуйки!
+          Если положить упавшую плотную сосновую шишку в тёплую сухую комнату, она сама раскроет свои чешуйки!
         </div>
       </div>
     </div>
@@ -528,7 +516,7 @@
     <!-- 10. ЕЛЬ -->
     <div class="plant-card" data-category="coniferous">
       <div class="card-img-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Picea_abies_needles.jpg/640px-Picea_abies_needles.jpg" alt="Ель обыкновенная" loading="lazy">
+        <img referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Picea_abies_needles.jpg/640px-Picea_abies_needles.jpg" alt="Ель обыкновенная" loading="lazy">
         <span class="card-badge badge-coniferous">Хвойное дерево</span>
       </div>
       <div class="card-body">
@@ -536,19 +524,19 @@
         <div class="card-sci">Picea abies</div>
         <div class="detail-row">
           <div class="detail-label">🪵 Ствол и кора:</div>
-          <div class="detail-val">Бурая шелушащаяся кора. Ветки растут ярусами от самой земли, образуя колючую пирамидку-шатёр.</div>
+          <div class="detail-val">Бурая кора, ветки растут ярусами от самой земли, образуя колючий шатёр-пирамидку.</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🌲 Хвоя:</div>
-          <div class="detail-val">Короткие (1-2 см), четырёхгранные, очень колючие иголочки. Они сидят на веточке ПО ОДНОЙ, очень густо.</div>
+          <div class="detail-val">Короткие (1.5–2 см), четырёхгранные, колючие иголочки. Они сидят на побеге ПО ОДНОЙ, очень густо.</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🌰 Плоды:</div>
-          <div class="detail-val">Длинные сосульки-шишки, которые свисают с верхних веток вниз.</div>
+          <div class="detail-val">Длинные шишки-сосульки, которые свисают с верхних веток вниз.</div>
         </div>
         <div class="kid-fact">
           <strong>💡 Секрет для малыша:</strong>
-          Это та самая ёлочка из любимой новогодней песенки: «Зимой и летом стройная, зелёная была!».
+          Та самая ёлочка из новогодней песенки: «Зимой и летом стройная, зелёная была!».
         </div>
       </div>
     </div>
@@ -556,7 +544,7 @@
     <!-- 11. ЛИСТВЕННИЦА -->
     <div class="plant-card" data-category="coniferous">
       <div class="card-img-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Larix_decidua_needles.jpg/640px-Larix_decidua_needles.jpg" alt="Лиственница" loading="lazy">
+        <img referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Larix_decidua_needles.jpg/640px-Larix_decidua_needles.jpg" alt="Лиственница" loading="lazy">
         <span class="card-badge badge-coniferous">Хвойное — сбрасывает хвою!</span>
       </div>
       <div class="card-body">
@@ -568,15 +556,15 @@
         </div>
         <div class="detail-row">
           <div class="detail-label">🌲 Хвоя:</div>
-          <div class="detail-val">Мягкая, нежная, неколючая! Растёт пучками по 20-40 иголочек. Осенью желтеет и ПОЛНОСТЬЮ ОПАДАЕТ на зиму!</div>
+          <div class="detail-val">Мягкая, нежная, неколючая! Растёт пучками по 20–40 штучек. Осенью желтеет и ПОЛНОСТЬЮ ОПАДАЕТ!</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🌰 Плоды:</div>
-          <div class="detail-val">Маленькие округлые шишечки с волнистыми чешуйками, похожие на деревянные розочки.</div>
+          <div class="detail-val">Маленькие аккуратные округлые шишечки, похожие на деревянные розочки.</div>
         </div>
         <div class="kid-fact">
           <strong>💡 Секрет для малыша:</strong>
-          Хотя у лиственницы хвоинки, на зиму она раздевается, как берёза или клён, чтобы ветки не сломались под снегом.
+          Хотя у лиственницы хвоя, на зиму она раздевается, как берёза или клён, чтобы ветви не сломались под снегом.
         </div>
       </div>
     </div>
@@ -584,7 +572,7 @@
     <!-- 12. ПИХТА -->
     <div class="plant-card" data-category="coniferous">
       <div class="card-img-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Abies_sibirica_needles.jpg/640px-Abies_sibirica_needles.jpg" alt="Пихта сибирская" loading="lazy">
+        <img referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Abies_sibirica_needles.jpg/640px-Abies_sibirica_needles.jpg" alt="Пихта сибирская" loading="lazy">
         <span class="card-badge badge-coniferous">Хвойное дерево</span>
       </div>
       <div class="card-body">
@@ -592,19 +580,19 @@
         <div class="card-sci">Abies sibirica</div>
         <div class="detail-row">
           <div class="detail-label">🪵 Ствол и кора:</div>
-          <div class="detail-val">Стройный ствол с гладкой серебристой корой, на которой видны смоляные пузырьки.</div>
+          <div class="detail-val">Стройный ствол с гладкой серебристой корой и смоляными пузырьками.</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🌲 Хвоя:</div>
-          <div class="detail-val">Плоские мягкие иголочки, которые совсем не колются! Снизу на хвоинке есть две белые полосочки.</div>
+          <div class="detail-val">Плоские мягкие иголочки, которые совсем не колются! Снизу на них видны две белые полосочки.</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🌰 Плоды:</div>
-          <div class="detail-val">Шишки стоят на ветках СТРОГО ВВЕРХ, как свечки! А созрев, осыпаются прямо на дереве.</div>
+          <div class="detail-val">Шишки стоят на ветках СТРОГО ВВЕРХ, как свечки, а созрев, осыпаются прямо на дереве.</div>
         </div>
         <div class="kid-fact">
           <strong>💡 Секрет для малыша:</strong>
-          Пихта — самая мягкая и ласковая из хвойных: её лапки можно гладить, они шелковистые и пахнут цитрусом!
+          Пихта — самая ласковая из хвойных: её лапки можно гладить, они шелковистые и приятно пахнут цитрусом!
         </div>
       </div>
     </div>
@@ -612,7 +600,7 @@
     <!-- 13. КЕДР -->
     <div class="plant-card" data-category="coniferous">
       <div class="card-img-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Pinus_sibirica_cones.jpg/640px-Pinus_sibirica_cones.jpg" alt="Кедр сибирский" loading="lazy">
+        <img referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Pinus_sibirica_cones.jpg/640px-Pinus_sibirica_cones.jpg" alt="Кедр сибирский" loading="lazy">
         <span class="card-badge badge-coniferous">Хвойное дерево</span>
       </div>
       <div class="card-body">
@@ -620,19 +608,19 @@
         <div class="card-sci">Pinus sibirica</div>
         <div class="detail-row">
           <div class="detail-label">🪵 Ствол и кора:</div>
-          <div class="detail-val">Огромный ствол, великан северных лесов. Буро-серая кора с глубокими трещинами.</div>
+          <div class="detail-val">Исполин тайги. Толстый ствол, буро-серая кора с трещинами и широкая густая крона.</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🌲 Хвоя:</div>
-          <div class="detail-val">Длинная, густая, пушистая хвоя. Главная примета — хвоинки собраны в пучки СРАЗУ ПО 5 ШТУК!</div>
+          <div class="detail-val">Длинная пушистая хвоя. Главная примета — хвоинки собраны в пучки СРАЗУ ПО 5 ШТУК!</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🌰 Плоды:</div>
-          <div class="detail-val">Большие тяжёлые шишки с вкусными питательными кедровыми орешками внутри.</div>
+          <div class="detail-val">Большие плотные шишки с вкусными питательными кедровыми орешками внутри.</div>
         </div>
         <div class="kid-fact">
           <strong>💡 Секрет для малыша:</strong>
-          Кедр кормит всех обитателей тайги: белок, бурундуков, медведей и птицу кедровку!
+          Кедр кормит всех обитателей тайги: белочек, бурундуков, медведей и птицу кедровку!
         </div>
       </div>
     </div>
@@ -640,7 +628,7 @@
     <!-- 14. СИРЕНЬ -->
     <div class="plant-card" data-category="shrub">
       <div class="card-img-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Syringa_vulgaris_flower.jpg/640px-Syringa_vulgaris_flower.jpg" alt="Сирень обыкновенная" loading="lazy">
+        <img referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Syringa_vulgaris_flower.jpg/640px-Syringa_vulgaris_flower.jpg" alt="Сирень обыкновенная" loading="lazy">
         <span class="card-badge badge-shrub">Лиственный кустарник</span>
       </div>
       <div class="card-body">
@@ -648,11 +636,11 @@
         <div class="card-sci">Syringa vulgaris</div>
         <div class="detail-row">
           <div class="detail-label">🪵 Стволики:</div>
-          <div class="detail-val">Нет одного ствола — от земли растёт пучок крепких серых стволиков-веток.</div>
+          <div class="detail-val">Нет одного ствола — от земли растёт пучок крепких упругих серых стволиков-веток.</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🍃 Листья:</div>
-          <div class="detail-val">Широкие, гладкие, аккуратной формы сердечка. Остаются ярко-зелёными до первого снега!</div>
+          <div class="detail-val">Гладкие, плотные, аккуратной формы сердечка. Остаются зелёными до первого снега!</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🌸 Цветы:</div>
@@ -660,7 +648,7 @@
         </div>
         <div class="kid-fact">
           <strong>💡 Секрет для малыша:</strong>
-          Обычно у цветка сирени 4 лепестка. Но если найти счастливый пятилепестковый цветочек, можно загадать желание!
+          Обычно у цветка сирени 4 лепестка. Если найти редкий цветочек с 5 лепестками — можно загадать желание!
         </div>
       </div>
     </div>
@@ -668,7 +656,7 @@
     <!-- 15. ШИПОВНИК -->
     <div class="plant-card" data-category="shrub">
       <div class="card-img-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Rosa_canina_fruit.jpg/640px-Rosa_canina_fruit.jpg" alt="Шиповник" loading="lazy">
+        <img referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Rosa_canina_fruit.jpg/640px-Rosa_canina_fruit.jpg" alt="Шиповник" loading="lazy">
         <span class="card-badge badge-shrub">Лиственный кустарник</span>
       </div>
       <div class="card-body">
@@ -676,19 +664,19 @@
         <div class="card-sci">Rosa canina</div>
         <div class="detail-row">
           <div class="detail-label">🪵 Стволики и шипы:</div>
-          <div class="detail-val">Гибкие дуговидные побеги от земли, покрытые цепкими загнутыми шипами-колючками.</div>
+          <div class="detail-val">Дуговидные побеги от земли, покрытые загнутыми шипами-колючками для защиты от животных.</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🍃 Листья:</div>
-          <div class="detail-val">Сложные листочки из 5-7 овальных зазубренных листиков с выраженными бороздками.</div>
+          <div class="detail-val">Сложные перистые листья из 5–7 зубчатых овальных листочков.</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🌰 Плоды:</div>
-          <div class="detail-val">Ярко-красные блестящие овальные ягодки, полные полезного витамина C.</div>
+          <div class="detail-val">Блестящие ярко-красные овальные ягоды, богатые полезным витамином C.</div>
         </div>
         <div class="kid-fact">
           <strong>💡 Секрет для малыша:</strong>
-          Шиповник — родной дедушка красивой розы! Летом он цветёт нежными розовыми цветами с чудесным ароматом.
+          Шиповник — родной дедушка садовой розы! Летом он нежно благоухает розовыми цветами.
         </div>
       </div>
     </div>
@@ -696,7 +684,7 @@
     <!-- 16. ОРЕШНИК -->
     <div class="plant-card" data-category="shrub">
       <div class="card-img-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Corylus_avellana_leaves_and_nuts.jpg/640px-Corylus_avellana_leaves_and_nuts.jpg" alt="Орешник" loading="lazy">
+        <img referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Corylus_avellana_leaves_and_nuts.jpg/640px-Corylus_avellana_leaves_and_nuts.jpg" alt="Орешник" loading="lazy">
         <span class="card-badge badge-shrub">Лиственный кустарник</span>
       </div>
       <div class="card-body">
@@ -704,19 +692,19 @@
         <div class="card-sci">Corylus avellana</div>
         <div class="detail-row">
           <div class="detail-label">🪵 Стволики:</div>
-          <div class="detail-val">Высокий пышный куст: из земли расходится веер длинных прямых стволов со светлой корой.</div>
+          <div class="detail-val">Высокий куст: прямо из почвы расходится веер прямых гибких стволов со светлой корой.</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🍃 Листья:</div>
-          <div class="detail-val">Большие, круглые, шероховатые и бархатистые на ощупь, с зубчатым краем.</div>
+          <div class="detail-val">Крупные, круглые, бархатистые на ощупь, с аккуратными зубчиками.</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🌰 Плоды:</div>
-          <div class="detail-val">Настоящие лесные орехи (фундук) в резных зелёных юбочках-колокольчиках!</div>
+          <div class="detail-val">Настоящие лесные орехи (фундук) в резных зелёных кружевных колокольчиках!</div>
         </div>
         <div class="kid-fact">
           <strong>💡 Секрет для малыша:</strong>
-          Лещина просыпается раньше всех в лесу: ещё лежит снег, а на её веточках уже висят золотые серёжки!
+          Лещина цветёт раньше всех в лесу: ещё лежит снег, а на ветках уже висят золотые серёжки!
         </div>
       </div>
     </div>
@@ -724,7 +712,7 @@
     <!-- 17. МОЖЖЕВЕЛЬНИК -->
     <div class="plant-card" data-category="shrub">
       <div class="card-img-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Juniperus_communis_berries.jpg/640px-Juniperus_communis_berries.jpg" alt="Можжевельник" loading="lazy">
+        <img referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Juniperus_communis_berries.jpg/640px-Juniperus_communis_berries.jpg" alt="Можжевельник" loading="lazy">
         <span class="card-badge badge-shrub">Хвойный кустарник!</span>
       </div>
       <div class="card-body">
@@ -732,19 +720,19 @@
         <div class="card-sci">Juniperus communis</div>
         <div class="detail-row">
           <div class="detail-label">🪵 Стволики:</div>
-          <div class="detail-val">Много невысоких стволиков с шелушащейся красно-бурой корой. Бывает прямостоячим или стелется ковром.</div>
+          <div class="detail-val">Много невысоких стволиков с красно-бурой корой. Растёт кустом или стелется ковром.</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🌲 Хвоя:</div>
-          <div class="detail-val">Острые короткие иголочки, сидящие тройками. На каждой хвоинке сверху есть белая полоска.</div>
+          <div class="detail-val">Острые короткие иголочки, сидящие тройками. На каждой хвоинке сверху есть белая полосочка.</div>
         </div>
         <div class="detail-row">
           <div class="detail-label">🫐 Плоды:</div>
-          <div class="detail-val">Круглые шишкоягоды: сначала зелёные, а затем становятся сине-черными с восковым налётом.</div>
+          <div class="detail-val">Круглые шишкоягоды: сначала зелёные, а затем становятся сине-чёрными с сизым налётом.</div>
         </div>
         <div class="kid-fact">
           <strong>💡 Секрет для малыша:</strong>
-          Можжевельник доказывает, что хвойным бывает не только высоченное дерево, но и колючий кустик!
+          Можжевельник доказывает, что хвойным растением бывает не только дерево-великан, но и колючий кустик!
         </div>
       </div>
     </div>
@@ -752,9 +740,9 @@
   </div>
 
   <section class="game-section" id="quizSection">
-    <h2>🎯 Викторина и игры для юного натуралиста (5 лет)</h2>
+    <h2>🎯 Викторина и загадки для юного следопыта (5 лет)</h2>
     <p style="text-align: center; color: var(--text-muted); max-width: 650px; margin: 0 auto 20px;">
-      Задайте эти вопросы малышу на прогулке или дома. Нажмите на вопрос, чтобы открыть правильный ответ и похвалу!
+      Задайте эти вопросы ребенку на прогулке или дома. Нажмите на вопрос, чтобы открыть верный ответ!
     </p>
 
     <div class="quiz-grid">
@@ -762,7 +750,7 @@
         <h4>1. Чем кустик сирени отличается от дуба?</h4>
         <details>
           <summary>Посмотреть ответ</summary>
-          <p>У дуба ОДИН толстый ствол, а у сирени МНОГО стволиков растёт прямо из земли!</p>
+          <p>У дуба ОДИН толстый ствол, а у куста сирени МНОГО стволиков растёт прямо из земли!</p>
         </details>
       </div>
 
@@ -770,7 +758,7 @@
         <h4>2. Какое хвойное дерево сбрасывает иголки на зиму?</h4>
         <details>
           <summary>Посмотреть ответ</summary>
-          <p>Лиственница! Её мягкие иголочки желтеют осенью и осыпаются до весны.</p>
+          <p>Лиственница! Её мягкие иголочки желтеют осенью и осыпаются до самой весны.</p>
         </details>
       </div>
 
@@ -786,7 +774,7 @@
         <h4>4. Чей листик похож на раскрытую ладошку с пальчиками?</h4>
         <details>
           <summary>Посмотреть ответ</summary>
-          <p>У клёна! А ещё у конского каштана целый веер листочков-пальцев.</p>
+          <p>У клёна! А ещё у каштана целый веер листочков-пальцев.</p>
         </details>
       </div>
 
@@ -794,7 +782,7 @@
         <h4>5. Бывают ли хвойные кустарники?</h4>
         <details>
           <summary>Посмотреть ответ</summary>
-          <p>Да! Это можжевельник: он низкий, кустистый, с колючими иголочками и синими шишкоягодками.</p>
+          <p>Да! Это можжевельник: он низкий, кустистый, с колючей хвоей и синими шишкоягодками.</p>
         </details>
       </div>
 
