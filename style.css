@@ -749,9 +749,9 @@ input:checked + .slider:before { transform: translateX(16px); }
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 
-  /* --- Фоновый SVG --- */
-  background-color: #f6f3eb; /* мягкий цвет подложки в тон картинке */
-  background-image: url('Fon.svg'); /* путь к файлу Fon.svg */
+  /* --- Фоновое изображение PNG --- */
+  background-color: #f6f3eb; /* цвет подложки, пока картинка грузится */
+  background-image: url('Fon.png'); /* путь к вашему файлу Fon.png */
   background-repeat: no-repeat;
   background-position: center bottom;
   background-size: cover;
