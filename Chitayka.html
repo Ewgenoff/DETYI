@@ -1944,16 +1944,16 @@
     }
 
     function closeLettersPanel() {
-      const isMobile = window.innerWidth <= 900;
-      if (isMobile) {
-        lettersPanel.classList.remove('open');
-        lettersPanel.classList.add('collapsed');
-        panelBackdrop.classList.remove('active');
-      } else {
-        lettersPanel.classList.remove('collapsed');
-      }
-      syncTabPullVisibility();
-    }
+  const isMobile = window.innerWidth <= 900;
+  if (isMobile) {
+    lettersPanel.classList.remove('open');
+    lettersPanel.classList.add('collapsed');
+    panelBackdrop.classList.remove('active');
+  } else {
+    lettersPanel.classList.add('collapsed'); // <-- Теперь закрывается!
+  }
+  syncTabPullVisibility();
+}
 
     function toggleLettersPanel() {
       if (isPanelOpen()) {
