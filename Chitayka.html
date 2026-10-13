@@ -632,7 +632,8 @@
     let currentSoundType = 'softping';
 
     // ВРЕМЕННЫЕ ЛИМИТЫ И ЗАЩИТА ОТ СПАМА
-    const CARD_MIN_INTERVAL_MS = 1500;       // Минимальное время на чтение карточки (1.5 сек)
+        const CARD_MIN_INTERVAL_MS = 500;        // Минимальное время на чтение карточки (0.5 сек)
+
     const PREV_CARD_MIN_INTERVAL_MS = 300;   // Минимальный интервал для листания назад (0.3 сек)
     const SPAM_WARNING_COOLDOWN_MS = 5000;   // Предупреждение голосом не чаще раза в 5 сек
     const AUDIO_MIN_INTERVAL_MS = 1000;      // Озвучка карточки не чаще раза в 1 сек

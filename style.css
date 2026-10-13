@@ -2203,14 +2203,15 @@ input:checked + .slider:before { transform: translateX(16px); }
   }
 
   /* Панели */
-  .letters-panel, .settings-panel {
-    position: fixed;
-    top: 0; bottom: 0; left: 0;
-    width: 86%;
-    max-width: 320px;
-    box-shadow: 10px 0 28px rgba(45, 40, 30, 0.18);
-    transform: translateX(-100%);
+    .panel-tab-pull {
+    top: auto;
+    bottom: 100px;
+    height: 48px;
+    width: 42px;
+    border-radius: 0 12px 12px 0;
+    opacity: 0.8;
   }
+
 
   .letters-panel.open, .settings-panel.open { transform: translateX(0) !important; }
   .panel-close-btn { display: block; }
