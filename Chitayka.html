@@ -632,13 +632,13 @@
     let currentSoundType = 'softping';
 
     // ВРЕМЕННЫЕ ЛИМИТЫ И ЗАЩИТА ОТ СПАМА
-    const CARD_MIN_INTERVAL_MS = 1500;       // Минимальное время на чтение карточки (1.5 сек)
-    const PREV_CARD_MIN_INTERVAL_MS = 1500;  // Минимальный интервал для листания назад (1.5 сек)
-    const SPAM_WARNING_COOLDOWN_MS = 5000;   // Предупреждение голосом не чаще 1 раза в 5 сек
-    const AUDIO_MIN_INTERVAL_MS = 1000;      // Озвучка карточки не чаще 1 раза в 1 сек
+    const CARD_MIN_VIEW_TIME_MS = 1500;   // 1. Карточку можно перелистнуть не ранее чем через 1.5 сек
+    const KEY_DEBOUNCE_INTERVAL_MS = 500; // 2. Между любыми нажатиями должно пройти не менее 0.5 сек
+    const SPAM_WARNING_COOLDOWN_MS = 5000;// Голосовое предупреждение не чаще 1 раза в 5 сек
+    const AUDIO_MIN_INTERVAL_MS = 1000;   // Озвучка карточки не чаще 1 раза в 1 сек
 
-    let lastCardSwitchTime = 0;
-    let lastPrevActionTime = 0;
+    let lastCardSwitchTime = 0;   // Время показа текущей карточки на экране
+    let lastKeyPressTime = 0;     // Время последнего нажатия кнопки/клика (включая заблокированные)
     let lastSpamWarningTime = 0;
     let lastAudioPlayTime = 0;
 
@@ -655,22 +655,21 @@
 
     function handleSpamAttempt() {
       const now = Date.now();
-      // Если пауза между попытками больше 2.5 сек — это не спам подряд, сбрасываем серию
-      if (now - lastSpamAttemptTime > 2500) {
+      // Если пауза между попытками больше 2 секунд — серия спама сбрасывается
+      if (now - lastSpamAttemptTime > 2000) {
         rapidSpamCount = 0;
       }
       lastSpamAttemptTime = now;
       rapidSpamCount++;
 
-      // Штраф начисляется только если ребёнок нажал быстро БОЛЕЕ 4 раз подряд
-      if (rapidSpamCount > 4) {
+      // Штраф начисляется, если жмёт подряд более 5 раз (с 6-го нажатия)
+      if (rapidSpamCount > 5) {
         triggerSpamPenalty();
-        rapidSpamCount = 0;
       }
     }
 
     function triggerSpamPenalty() {
-      cheerStreakCount = 0; // Сброс серии до подбадривающей карточки
+      cheerStreakCount = 0; // Сброс серии подбадриваний/стикеров в 0
       const now = Date.now();
       if (now - lastSpamWarningTime >= SPAM_WARNING_COOLDOWN_MS) {
         lastSpamWarningTime = now;
@@ -941,7 +940,8 @@
     }
 
     async function playSyllableAudio() {
-      if (['alphabet', 'matrix'].includes(primaryMode) || !currentText) return;
+      if (['alphabet', 'matrix'].includes(primaryMode)) return;
+      if (!currentText) return;
       if (isSoundMuted) return;
 
       const now = Date.now();
@@ -1387,8 +1387,8 @@
           headerRow.appendChild(th);
         });
         thead.appendChild(headerRow);
-        table.appendChild(tbody = document.createElement('tbody'));
 
+        const tbody = document.createElement('tbody');
         MATRIX_CONSONANTS.forEach((c, rowIdx) => {
           const tr = document.createElement('tr');
           
@@ -1436,6 +1436,8 @@
 
           tbody.appendChild(tr);
         });
+        table.appendChild(thead);
+        table.appendChild(tbody);
 
       } else {
         const thead = document.createElement('thead');
@@ -1454,7 +1456,6 @@
           headerRow.appendChild(th);
         });
         thead.appendChild(headerRow);
-        table.appendChild(thead);
 
         const tbody = document.createElement('tbody');
         MATRIX_CONSONANTS_REVERSE.forEach((c, rowIdx) => {
@@ -1499,6 +1500,7 @@
 
           tbody.appendChild(tr);
         });
+        table.appendChild(thead);
         table.appendChild(tbody);
       }
     }
@@ -1629,11 +1631,15 @@
       if (event) event.stopPropagation();
 
       const now = Date.now();
-      if (now - lastPrevActionTime < PREV_CARD_MIN_INTERVAL_MS) {
+      const timeSinceLastPress = now - lastKeyPressTime;
+      // Сдвигаем дебаунс при любом нажатии
+      lastKeyPressTime = now;
+
+      // Блокируем, если между кликами прошло менее 0.5 сек
+      if (timeSinceLastPress < KEY_DEBOUNCE_INTERVAL_MS) {
         handleSpamAttempt();
         return;
       }
-      lastPrevActionTime = now;
 
       if (historyIndex <= 0) {
         handleSpamAttempt();
@@ -1641,7 +1647,7 @@
       }
 
       rapidSpamCount = 0;
-      lastCardSwitchTime = now;
+      lastCardSwitchTime = now; // Перезапуск таймера на чтение карточки
       stopSyllableAudio();
 
       historyIndex--;
@@ -1780,7 +1786,9 @@
       document.getElementById('sticker-modal').classList.remove('open');
       isStickerModalOpen = false;
       stopExtraAudio();
-      lastCardSwitchTime = Date.now();
+      const now = Date.now();
+      lastCardSwitchTime = now;
+      lastKeyPressTime = now;
       rapidSpamCount = 0;
     }
 
@@ -1793,15 +1801,25 @@
       if (event) event.stopPropagation();
 
       const now = Date.now();
-      if (now - lastCardSwitchTime < CARD_MIN_INTERVAL_MS) {
-        // Попытка нажать раньше 1.5 секунд
+      const timeSinceLastPress = now - lastKeyPressTime;
+      const timeSinceCardShown = now - lastCardSwitchTime;
+
+      // СРАЗУ сдвигаем отметку последнего нажатия!
+      // Если ребенок жмет как из пулемета (< 0.5с), карточка будет заблокирована
+      // до тех пор, пока он не остановится и не сделает паузу более 0.5 секунды.
+      lastKeyPressTime = now;
+
+      // Одновременное выполнение двух условий:
+      // 1. Карточка на экране не менее 1.5 сек
+      // 2. Пауза между нажатиями не менее 0.5 сек
+      if (timeSinceCardShown < CARD_MIN_VIEW_TIME_MS || timeSinceLastPress < KEY_DEBOUNCE_INTERVAL_MS) {
         handleSpamAttempt();
-        return;
+        return; // БЛОКИРОВКА!
       }
 
-      // Успешный переход
+      // УСПЕШНЫЙ ПЕРЕХОД
       rapidSpamCount = 0;
-      lastCardSwitchTime = now;
+      lastCardSwitchTime = now; // Засекаем 1.5 секунды для новой карточки
 
       stopSyllableAudio();
       playSoundEffect();
@@ -2086,7 +2104,7 @@
     });
 
     let touchStartX = 0;
-    let touchStartY = 0;
+    touchStartY = 0;
 
     window.addEventListener('touchstart', (e) => {
       touchStartX = e.touches[0].clientX;
@@ -2120,3 +2138,4 @@
   </script>
 </body>
 </html>
+```[cite: 1]
