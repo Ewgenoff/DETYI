@@ -228,6 +228,20 @@
         </div>
       </div>
 
+      <!-- НАСТРОЙКА ЧАСТОТЫ ПОДБАДРИВАНИЯ -->
+      <div class="group-box">
+        <div class="group-header">
+          <span>🎉</span> Частота подбадривания
+        </div>
+        <div class="font-select-wrap">
+          <select id="cheer-freq-select" onchange="changeCheerFrequency(this.value)">
+            <option value="often">Часто (в 2 раза чаще)</option>
+            <option value="normal" selected>Нормально</option>
+            <option value="rare">Редко (в 2 раза реже)</option>
+          </select>
+        </div>
+      </div>
+
     </aside>
 
     <main class="stage">
@@ -347,7 +361,7 @@
                   <div class="cons-row">
                     <div class="row-hint">Во втором ряду — глухие согласные звуки</div>
                     <div class="cons-cells-row">
-                      <div class="cons-subgroup group-unpaired-voiced">
+                      <div class="cons-subgroup group-unpaired-voiceless">
                         <div class="cons-cell bg-empty"></div>
                         <div class="cons-cell bg-empty"></div>
                         <div class="cons-cell bg-empty bg-icon" title="Глухие согласные">🎧</div>
@@ -630,6 +644,20 @@
 
     let isSoundMuted = false;
     let currentSoundType = 'softping';
+
+    // НАСТРОЙКИ ЧАСТОТЫ ПОДБАДРИВАНИЯ
+    let cheerFrequency = 'normal';
+    const CHEER_CONFIG = {
+      often: { sticker: 10, cheer: 5 },   // Часто: в 2 раза чаще
+      normal: { sticker: 20, cheer: 10 }, // Нормально: по умолчанию
+      rare: { sticker: 40, cheer: 20 }    // Редко: в 2 раза реже
+    };
+
+    function changeCheerFrequency(val) {
+      if (CHEER_CONFIG[val]) {
+        cheerFrequency = val;
+      }
+    }
 
     // ВРЕМЕННЫЕ ЛИМИТЫ И ЗАЩИТА ОТ СПАМА
     const CARD_MIN_VIEW_TIME_MS = 1500;   // 1. Карточку можно перелистнуть не ранее чем через 1.5 сек
@@ -1609,7 +1637,7 @@
       currentText = next;
 
       if (historyIndex < historyStack.length - 1) {
-        historyStack = historyStack.slice(0, historyIndex + 1);
+        historyIndex = historyStack.slice(0, historyIndex + 1);
       }
       historyStack.push(currentText);
       historyIndex = historyStack.length - 1;
@@ -1805,8 +1833,6 @@
       const timeSinceCardShown = now - lastCardSwitchTime;
 
       // СРАЗУ сдвигаем отметку последнего нажатия!
-      // Если ребенок жмет как из пулемета (< 0.5с), карточка будет заблокирована
-      // до тех пор, пока он не остановится и не сделает паузу более 0.5 секунды.
       lastKeyPressTime = now;
 
       // Одновременное выполнение двух условий:
@@ -1834,10 +1860,13 @@
         hintEl.textContent = '';
       }
 
-      if (cheerStreakCount > 0 && cheerStreakCount % 20 === 0) {
+      // Проверяем текущие настройки частоты подбадривания
+      const currentCheerCfg = CHEER_CONFIG[cheerFrequency] || CHEER_CONFIG.normal;
+
+      if (cheerStreakCount >= currentCheerCfg.sticker) {
         cheerStreakCount = 0;
         setTimeout(() => openStickerModal(), 200);
-      } else if (cheerStreakCount >= 10 && (cheerStreakCount - 10) % 20 === 0) {
+      } else if (cheerStreakCount === currentCheerCfg.cheer) {
         setTimeout(() => {
           launchConfetti(false);
           playRandomCheerAudio();
@@ -2104,7 +2133,7 @@
     });
 
     let touchStartX = 0;
-    touchStartY = 0;
+    let touchStartY = 0;
 
     window.addEventListener('touchstart', (e) => {
       touchStartX = e.touches[0].clientX;
@@ -2138,4 +2167,3 @@
   </script>
 </body>
 </html>
-```[cite: 1]
