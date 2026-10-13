@@ -632,11 +632,10 @@
     let currentSoundType = 'softping';
 
     // ВРЕМЕННЫЕ ЛИМИТЫ И ЗАЩИТА ОТ СПАМА
-        const CARD_MIN_INTERVAL_MS = 500;        // Минимальное время на чтение карточки (0.5 сек)
-
-    const PREV_CARD_MIN_INTERVAL_MS = 300;   // Минимальный интервал для листания назад (0.3 сек)
-    const SPAM_WARNING_COOLDOWN_MS = 5000;   // Предупреждение голосом не чаще раза в 5 сек
-    const AUDIO_MIN_INTERVAL_MS = 1000;      // Озвучка карточки не чаще раза в 1 сек
+    const CARD_MIN_INTERVAL_MS = 1500;       // Минимальное время на чтение карточки (1.5 сек)
+    const PREV_CARD_MIN_INTERVAL_MS = 1500;  // Минимальный интервал для листания назад (1.5 сек)
+    const SPAM_WARNING_COOLDOWN_MS = 5000;   // Предупреждение голосом не чаще 1 раза в 5 сек
+    const AUDIO_MIN_INTERVAL_MS = 1000;      // Озвучка карточки не чаще 1 раза в 1 сек
 
     let lastCardSwitchTime = 0;
     let lastPrevActionTime = 0;
@@ -656,15 +655,15 @@
 
     function handleSpamAttempt() {
       const now = Date.now();
-      // Если пауза между быстрыми нажатиями больше 2 секунд — это не спам подряд, сбрасываем серию
-      if (now - lastSpamAttemptTime > 2000) {
+      // Если пауза между попытками больше 2.5 сек — это не спам подряд, сбрасываем серию
+      if (now - lastSpamAttemptTime > 2500) {
         rapidSpamCount = 0;
       }
       lastSpamAttemptTime = now;
       rapidSpamCount++;
 
-      // Штраф начисляется только если ребёнок нажал быстро БОЛЕЕ 5 раз подряд
-      if (rapidSpamCount > 5) {
+      // Штраф начисляется только если ребёнок нажал быстро БОЛЕЕ 4 раз подряд
+      if (rapidSpamCount > 4) {
         triggerSpamPenalty();
         rapidSpamCount = 0;
       }
@@ -1388,9 +1387,8 @@
           headerRow.appendChild(th);
         });
         thead.appendChild(headerRow);
-        table.appendChild(thead);
+        table.appendChild(tbody = document.createElement('tbody'));
 
-        const tbody = document.createElement('tbody');
         MATRIX_CONSONANTS.forEach((c, rowIdx) => {
           const tr = document.createElement('tr');
           
@@ -1438,7 +1436,6 @@
 
           tbody.appendChild(tr);
         });
-        table.appendChild(tbody);
 
       } else {
         const thead = document.createElement('thead');
@@ -1797,7 +1794,7 @@
 
       const now = Date.now();
       if (now - lastCardSwitchTime < CARD_MIN_INTERVAL_MS) {
-        // Попытка кликнуть раньше 1.5 секунд
+        // Попытка нажать раньше 1.5 секунд
         handleSpamAttempt();
         return;
       }
