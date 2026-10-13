@@ -7,7 +7,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@700&family=Comfortaa:wght@700&family=Lora:ital,wght@0,600;0,700;1,600&family=Nunito:wght@700;800;900&family=PT+Serif:wght@700&family=Rubik:wght@700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -571,7 +571,9 @@
       "ВОТ_ЭТО_ДА.wav": "Вот это да!",
       "ХОРОШО.wav": "Хорошо!",
       "ТЫ_СПРАВИЛСЯ.wav": "Ты справился!",
-      "ГОРЖУСЬ_ТОБОЙ.wav": "Горжусь тобой!"
+      "ГОРЖУСЬ_ТОБОЙ.wav": "Горжусь тобой!",
+      "Сначала прочитай вслух.wav": "Сначала прочитай вслух!",
+      "СНАЧАЛА_ПРОЧИТАЙ_ВСЛУХ.wav": "Сначала прочитай вслух!"
     };
 
     let WORDS_ONE_SYLLABLE_3_4 = [];
@@ -619,6 +621,7 @@
 
     let currentText = '';
     let readCount = 0;
+    let cheerStreakCount = 0;
     let allowLowercase = false;
     let alphabetSortMode = 'all';
 
@@ -628,8 +631,19 @@
     let isSoundMuted = false;
     let currentSoundType = 'softping';
 
-    let lastActionTime = 0;
-    const THROTTLE_DELAY_MS = 160;
+    // ВРЕМЕННЫЕ ЛИМИТЫ И ЗАЩИТА ОТ СПАМА
+    const CARD_MIN_INTERVAL_MS = 1500;       // Минимальное время на чтение карточки (1.5 сек)
+    const PREV_CARD_MIN_INTERVAL_MS = 300;   // Минимальный интервал для листания назад (0.3 сек)
+    const SPAM_WARNING_COOLDOWN_MS = 5000;   // Предупреждение голосом не чаще раза в 5 сек
+    const AUDIO_MIN_INTERVAL_MS = 1000;      // Озвучка карточки не чаще раза в 1 сек
+
+    let lastCardSwitchTime = 0;
+    let lastPrevActionTime = 0;
+    let lastSpamWarningTime = 0;
+    let lastAudioPlayTime = 0;
+
+    let rapidSpamCount = 0;
+    let lastSpamAttemptTime = 0;
 
     let startTime = Date.now();
     let cardTimestamps = [];
@@ -638,6 +652,40 @@
     let currentSequenceId = 0;
     let currentExtraAudio = null;
     const audioAvailabilityCache = new Map();
+
+    function handleSpamAttempt() {
+      const now = Date.now();
+      // Если пауза между быстрыми нажатиями больше 2 секунд — это не спам подряд, сбрасываем серию
+      if (now - lastSpamAttemptTime > 2000) {
+        rapidSpamCount = 0;
+      }
+      lastSpamAttemptTime = now;
+      rapidSpamCount++;
+
+      // Штраф начисляется только если ребёнок нажал быстро БОЛЕЕ 5 раз подряд
+      if (rapidSpamCount > 5) {
+        triggerSpamPenalty();
+        rapidSpamCount = 0;
+      }
+    }
+
+    function triggerSpamPenalty() {
+      cheerStreakCount = 0; // Сброс серии до подбадривающей карточки
+      const now = Date.now();
+      if (now - lastSpamWarningTime >= SPAM_WARNING_COOLDOWN_MS) {
+        lastSpamWarningTime = now;
+        playAudioFile('Super/Сначала прочитай вслух.wav');
+        const hintEl = document.getElementById('subtle-cheer-text');
+        if (hintEl) {
+          hintEl.textContent = 'Сначала прочитай вслух!';
+          setTimeout(() => {
+            if (hintEl.textContent === 'Сначала прочитай вслух!') {
+              hintEl.textContent = '';
+            }
+          }, 3500);
+        }
+      }
+    }
 
     function stopExtraAudio() {
       if (currentExtraAudio) {
@@ -895,6 +943,15 @@
     async function playSyllableAudio() {
       if (['alphabet', 'matrix'].includes(primaryMode) || !currentText) return;
       if (isSoundMuted) return;
+
+      const now = Date.now();
+      if (now - lastAudioPlayTime < AUDIO_MIN_INTERVAL_MS) {
+        handleSpamAttempt();
+        return;
+      }
+      lastAudioPlayTime = now;
+      rapidSpamCount = 0;
+
       stopSyllableAudio();
       stopExtraAudio();
       const sequenceId = currentSequenceId;
@@ -1513,6 +1570,7 @@
       if (resetHistory) {
         historyStack = [];
         historyIndex = -1;
+        cheerStreakCount = 0;
       }
 
       let pool = [];
@@ -1560,6 +1618,9 @@
       updateNavButtonsState();
       updateSpeakerButtonState();
 
+      lastCardSwitchTime = Date.now();
+      rapidSpamCount = 0;
+
       card.classList.remove('card-fade');
       void card.offsetWidth;
       card.classList.add('card-fade');
@@ -1570,24 +1631,32 @@
       if (event) event.stopPropagation();
 
       const now = Date.now();
-      if (now - lastActionTime < THROTTLE_DELAY_MS) return;
-      lastActionTime = now;
+      if (now - lastPrevActionTime < PREV_CARD_MIN_INTERVAL_MS) {
+        handleSpamAttempt();
+        return;
+      }
+      lastPrevActionTime = now;
 
+      if (historyIndex <= 0) {
+        handleSpamAttempt();
+        return;
+      }
+
+      rapidSpamCount = 0;
+      lastCardSwitchTime = now;
       stopSyllableAudio();
 
-      if (historyIndex > 0) {
-        historyIndex--;
-        currentText = historyStack[historyIndex];
-        playSoundEffect();
-        renderFormattedText(currentText);
-        updateNavButtonsState();
-        updateSpeakerButtonState();
+      historyIndex--;
+      currentText = historyStack[historyIndex];
+      playSoundEffect();
+      renderFormattedText(currentText);
+      updateNavButtonsState();
+      updateSpeakerButtonState();
 
-        const card = document.getElementById('syllable-card');
-        card.classList.remove('card-fade');
-        void card.offsetWidth;
-        card.classList.add('card-fade');
-      }
+      const card = document.getElementById('syllable-card');
+      card.classList.remove('card-fade');
+      void card.offsetWidth;
+      card.classList.add('card-fade');
     }
 
     let confettiParticles = [];
@@ -1713,6 +1782,8 @@
       document.getElementById('sticker-modal').classList.remove('open');
       isStickerModalOpen = false;
       stopExtraAudio();
+      lastCardSwitchTime = Date.now();
+      rapidSpamCount = 0;
     }
 
     function onStickerBackdropClick(e) {
@@ -1724,22 +1795,33 @@
       if (event) event.stopPropagation();
 
       const now = Date.now();
-      if (now - lastActionTime < THROTTLE_DELAY_MS) return;
-      lastActionTime = now;
+      if (now - lastCardSwitchTime < CARD_MIN_INTERVAL_MS) {
+        // Попытка кликнуть раньше 1.5 секунд
+        handleSpamAttempt();
+        return;
+      }
+
+      // Успешный переход
+      rapidSpamCount = 0;
+      lastCardSwitchTime = now;
 
       stopSyllableAudio();
       playSoundEffect();
       readCount++;
+      cheerStreakCount++;
       cardTimestamps.push(now);
       document.getElementById('star-count').textContent = readCount;
       updateTimers();
 
       const hintEl = document.getElementById('subtle-cheer-text');
-      if (hintEl) hintEl.textContent = '';
+      if (hintEl && hintEl.textContent !== 'Сначала прочитай вслух!') {
+        hintEl.textContent = '';
+      }
 
-      if (readCount > 0 && readCount % 20 === 0) {
+      if (cheerStreakCount > 0 && cheerStreakCount % 20 === 0) {
+        cheerStreakCount = 0;
         setTimeout(() => openStickerModal(), 200);
-      } else if (readCount >= 10 && (readCount - 10) % 20 === 0) {
+      } else if (cheerStreakCount >= 10 && (cheerStreakCount - 10) % 20 === 0) {
         setTimeout(() => {
           launchConfetti(false);
           playRandomCheerAudio();
@@ -1944,16 +2026,16 @@
     }
 
     function closeLettersPanel() {
-  const isMobile = window.innerWidth <= 900;
-  if (isMobile) {
-    lettersPanel.classList.remove('open');
-    lettersPanel.classList.add('collapsed');
-    panelBackdrop.classList.remove('active');
-  } else {
-    lettersPanel.classList.add('collapsed'); // <-- Теперь закрывается!
-  }
-  syncTabPullVisibility();
-}
+      const isMobile = window.innerWidth <= 900;
+      if (isMobile) {
+        lettersPanel.classList.remove('open');
+        lettersPanel.classList.add('collapsed');
+        panelBackdrop.classList.remove('active');
+      } else {
+        lettersPanel.classList.add('collapsed');
+      }
+      syncTabPullVisibility();
+    }
 
     function toggleLettersPanel() {
       if (isPanelOpen()) {
