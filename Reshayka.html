@@ -2,17 +2,12 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Считай-ка: Весёлая математика для детей</title>
-  
-  <!-- Асинхронная загрузка шрифтов: страница открывается мгновенно на системных шрифтах -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔢</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@700&family=Comfortaa:wght@700&family=Lora:ital,wght@0,600;0,700;1,600&family=Nunito:wght@700;800;900&family=PT+Serif:wght@700&family=Rubik:wght@700;900&display=swap">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@700&family=Comfortaa:wght@700&family=Lora:ital,wght@0,600;0,700;1,600&family=Nunito:wght@700;800;900&family=PT+Serif:wght@700&family=Rubik:wght@700;900&display=swap" media="print" onload="this.media='all'">
-  <noscript>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@700&family=Comfortaa:wght@700&family=Lora:ital,wght@0,600;0,700;1,600&family=Nunito:wght@700;800;900&family=PT+Serif:wght@700&family=Rubik:wght@700;900&display=swap">
-  </noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@700&family=Comfortaa:wght@700&family=Lora:ital,wght@0,600;0,700;1,600&family=Nunito:wght@700;800;900&family=PT+Serif:wght@700&family=Rubik:wght@700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="font-schoolbook">
@@ -20,132 +15,81 @@
   <div class="panel-backdrop" id="panel-backdrop" onclick="closeSettingsPanel()"></div>
 
   <!-- Модальное окно справки -->
-  <div class="help-modal-backdrop" id="help-modal" onclick="onHelpBackdropClick(event)">
+  <div class="help-modal-backdrop" id="help-modal" onclick="if(event.target===this)closeHelpModal()">
     <div class="help-modal-card">
       <div class="help-modal-header">
-        <div class="help-modal-title">Справка по программе «Считай-ка»</div>
+        <div class="help-modal-title"><span>🔢</span> Справка по программе «Считай-ка»</div>
         <button class="help-modal-close-btn" onclick="closeHelpModal()">✕</button>
       </div>
       <div class="help-modal-body">
-        
         <div class="help-card-section">
           <h3>Режимы тренировки</h3>
           <ul>
             <li><b>Карточки (самопроверка):</b> ребёнок решает пример в уме, нажимает на карточку (или стрелку ⟶) — открывается правильный ответ. Следующий клик показывает новый пример.</li>
-            <li><b>Тест (с вариантами):</b> внизу появляются крупные кнопки для выбора мышкой или пальцем на экране планшета/телефона. При правильном ответе загорается зелёный цвет и пример перелистывается; при ошибке кнопка подсвечивается красным, а вверху обновляется счётчик ошибок ❌.</li>
+            <li><b>Тест (с вариантами):</b> внизу появляются крупные кнопки для выбора мышкой или пальцем на экране планшета/телефона. При правильном ответе загорается зелёный цвет; при ошибке обновляется счётчик ошибок ❌.</li>
           </ul>
         </div>
-
         <div class="help-card-section">
           <h3>Арифметика и мультивыбор</h3>
           <ul>
-            <li>Кнопки <b>Сложение</b>, <b>Вычитание</b>, <b>Умножение</b> и <b>Деление</b> работают с мультивыбором («залипают»). Можно комбинировать любые операции в одной тренировке (например, одновременно сложение и вычитание).</li>
-            <li><b>Сравнение:</b> разделено на два удобных формата: <i>«Просто числа»</i> (сравнение двух величин) и <i>«С примерами»</i> (сложение и вычитание выражений). Сравнение строго учитывает выбранный диапазон.</li>
+            <li>Кнопки <b>Сложение</b>, <b>Вычитание</b>, <b>Умножение</b> и <b>Деление</b> работают с мультивыбором. Можно комбинировать любые операции в одной тренировке.</li>
+            <li><b>Сравнение:</b> разделено на <i>«Просто числа»</i> и <i>«С примерами»</i> с учётом выбранного диапазона.</li>
           </ul>
         </div>
-
         <div class="help-card-section">
           <h3>Наглядные интерактивные таблицы</h3>
           <ul>
-            <li><b>Таблица Пифагора:</b> наглядное умножение с контрастным цветным перекрестием для быстрого визуального запоминания таблицы умножения.</li>
-            <li><b>Таблица Сотни по методике Никитиных:</b> числа расположены столбцами сверху вниз (1–10, 11–20 ... 91–100), круглые десятки выделены красным. Слева показаны единичные точки Никитина, а снизу — вертикальные полоски десятков. При выборе число остаётся подсвеченным и выводится его подробная расшифровка десятков и единиц.</li>
+            <li><b>Таблица Пифагора:</b> наглядное умножение с цветным перекрестием.</li>
+            <li><b>Таблица Сотни по методике Никитиных:</b> числа расположены столбцами сверху вниз (1–10, 11–20 ... 91–100), круглые десятки выделены красным. Слева показаны единичные точки Никитина, а снизу — полоски десятков.</li>
           </ul>
         </div>
-
-        <div class="help-card-section">
-          <h3>Параметры и настройки (боковая панель)</h3>
-          <ul>
-            <li><b>Диапазон чисел:</b> задаёт максимальную границу счёта (до 10, 20, 50 или 100) для сложения, вычитания и сравнений.</li>
-            <li><b>Множители:</b> по умолчанию включены все множители (от 2 до 9). Мини-кнопка «Все / Только ×2» позволяет в один клик переключаться между полной таблицей и изучением только умножения на 2.</li>
-            <li><b>Шрифт и звук:</b> возможность настроить визуальный стиль цифр (включая классический школьный учебник) и приятные звуки при кликах.</li>
-          </ul>
-        </div>
-
       </div>
     </div>
   </div>
 
   <header>
     <div class="brand">
-      <span class="brand-icon">🔢</span>
+      <a href="index.html" class="btn-icon-header" title="На главную"><span>🏠</span><span class="hide-xs">Домой</span></a>
       <h1 class="brand-title">Считай-ка!</h1>
     </div>
 
     <div class="stats-bar">
-      <!-- 1. Счетчик решенных заданий -->
-      <div class="stat-badge star" title="Правильно решено">
-        <span>⭐</span>
-        <span id="star-count">0</span>
-      </div>
+      <div class="stat-badge star" title="Правильно решено"><span>⭐</span><span id="star-count">0</span></div>
+      <div class="stat-badge wrong-badge" id="wrong-badge" style="display:none" title="Ошибок в тесте"><span>❌</span><span id="wrong-count">0</span></div>
+      <div class="stat-badge speed" id="speed-badge" title="Темп: примеров в минуту"><span>⚡</span><span id="speed-count">0</span><span class="unit-lbl">/мин</span></div>
+      <div class="stat-badge time hide-sm" title="Общее время занятия"><span>⏱</span><span id="session-time">00:00</span></div>
 
-      <!-- 2. Счетчик ошибок в тесте -->
-      <div class="stat-badge wrong-badge" id="wrong-badge" style="display: none;" title="Ошибок в режиме тест">
-        <span>❌</span>
-        <span id="wrong-count">0</span>
-      </div>
-
-      <!-- 3. Темп решения -->
-      <div class="stat-badge speed" id="speed-badge" title="Темп: примеров в минуту">
-        <span>⚡</span>
-        <span id="speed-count">0</span>
-        <span style="font-size: 11px; opacity: 0.85;">/мин</span>
-      </div>
-
-      <!-- 4. Время занятия -->
-      <div class="stat-badge time" title="Общее время занятия">
-        <span>⏱</span>
-        <span id="session-time">00:00</span>
-      </div>
-
-      <!-- 5. Кнопка звука -->
       <button class="btn-icon-header" id="sound-mute-btn" onclick="toggleSoundMute()" title="Включить / отключить звук">
         <span id="sound-mute-icon">🔊</span>
       </button>
-
-      <!-- 6. Кнопка вызова справки (справа в шапке) -->
-      <button class="btn-icon-header" onclick="openHelpModal()" title="Справка по программе">
-        <span>❓</span>
-      </button>
-
-      <!-- 7. Кнопка боковой панели настроек -->
+      <button class="btn-icon-header" onclick="openHelpModal()" title="Справка"><span>❓</span></button>
       <button class="btn-toggle-panel" id="toggle-panel-btn" onclick="toggleSettingsPanel()">
-        <span>⚙</span>
-        <span id="panel-btn-label">Параметры</span>
+        <span>⚙️</span><span id="panel-btn-label" class="hide-xs">Параметры</span>
       </button>
     </div>
   </header>
 
   <div class="app-layout">
-    
-    <!-- БОКОВАЯ ПАНЕЛЬ НАСТРОЕК -->
     <aside class="settings-panel collapsed" id="settings-panel">
       <div class="panel-header-row">
         <div class="panel-title">Параметры счёта</div>
         <button class="panel-close-btn" onclick="closeSettingsPanel()">✕</button>
       </div>
 
-      <!-- РАЗДЕЛ ТРЕНИРОВКА -->
       <div class="clean-box">
-        <div class="clean-box-header">
-          <span>Тренировка</span>
-        </div>
+        <div class="clean-box-header"><span>Тренировка</span></div>
         <div class="training-toggle-btns">
           <button class="training-btn active" id="btn-mode-cards" onclick="setTrainingMode(false)">
-            <span>💡 Карточки</span>
-            <span class="btn-sub">Самопроверка</span>
+            <span>💡 Карточки</span><span class="btn-sub">Самопроверка</span>
           </button>
           <button class="training-btn" id="btn-mode-quiz" onclick="setTrainingMode(true)">
-            <span>🎯 Тест</span>
-            <span class="btn-sub">С вариантами</span>
+            <span>🎯 Тест</span><span class="btn-sub">С вариантами</span>
           </button>
         </div>
       </div>
 
-      <!-- ДИАПАЗОН ЧИСЕЛ ДО -->
       <div class="clean-box">
-        <div class="clean-box-header">
-          <span>Диапазон чисел до (для ➕, ➖ и ⚖️)</span>
-        </div>
+        <div class="clean-box-header"><span>Диапазон чисел до (для ➕, ➖ и ⚖️)</span></div>
         <div class="range-pills-row">
           <button class="range-pill-btn active" data-range="10" onclick="setMaxRange(10)">10</button>
           <button class="range-pill-btn" data-range="20" onclick="setMaxRange(20)">20</button>
@@ -154,22 +98,16 @@
         </div>
       </div>
 
-      <!-- МНОЖИТЕЛИ ДЛЯ УМНОЖЕНИЯ И ДЕЛЕНИЯ -->
       <div class="clean-box">
         <div class="clean-box-header">
           <span>Множители (для ✖️ и ➗)</span>
-          <button class="btn-toggle-all-mults" id="btn-toggle-mults" onclick="toggleAllOrMinMultipliers()" title="Переключить: все множители или только ×2">
-            Все / ×2
-          </button>
+          <button class="btn-toggle-all-mults" onclick="toggleAllOrMinMultipliers()">Все / ×2</button>
         </div>
         <div class="multipliers-grid" id="multipliers-grid"></div>
       </div>
 
-      <!-- ШРИФТ -->
       <div class="clean-box">
-        <div class="clean-box-header">
-          <span>Шрифт текста</span>
-        </div>
+        <div class="clean-box-header"><span>Шрифт текста</span></div>
         <div class="select-wrap">
           <select id="font-select" onchange="changeFont(this.value)">
             <option value="schoolbook" selected>Школьная (PT Serif / Lora)</option>
@@ -181,11 +119,8 @@
         </div>
       </div>
 
-      <!-- ЗВУК -->
       <div class="clean-box">
-        <div class="clean-box-header">
-          <span>Звук нажатия</span>
-        </div>
+        <div class="clean-box-header"><span>Звук нажатия</span></div>
         <div class="select-wrap">
           <select id="sound-select" onchange="changeSoundEffect(this.value)">
             <option value="softping" selected>Мягкий пинг</option>
@@ -196,53 +131,34 @@
           </select>
         </div>
       </div>
-
     </aside>
 
     <main class="stage">
-      
-      <!-- ВЕРХНЯЯ ПАНЕЛЬ ОПЕРАЦИЙ -->
       <div class="modes-categories-wrapper">
-        
         <div class="mode-group" style="flex: 0 0 auto;">
           <div class="mode-group-title">Наглядность</div>
           <div class="mode-buttons-row">
-            <button class="mode-tab" id="btn-tab-table" onclick="toggleTableView()">
-              <span>🔢 Таблица</span>
-            </button>
+            <button class="mode-tab" id="btn-tab-table" onclick="toggleTableView()"><span>🔢 Таблица</span></button>
           </div>
         </div>
 
         <div class="mode-group">
           <div class="mode-group-title">Арифметика (можно выбрать несколько)</div>
           <div class="mode-buttons-row">
-            <button class="mode-tab op-toggle-tab active" data-op="add" onclick="toggleArithmeticOp('add')">
-              <span>➕ Сложение</span>
-            </button>
-            <button class="mode-tab op-toggle-tab" data-op="sub" onclick="toggleArithmeticOp('sub')">
-              <span>➖ Вычитание</span>
-            </button>
-            <button class="mode-tab op-toggle-tab" data-op="mul" onclick="toggleArithmeticOp('mul')">
-              <span>✖️ Умножение</span>
-            </button>
-            <button class="mode-tab op-toggle-tab" data-op="div" onclick="toggleArithmeticOp('div')">
-              <span>➗ Деление</span>
-            </button>
+            <button class="mode-tab op-toggle-tab active" data-op="add" onclick="toggleArithmeticOp('add')"><span>➕ Сложение</span></button>
+            <button class="mode-tab op-toggle-tab" data-op="sub" onclick="toggleArithmeticOp('sub')"><span>➖ Вычитание</span></button>
+            <button class="mode-tab op-toggle-tab" data-op="mul" onclick="toggleArithmeticOp('mul')"><span>✖️ Умножение</span></button>
+            <button class="mode-tab op-toggle-tab" data-op="div" onclick="toggleArithmeticOp('div')"><span>➗ Деление</span></button>
           </div>
         </div>
 
         <div class="mode-group" style="flex: 0 0 auto;">
           <div class="mode-group-title">Сравнение (&gt;, &lt;, =)</div>
           <div class="mode-buttons-row">
-            <button class="mode-tab cmp-tab" id="btn-cmp-simple" onclick="setCompareMode('cmp_simple')">
-              <span>⚖️ Просто числа</span>
-            </button>
-            <button class="mode-tab cmp-tab" id="btn-cmp-expr" onclick="setCompareMode('cmp_expr')">
-              <span>⚖️ С примерами</span>
-            </button>
+            <button class="mode-tab cmp-tab" id="btn-cmp-simple" onclick="setCompareMode('cmp_simple')"><span>⚖️ Просто числа</span></button>
+            <button class="mode-tab cmp-tab" id="btn-cmp-expr" onclick="setCompareMode('cmp_expr')"><span>⚖️ С примерами</span></button>
           </div>
         </div>
-
       </div>
 
       <!-- ТАБЛИЧНЫЙ РЕЖИМ -->
@@ -256,17 +172,12 @@
         </div>
 
         <div class="table-card-container">
-          <!-- Информационный блок с расшифровкой -->
           <div class="table-info-bubble" id="table-info-bubble">
             <span class="info-tag">Инфо</span>
             <span class="info-desc">Нажми на любое число в таблице</span>
           </div>
-
-          <!-- Таблица Пифагора -->
           <div id="pythagoras-grid-wrapper" class="pythagoras-grid"></div>
-
-          <!-- Таблица Сотни Никитина -->
-          <div id="hundred-grid-wrapper" class="nikitin-container" style="display: none;">
+          <div id="hundred-grid-wrapper" class="nikitin-container" style="display:none">
             <div class="nikitin-title-block">
               <div class="nikitin-title">ТАБЛИЦА СОТНИ</div>
               <div class="nikitin-sub">Развивающие игры Никитиных</div>
@@ -285,1068 +196,458 @@
           </div>
         </div>
 
-        <!-- Кнопки выбора (в режиме тест) -->
-        <div class="choices-container" id="choices-container" style="display: none;"></div>
+        <div class="choices-container" id="choices-container" style="display:none"></div>
 
-        <!-- Кнопки стрелок -->
         <div class="controls-row">
-          <button class="btn-nav-arrow" id="btn-prev-card" onclick="prevCard(event)" title="Предыдущая карточка">
-            <span class="arrow-icon">⟵</span>
-          </button>
-          <button class="btn-nav-arrow" id="btn-next-card" onclick="nextCard(event)" title="Следующая карточка">
-            <span class="arrow-icon">⟶</span>
-          </button>
+          <button class="btn-nav-arrow" id="btn-prev-card" onclick="prevCard(event)" title="Предыдущая карточка"><span class="arrow-icon">⟵</span></button>
+          <button class="btn-nav-arrow" id="btn-next-card" onclick="nextCard(event)" title="Следующая карточка"><span class="arrow-icon">⟶</span></button>
         </div>
 
-        <!-- Нижняя панель подсказок -->
         <div class="hint-bar">
-          <span>Управление:</span>
-          <span class="kbd-chip">←</span>
-          <span class="kbd-chip">→</span>
-          <span>или</span>
-          <span class="kbd-chip">ПРОБЕЛ</span>
+          <span>Управление:</span><span class="kbd-chip">←</span><span class="kbd-chip">→</span><span>или</span><span class="kbd-chip">ПРОБЕЛ</span>
         </div>
       </div>
 
       <div></div>
     </main>
-
   </div>
 
   <script>
-    let selectedArithmeticOps = new Set(['add']); 
-    let currentMode = 'arithmetic'; // 'arithmetic', 'cmp_simple', 'cmp_expr', 'table'
-    let tableSubMode = 'pythagoras';
-    let maxRange = 10;
-    
+    let selectedArithmeticOps = new Set(['add']);
+    let currentMode = 'arithmetic', tableSubMode = 'pythagoras', maxRange = 10;
     let activeMultipliers = new Set([2, 3, 4, 5, 6, 7, 8, 9]);
-    let isQuizMode = false;
-    let isSoundMuted = false;
-    let currentSoundType = 'softping';
-
-    let selectedNikitinNumber = null;
-
-    let currentProblem = null;
-    let isAnswerRevealed = false;
-    let solvedCount = 0;
-    let wrongCount = 0;
-
-    let historyStack = [];
-    let historyIndex = -1;
-
-    let startTime = Date.now();
-    let solveTimestamps = [];
-    let lastActionTime = 0;
+    let isQuizMode = false, isSoundMuted = false, currentSoundType = 'softping';
+    let selectedNikitinNumber = null, currentProblem = null, isAnswerRevealed = false;
+    let solvedCount = 0, wrongCount = 0, historyStack = [], historyIndex = -1;
+    let startTime = Date.now(), solveTimestamps = [], lastActionTime = 0;
     const THROTTLE_DELAY_MS = 160;
-
-    let audioCtx = null;
+    let audioCtx = null, pythagorasRendered = false, hundredRendered = false;
+    const $ = id => document.getElementById(id);
 
     function playSound(type) {
       if (isSoundMuted) return;
       try {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         if (audioCtx.state === 'suspended') audioCtx.resume();
-
-        const t = audioCtx.currentTime;
-        const soundToPlay = type || currentSoundType;
-
-        switch (soundToPlay) {
-          case 'softping': {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(659.25, t);
-            gain.gain.setValueAtTime(0.14, t);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start(t);
-            osc.stop(t + 0.19);
-            break;
-          }
-          case 'popit': {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(450, t);
-            osc.frequency.exponentialRampToValueAtTime(140, t + 0.045);
-            gain.gain.setValueAtTime(0.24, t);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start(t);
-            osc.stop(t + 0.055);
-            break;
-          }
-          case 'bell': {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(880, t);
-            gain.gain.setValueAtTime(0.18, t);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start(t);
-            osc.stop(t + 0.46);
-            break;
-          }
-          case 'success': {
-            const osc1 = audioCtx.createOscillator();
-            const osc2 = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc1.type = 'sine';
-            osc2.type = 'sine';
-            osc1.frequency.setValueAtTime(523.25, t);
-            osc2.frequency.setValueAtTime(659.25, t + 0.08);
-            gain.gain.setValueAtTime(0.18, t);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.32);
-            osc1.connect(gain);
-            osc2.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc1.start(t);
-            osc2.start(t + 0.08);
-            osc1.stop(t + 0.3);
-            osc2.stop(t + 0.33);
-            break;
-          }
-          case 'error': {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(160, t);
-            osc.frequency.linearRampToValueAtTime(110, t + 0.12);
-            gain.gain.setValueAtTime(0.12, t);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start(t);
-            osc.stop(t + 0.15);
-            break;
-          }
+        const t = audioCtx.currentTime, s = type || currentSoundType;
+        if (s === 'success') {
+          const o1 = audioCtx.createOscillator(), o2 = audioCtx.createOscillator(), g = audioCtx.createGain();
+          o1.frequency.setValueAtTime(523.25, t); o2.frequency.setValueAtTime(659.25, t + 0.08);
+          g.gain.setValueAtTime(0.18, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.32);
+          o1.connect(g); o2.connect(g); g.connect(audioCtx.destination);
+          o1.start(t); o2.start(t + 0.08); o1.stop(t + 0.3); o2.stop(t + 0.33);
+          return;
         }
+        const presets = {
+          softping:  ['sine', 659.25, null, 0.14, 0.18],
+          popit:     ['sine', 450, 140, 0.24, 0.05],
+          bell:      ['sine', 880, null, 0.18, 0.45],
+          xylophone: ['triangle', 1046.5, null, 0.22, 0.18],
+          marimba:   ['sine', 523.25, null, 0.24, 0.22],
+          error:     ['sawtooth', 160, 110, 0.12, 0.14]
+        };
+        const [wType, f1, f2, vol, dur] = presets[s] || presets.softping;
+        const osc = audioCtx.createOscillator(), g = audioCtx.createGain();
+        osc.type = wType; osc.frequency.setValueAtTime(f1, t);
+        if (f2) osc.frequency.linearRampToValueAtTime(f2, t + dur * 0.85);
+        g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+        osc.connect(g); g.connect(audioCtx.destination);
+        osc.start(t); osc.stop(t + dur + 0.01);
       } catch (e) {}
     }
 
     function updateTimers() {
-      const now = Date.now();
-      const elapsedTotal = Math.floor((now - startTime) / 1000);
-      const mins = Math.floor(elapsedTotal / 60).toString().padStart(2, '0');
-      const secs = (elapsedTotal % 60).toString().padStart(2, '0');
-      document.getElementById('session-time').textContent = `${mins}:${secs}`;
-
-      const speedBadge = document.getElementById('speed-badge');
-      const speedCountEl = document.getElementById('speed-count');
-
-      if (currentMode === 'table') {
-        speedBadge.classList.add('paused');
-        speedCountEl.textContent = '⏸';
-        return;
-      } else {
-        speedBadge.classList.remove('paused');
-      }
-
+      const now = Date.now(), sec = Math.floor((now - startTime) / 1000);
+      $('session-time').textContent = `${String(Math.floor(sec / 60)).padStart(2,'0')}:${String(sec % 60).padStart(2,'0')}`;
+      const sb = $('speed-badge'), sc = $('speed-count');
+      if (currentMode === 'table') { sb.classList.add('paused'); sc.textContent = '⏸'; return; }
+      sb.classList.remove('paused');
       solveTimestamps = solveTimestamps.filter(t => now - t <= 60000);
-      let speed = solveTimestamps.length;
-      if (elapsedTotal > 3 && elapsedTotal < 60) {
-        speed = Math.round((solvedCount / elapsedTotal) * 60);
-      }
-      speedCountEl.textContent = speed;
+      sc.textContent = (sec > 3 && sec < 60) ? Math.round((solvedCount / sec) * 60) : solveTimestamps.length;
     }
     setInterval(updateTimers, 1000);
 
-    function getRandomInt(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
+    const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+    function pluralize(n, f1, f2, f5) {
+      n = Math.abs(n) % 100; const n1 = n % 10;
+      return (n > 10 && n < 20) ? f5 : (n1 > 1 && n1 < 5) ? f2 : (n1 === 1 ? f1 : f5);
     }
-
-    function pluralize(n, form1, form2, form5) {
-      n = Math.abs(n) % 100;
-      const n1 = n % 10;
-      if (n > 10 && n < 20) return form5;
-      if (n1 > 1 && n1 < 5) return form2;
-      if (n1 === 1) return form1;
-      return form5;
-    }
-
     function formatNumberDecomposition(n) {
       if (n === 100) return '10 десятков и 0 единиц';
-      const tens = Math.floor(n / 10);
-      const units = n % 10;
-      const tensStr = `${tens} ${pluralize(tens, 'десяток', 'десятка', 'десятков')}`;
-      const unitsStr = `${units} ${pluralize(units, 'единица', 'единицы', 'единиц')}`;
-      return `${tensStr} и ${unitsStr}`;
+      const t = Math.floor(n / 10), u = n % 10;
+      return `${t} ${pluralize(t,'десяток','десятка','десятков')} и ${u} ${pluralize(u,'единица','единицы','единиц')}`;
     }
 
     function generateAddition() {
       let a, b;
-      if (maxRange <= 10) {
-        a = getRandomInt(1, 9);
-        b = getRandomInt(1, 10 - a);
-      } else if (maxRange <= 20) {
-        if (Math.random() < 0.6) {
-          a = getRandomInt(4, 9);
-          b = getRandomInt(11 - a, 9);
-        } else {
-          a = getRandomInt(1, 18);
-          b = getRandomInt(1, 20 - a);
-        }
-      } else {
-        a = getRandomInt(5, maxRange - 5);
-        b = getRandomInt(1, maxRange - a);
-      }
-      const ans = a + b;
-      return {
-        type: 'add',
-        leftText: `${a} + ${b}`,
-        answer: ans
-      };
+      if (maxRange <= 10) { a = getRandomInt(1, 9); b = getRandomInt(1, 10 - a); }
+      else if (maxRange <= 20) {
+        if (Math.random() < 0.6) { a = getRandomInt(4, 9); b = getRandomInt(11 - a, 9); }
+        else { a = getRandomInt(1, 18); b = getRandomInt(1, 20 - a); }
+      } else { a = getRandomInt(5, maxRange - 5); b = getRandomInt(1, maxRange - a); }
+      return { type: 'add', leftText: `${a} + ${b}`, answer: a + b };
     }
 
     function generateSubtraction() {
       let a, b;
-      if (maxRange <= 10) {
-        a = getRandomInt(2, 10);
-        b = getRandomInt(1, a);
-      } else if (maxRange <= 20) {
-        if (Math.random() < 0.6) {
-          a = getRandomInt(11, 18);
-          b = getRandomInt(a - 9, 9);
-        } else {
-          a = getRandomInt(2, 20);
-          b = getRandomInt(1, a);
-        }
-      } else {
-        a = getRandomInt(10, maxRange);
-        b = getRandomInt(1, a);
-      }
-      const ans = a - b;
-      return {
-        type: 'sub',
-        leftText: `${a} − ${b}`,
-        answer: ans
-      };
+      if (maxRange <= 10) { a = getRandomInt(2, 10); b = getRandomInt(1, a); }
+      else if (maxRange <= 20) {
+        if (Math.random() < 0.6) { a = getRandomInt(11, 18); b = getRandomInt(a - 9, 9); }
+        else { a = getRandomInt(2, 20); b = getRandomInt(1, a); }
+      } else { a = getRandomInt(10, maxRange); b = getRandomInt(1, a); }
+      return { type: 'sub', leftText: `${a} − ${b}`, answer: a - b };
     }
 
     function generateMultiplication() {
-      const mults = activeMultipliers.size > 0 ? Array.from(activeMultipliers) : [2];
-      const a = mults[Math.floor(Math.random() * mults.length)];
-      const b = getRandomInt(2, 9);
-      return {
-        type: 'mul',
-        leftText: `${a} × ${b}`,
-        answer: a * b
-      };
+      const m = activeMultipliers.size ? [...activeMultipliers] : [2];
+      const a = m[Math.floor(Math.random() * m.length)], b = getRandomInt(2, 9);
+      return { type: 'mul', leftText: `${a} × ${b}`, answer: a * b };
     }
 
     function generateDivision() {
-      const mults = activeMultipliers.size > 0 ? Array.from(activeMultipliers) : [2];
-      const b = mults[Math.floor(Math.random() * mults.length)];
-      const ans = getRandomInt(2, 9);
-      const a = b * ans;
-      return {
-        type: 'div',
-        leftText: `${a} : ${b}`,
-        answer: ans
-      };
+      const m = activeMultipliers.size ? [...activeMultipliers] : [2];
+      const b = m[Math.floor(Math.random() * m.length)], ans = getRandomInt(2, 9);
+      return { type: 'div', leftText: `${b * ans} : ${b}`, answer: ans };
     }
 
     function generateSimpleComparison() {
-      let a = getRandomInt(1, maxRange);
-      let b = Math.random() < 0.28 ? a : getRandomInt(1, maxRange);
-      let sign = '=';
-      if (a > b) sign = '>';
-      else if (a < b) sign = '<';
-
-      return {
-        type: 'cmp',
-        leftExpr: `${a}`,
-        rightExpr: `${b}`,
-        answer: sign
-      };
+      const a = getRandomInt(1, maxRange), b = Math.random() < 0.28 ? a : getRandomInt(1, maxRange);
+      return { type: 'cmp', leftExpr: `${a}`, rightExpr: `${b}`, answer: a > b ? '>' : (a < b ? '<' : '=') };
     }
 
     function generateExprComparison() {
-      function makeSubExpr(limit) {
-        const x = getRandomInt(Math.min(limit, 4), limit);
-        const y = getRandomInt(1, x - 1);
-        return { text: `${x} − ${y}`, val: x - y };
-      }
-
-      function makeAddExpr(limit) {
-        const x = getRandomInt(1, Math.max(1, limit - 2));
-        const y = getRandomInt(1, Math.max(1, limit - x));
-        return { text: `${x} + ${y}`, val: x + y };
-      }
-
-      function makeExpr(limit) {
-        return Math.random() < 0.5 ? makeSubExpr(limit) : makeAddExpr(limit);
-      }
-
-      const pattern = getRandomInt(1, 3);
-      let leftExpr = '', rightExpr = '';
-      let leftVal = 0, rightVal = 0;
-
-      if (pattern === 1) {
-        const e = makeExpr(maxRange);
-        leftExpr = e.text;
-        leftVal = e.val;
-        if (Math.random() < 0.3) {
-          rightVal = leftVal;
-        } else {
-          const delta = getRandomInt(-3, 3);
-          rightVal = Math.max(1, Math.min(maxRange, leftVal + (delta === 0 ? 1 : delta)));
-        }
-        rightExpr = `${rightVal}`;
-      } else if (pattern === 2) {
-        const e = makeExpr(maxRange);
-        rightExpr = e.text;
-        rightVal = e.val;
-        if (Math.random() < 0.3) {
-          leftVal = rightVal;
-        } else {
-          const delta = getRandomInt(-3, 3);
-          leftVal = Math.max(1, Math.min(maxRange, rightVal + (delta === 0 ? 1 : delta)));
-        }
-        leftExpr = `${leftVal}`;
-      } else {
-        const e1 = makeExpr(maxRange);
-        leftExpr = e1.text;
-        leftVal = e1.val;
-
-        if (Math.random() < 0.32) {
-          if (leftVal > 1 && Math.random() < 0.5 && leftVal + 3 <= maxRange) {
-            const addK = getRandomInt(1, 4);
-            rightExpr = `${leftVal + addK} − ${addK}`;
-          } else {
-            const part1 = getRandomInt(1, Math.max(1, leftVal - 1));
-            rightExpr = `${part1} + ${leftVal - part1}`;
-          }
-          rightVal = leftVal;
-        } else {
-          const e2 = makeExpr(maxRange);
-          rightExpr = e2.text;
-          rightVal = e2.val;
-        }
-      }
-
-      let sign = '=';
-      if (leftVal > rightVal) sign = '>';
-      else if (leftVal < rightVal) sign = '<';
-
-      return {
-        type: 'cmp',
-        leftExpr,
-        rightExpr,
-        answer: sign
+      const makeExpr = lim => {
+        if (Math.random() < 0.5) { const x = getRandomInt(Math.min(lim, 4), lim), y = getRandomInt(1, x - 1); return { text: `${x} − ${y}`, val: x - y }; }
+        const x = getRandomInt(1, Math.max(1, lim - 2)), y = getRandomInt(1, Math.max(1, lim - x)); return { text: `${x} + ${y}`, val: x + y };
       };
+      const pat = getRandomInt(1, 3);
+      let lE = '', rE = '', lV = 0, rV = 0;
+      if (pat === 1) {
+        const e = makeExpr(maxRange); lE = e.text; lV = e.val;
+        const d = getRandomInt(-3, 3); rV = Math.random() < 0.3 ? lV : Math.max(1, Math.min(maxRange, lV + (d || 1))); rE = `${rV}`;
+      } else if (pat === 2) {
+        const e = makeExpr(maxRange); rE = e.text; rV = e.val;
+        const d = getRandomInt(-3, 3); lV = Math.random() < 0.3 ? rV : Math.max(1, Math.min(maxRange, rV + (d || 1))); lE = `${lV}`;
+      } else {
+        const e1 = makeExpr(maxRange), e2 = makeExpr(maxRange);
+        lE = e1.text; lV = e1.val; rE = e2.text; rV = e2.val;
+      }
+      return { type: 'cmp', leftExpr: lE, rightExpr: rE, answer: lV > rV ? '>' : (lV < rV ? '<' : '=') };
     }
 
     function generateNextProblem() {
       if (currentMode === 'cmp_simple') return generateSimpleComparison();
       if (currentMode === 'cmp_expr') return generateExprComparison();
-
-      const ops = Array.from(selectedArithmeticOps);
-      const chosenOp = ops[Math.floor(Math.random() * ops.length)];
-
-      if (chosenOp === 'add') return generateAddition();
-      if (chosenOp === 'sub') return generateSubtraction();
-      if (chosenOp === 'mul') return generateMultiplication();
-      if (chosenOp === 'div') return generateDivision();
-      return generateAddition();
+      const ops = [...selectedArithmeticOps], op = ops[Math.floor(Math.random() * ops.length)];
+      return ({ add: generateAddition, sub: generateSubtraction, mul: generateMultiplication, div: generateDivision }[op] || generateAddition)();
     }
 
-    function generateOptions(correctAnswer, problemType) {
-      if (problemType === 'cmp') return ['<', '=', '>'];
-
-      const options = new Set([correctAnswer]);
-      let attempts = 0;
-      while (options.size < 4 && attempts < 35) {
-        attempts++;
-        let offset = getRandomInt(-4, 4);
-        if (offset === 0) offset = Math.random() < 0.5 ? 1 : -1;
-        let cand = correctAnswer + offset;
-        if (cand >= 0 && cand !== correctAnswer) options.add(cand);
+    function generateOptions(ans, type) {
+      if (type === 'cmp') return ['<', '=', '>'];
+      const opts = new Set([ans]);
+      let att = 0;
+      while (opts.size < 4 && att++ < 35) {
+        let off = getRandomInt(-4, 4) || (Math.random() < 0.5 ? 1 : -1);
+        if (ans + off >= 0) opts.add(ans + off);
       }
-      let fallback = 1;
-      while (options.size < 4) {
-        if (!options.has(correctAnswer + fallback)) options.add(correctAnswer + fallback);
-        fallback++;
-      }
-      const arr = Array.from(options);
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
+      for (let f = 1; opts.size < 4; f++) opts.add(ans + f);
+      return [...opts].sort(() => Math.random() - 0.5);
     }
 
-    function renderCard(problem, isRevealed) {
-      const container = document.getElementById('math-expression');
-      const subtext = document.getElementById('card-subtext');
-      container.innerHTML = '';
+    function renderCard(p, revealed) {
+      const container = $('math-expression'), subtext = $('card-subtext');
       container.classList.remove('text-long', 'text-medium');
-
-      if (problem.type === 'cmp') {
-        const len = (problem.leftExpr + problem.rightExpr).length;
+      if (p.type === 'cmp') {
+        const len = (p.leftExpr + p.rightExpr).length;
         if (len > 10) container.classList.add('text-long');
         else if (len > 6) container.classList.add('text-medium');
-
-        const leftSpan = document.createElement('span');
-        leftSpan.className = 'elem-num';
-        leftSpan.textContent = problem.leftExpr;
-
-        const signSpan = document.createElement('span');
-        if (isRevealed) {
-          signSpan.className = 'elem-answer';
-          signSpan.textContent = problem.answer;
-        } else {
-          signSpan.className = 'elem-question';
-          signSpan.textContent = '❓';
-        }
-
-        const rightSpan = document.createElement('span');
-        rightSpan.className = 'elem-num';
-        rightSpan.textContent = problem.rightExpr;
-
-        container.appendChild(leftSpan);
-        container.appendChild(signSpan);
-        container.appendChild(rightSpan);
-
-        subtext.innerHTML = isQuizMode 
-          ? '<span>🎯 Выбери знак: <b>&lt;</b>, <b>=</b> или <b>&gt;</b></span>'
-          : (isRevealed ? '<span>✨ Отлично! Нажми для следующего</span>' : '<span>💡 Нажми на карточку, чтобы узнать правильный знак</span>');
+        container.innerHTML = `<span class="elem-num">${p.leftExpr}</span><span class="${revealed?'elem-answer':'elem-question'}">${revealed?p.answer:'❓'}</span><span class="elem-num">${p.rightExpr}</span>`;
+        subtext.innerHTML = isQuizMode ? '<span>🎯 Выбери знак: <b>&lt;</b>, <b>=</b> или <b>&gt;</b></span>' : (revealed ? '<span>✨ Отлично! Нажми для следующего</span>' : '<span>💡 Нажми на карточку, чтобы узнать правильный знак</span>');
         return;
       }
-
-      const parts = problem.leftText.split(' ');
-      const aSpan = document.createElement('span');
-      aSpan.className = 'elem-num';
-      aSpan.textContent = parts[0];
-
-      const opSpan = document.createElement('span');
-      opSpan.className = 'elem-op';
-      opSpan.textContent = parts[1];
-
-      const bSpan = document.createElement('span');
-      bSpan.className = 'elem-num';
-      bSpan.textContent = parts[2];
-
-      const eqSpan = document.createElement('span');
-      eqSpan.className = 'elem-equal';
-      eqSpan.textContent = '=';
-
-      const ansSpan = document.createElement('span');
-      if (isRevealed) {
-        ansSpan.className = 'elem-answer';
-        ansSpan.textContent = problem.answer;
-      } else {
-        ansSpan.className = 'elem-question';
-        ansSpan.textContent = '?';
-      }
-
-      container.appendChild(aSpan);
-      container.appendChild(opSpan);
-      container.appendChild(bSpan);
-      container.appendChild(eqSpan);
-      container.appendChild(ansSpan);
-
-      subtext.innerHTML = isQuizMode 
-        ? '<span>🎯 Выбери правильный ответ</span>'
-        : (isRevealed ? '<span>✨ Отлично! Нажми для следующего</span>' : '<span>💡 Нажми на карточку, чтобы узнать ответ</span>');
+      const [a, op, b] = p.leftText.split(' ');
+      container.innerHTML = `<span class="elem-num">${a}</span><span class="elem-op">${op}</span><span class="elem-num">${b}</span><span class="elem-equal">=</span><span class="${revealed?'elem-answer':'elem-question'}">${revealed?p.answer:'?'}</span>`;
+      subtext.innerHTML = isQuizMode ? '<span>🎯 Выбери правильный ответ</span>' : (revealed ? '<span>✨ Отлично! Нажми для следующего</span>' : '<span>💡 Нажми на карточку, чтобы узнать ответ</span>');
     }
 
-    function renderQuizChoices(problem, allowRevealed = false) {
-      const container = document.getElementById('choices-container');
-      container.innerHTML = '';
-
-      if (!isQuizMode || currentMode === 'table') {
-        container.style.display = 'none';
-        return;
-      }
-
+    function renderQuizChoices(p, allowRevealed = false) {
+      const container = $('choices-container'); container.innerHTML = '';
+      if (!isQuizMode || currentMode === 'table') { container.style.display = 'none'; return; }
       container.style.display = 'flex';
-      const options = generateOptions(problem.answer, problem.type);
-
-      options.forEach((opt) => {
+      generateOptions(p.answer, p.type).forEach(opt => {
         const btn = document.createElement('button');
-        btn.className = 'choice-btn';
-
-        const textSpan = document.createElement('span');
-        textSpan.textContent = opt;
-        btn.appendChild(textSpan);
-
-        if (isAnswerRevealed && opt === problem.answer && allowRevealed) {
-          btn.classList.add('correct');
-        }
-
-        btn.onclick = (e) => {
-          e.stopPropagation();
-          handleQuizSelection(opt, btn);
-        };
-
+        btn.className = `choice-btn ${isAnswerRevealed && opt === p.answer && allowRevealed ? 'correct' : ''}`;
+        btn.innerHTML = `<span>${opt}</span>`;
+        btn.onclick = e => { e.stopPropagation(); handleQuizSelection(opt, btn); };
         container.appendChild(btn);
       });
     }
 
-    function handleQuizSelection(selectedVal, btnElement) {
-      if (isAnswerRevealed) {
-        nextCard();
-        return;
-      }
-
-      if (selectedVal === currentProblem.answer) {
-        btnElement.classList.add('correct');
-        playSound('success');
-        isAnswerRevealed = true;
+    function handleQuizSelection(val, btn) {
+      if (isAnswerRevealed) return nextCard();
+      const card = $('math-card');
+      if (val === currentProblem.answer) {
+        btn.classList.add('correct'); playSound('success');
+        isAnswerRevealed = true; currentProblem.solvedInQuiz = true;
         renderCard(currentProblem, true);
-        solvedCount++;
-        solveTimestamps.push(Date.now());
-        document.getElementById('star-count').textContent = solvedCount;
-
-        const card = document.getElementById('math-card');
+        solvedCount++; solveTimestamps.push(Date.now());
+        $('star-count').textContent = solvedCount;
         card.classList.add('correct-flash');
         setTimeout(() => card.classList.remove('correct-flash'), 600);
-
-        setTimeout(() => {
-          if (isAnswerRevealed) nextCard();
-        }, 850);
+        setTimeout(() => { if (isAnswerRevealed) nextCard(); }, 850);
       } else {
-        btnElement.classList.add('wrong');
-        wrongCount++;
-        document.getElementById('wrong-count').textContent = wrongCount;
+        btn.classList.add('wrong');
+        $('wrong-count').textContent = ++wrongCount;
         playSound('error');
-
-        const card = document.getElementById('math-card');
-        card.classList.remove('shake');
-        void card.offsetWidth;
-        card.classList.add('shake');
+        card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
       }
     }
 
     function generateNext(resetHistory = false) {
       if (currentMode === 'table') return;
-
-      if (resetHistory) {
-        historyStack = [];
-        historyIndex = -1;
-      }
-
+      if (resetHistory) { historyStack = []; historyIndex = -1; }
       currentProblem = generateNextProblem();
       isAnswerRevealed = false;
-
-      if (historyIndex < historyStack.length - 1) {
-        historyStack = historyStack.slice(0, historyIndex + 1);
-      }
+      if (historyIndex < historyStack.length - 1) historyStack = historyStack.slice(0, historyIndex + 1);
       historyStack.push({ ...currentProblem, solvedInQuiz: false });
       historyIndex = historyStack.length - 1;
-
       renderCard(currentProblem, false);
       renderQuizChoices(currentProblem, false);
-      updateNavButtonsState();
-
-      const card = document.getElementById('math-card');
-      card.classList.remove('card-fade');
-      void card.offsetWidth;
-      card.classList.add('card-fade');
+      $('btn-prev-card').disabled = historyIndex <= 0;
+      const card = $('math-card');
+      card.classList.remove('card-fade'); void card.offsetWidth; card.classList.add('card-fade');
     }
 
-    function onCardClick(e) {
-      if (currentMode === 'table') return;
-      if (!isQuizMode) {
-        if (!isAnswerRevealed) {
-          playSound('softping');
-          isAnswerRevealed = true;
-          renderCard(currentProblem, true);
-          solvedCount++;
-          solveTimestamps.push(Date.now());
-          document.getElementById('star-count').textContent = solvedCount;
-        } else {
-          nextCard();
-        }
-      }
+    function onCardClick() {
+      if (currentMode === 'table' || isQuizMode) return;
+      if (!isAnswerRevealed) {
+        playSound(); isAnswerRevealed = true;
+        renderCard(currentProblem, true);
+        solvedCount++; solveTimestamps.push(Date.now());
+        $('star-count').textContent = solvedCount;
+      } else nextCard();
     }
 
-    function nextCard(event) {
+    function nextCard(e) {
       if (currentMode === 'table') return;
-      if (event) event.stopPropagation();
-
-      const now = Date.now();
-      if (now - lastActionTime < THROTTLE_DELAY_MS) return;
-      lastActionTime = now;
-
-      playSound('softping');
-
+      if (e) e.stopPropagation();
+      const now = Date.now(); if (now - lastActionTime < THROTTLE_DELAY_MS) return;
+      lastActionTime = now; playSound();
       if (historyIndex < historyStack.length - 1) {
-        historyIndex++;
-        currentProblem = historyStack[historyIndex];
+        currentProblem = historyStack[++historyIndex];
         isAnswerRevealed = isQuizMode ? !!currentProblem.solvedInQuiz : true;
         renderCard(currentProblem, isAnswerRevealed);
         renderQuizChoices(currentProblem, isAnswerRevealed);
-        updateNavButtonsState();
-      } else {
-        generateNext();
-      }
+        $('btn-prev-card').disabled = historyIndex <= 0;
+      } else generateNext();
     }
 
-    function prevCard(event) {
+    function prevCard(e) {
       if (currentMode === 'table') return;
-      if (event) event.stopPropagation();
-
-      const now = Date.now();
-      if (now - lastActionTime < THROTTLE_DELAY_MS) return;
+      if (e) e.stopPropagation();
+      const now = Date.now(); if (now - lastActionTime < THROTTLE_DELAY_MS || historyIndex <= 0) return;
       lastActionTime = now;
-
-      if (historyIndex > 0) {
-        historyIndex--;
-        currentProblem = historyStack[historyIndex];
-        isAnswerRevealed = isQuizMode ? !!currentProblem.solvedInQuiz : true;
-        playSound('softping');
-        renderCard(currentProblem, isAnswerRevealed);
-        renderQuizChoices(currentProblem, isAnswerRevealed);
-        updateNavButtonsState();
-      }
-    }
-
-    function updateNavButtonsState() {
-      const prevBtn = document.getElementById('btn-prev-card');
-      if (prevBtn) prevBtn.disabled = (historyIndex <= 0);
-    }
-
-    function toggleArithmeticOp(op) {
-      currentMode = 'arithmetic';
-      clearCompareActiveStates();
-
-      if (selectedArithmeticOps.has(op)) {
-        if (selectedArithmeticOps.size > 1) {
-          selectedArithmeticOps.delete(op);
-        }
-      } else {
-        selectedArithmeticOps.add(op);
-      }
-
-      updateOpButtonsVisual();
-      hideTableView();
-      generateNext(true);
+      currentProblem = historyStack[--historyIndex];
+      isAnswerRevealed = isQuizMode ? !!currentProblem.solvedInQuiz : true;
+      playSound();
+      renderCard(currentProblem, isAnswerRevealed);
+      renderQuizChoices(currentProblem, isAnswerRevealed);
+      $('btn-prev-card').disabled = historyIndex <= 0;
     }
 
     function updateOpButtonsVisual() {
-      document.querySelectorAll('.op-toggle-tab').forEach(b => {
-        const op = b.dataset.op;
-        b.classList.toggle('active', currentMode === 'arithmetic' && selectedArithmeticOps.has(op));
-      });
+      document.querySelectorAll('.op-toggle-tab').forEach(b => b.classList.toggle('active', currentMode === 'arithmetic' && selectedArithmeticOps.has(b.dataset.op)));
+    }
+    function clearCompareActiveStates() { $('btn-cmp-simple').classList.remove('active'); $('btn-cmp-expr').classList.remove('active'); }
+    function hideTableView() { $('btn-tab-table').classList.remove('active'); $('table-view-container').style.display = 'none'; $('card-wrapper').style.display = 'flex'; }
+
+    function toggleArithmeticOp(op) {
+      currentMode = 'arithmetic'; clearCompareActiveStates();
+      if (selectedArithmeticOps.has(op)) { if (selectedArithmeticOps.size > 1) selectedArithmeticOps.delete(op); }
+      else selectedArithmeticOps.add(op);
+      updateOpButtonsVisual(); hideTableView(); generateNext(true);
     }
 
     function setCompareMode(cmpType) {
-      currentMode = cmpType;
-      updateOpButtonsVisual();
-      clearCompareActiveStates();
-
-      if (cmpType === 'cmp_simple') {
-        document.getElementById('btn-cmp-simple').classList.add('active');
-      } else {
-        document.getElementById('btn-cmp-expr').classList.add('active');
-      }
-
-      hideTableView();
-      generateNext(true);
-    }
-
-    function clearCompareActiveStates() {
-      document.getElementById('btn-cmp-simple').classList.remove('active');
-      document.getElementById('btn-cmp-expr').classList.remove('active');
+      currentMode = cmpType; updateOpButtonsVisual(); clearCompareActiveStates();
+      $(cmpType === 'cmp_simple' ? 'btn-cmp-simple' : 'btn-cmp-expr').classList.add('active');
+      hideTableView(); generateNext(true);
     }
 
     function setTrainingMode(quiz) {
       isQuizMode = quiz;
-      document.getElementById('btn-mode-cards').classList.toggle('active', !quiz);
-      document.getElementById('btn-mode-quiz').classList.toggle('active', quiz);
-      document.getElementById('wrong-badge').style.display = quiz ? 'flex' : 'none';
-
-      if (currentProblem) {
-        renderCard(currentProblem, isAnswerRevealed);
-        renderQuizChoices(currentProblem, isAnswerRevealed);
-      }
+      $('btn-mode-cards').classList.toggle('active', !quiz);
+      $('btn-mode-quiz').classList.toggle('active', quiz);
+      $('wrong-badge').style.display = quiz ? 'flex' : 'none';
+      if (currentProblem) { renderCard(currentProblem, isAnswerRevealed); renderQuizChoices(currentProblem, isAnswerRevealed); }
     }
 
     function setMaxRange(val) {
       maxRange = val;
-      document.querySelectorAll('.range-pill-btn').forEach(btn => {
-        btn.classList.toggle('active', parseInt(btn.dataset.range) === val);
-      });
+      document.querySelectorAll('.range-pill-btn').forEach(b => b.classList.toggle('active', +b.dataset.range === val));
       generateNext(true);
     }
 
     function toggleAllOrMinMultipliers() {
-      if (activeMultipliers.size >= 8) {
-        activeMultipliers = new Set([2]);
-      } else {
-        activeMultipliers = new Set([2, 3, 4, 5, 6, 7, 8, 9]);
-      }
+      activeMultipliers = activeMultipliers.size >= 8 ? new Set([2]) : new Set([2, 3, 4, 5, 6, 7, 8, 9]);
       renderMultipliersCheckboxes();
-      if (selectedArithmeticOps.has('mul') || selectedArithmeticOps.has('div')) {
-        generateNext(true);
-      }
+      if (selectedArithmeticOps.has('mul') || selectedArithmeticOps.has('div')) generateNext(true);
     }
 
     function renderMultipliersCheckboxes() {
-      const container = document.getElementById('multipliers-grid');
-      container.innerHTML = '';
-
+      const container = $('multipliers-grid'); container.innerHTML = '';
       for (let i = 2; i <= 9; i++) {
         const item = document.createElement('div');
         item.className = 'mult-item';
-
-        const input = document.createElement('input');
-        input.type = 'checkbox';
-        input.id = `mult-${i}`;
-        input.value = i;
-        input.checked = activeMultipliers.has(i);
-
-        input.onchange = (e) => {
-          if (e.target.checked) activeMultipliers.add(i);
-          else activeMultipliers.delete(i);
-
-          if (activeMultipliers.size === 0) {
-            activeMultipliers.add(i);
-            input.checked = true;
-          }
-          if (selectedArithmeticOps.has('mul') || selectedArithmeticOps.has('div')) {
-            generateNext(true);
-          }
+        item.innerHTML = `<input type="checkbox" id="mult-${i}" value="${i}" ${activeMultipliers.has(i)?'checked':''}><label class="mult-label" for="mult-${i}">× ${i}</label>`;
+        item.querySelector('input').onchange = e => {
+          e.target.checked ? activeMultipliers.add(i) : activeMultipliers.delete(i);
+          if (!activeMultipliers.size) { activeMultipliers.add(i); e.target.checked = true; }
+          if (selectedArithmeticOps.has('mul') || selectedArithmeticOps.has('div')) generateNext(true);
         };
-
-        const label = document.createElement('label');
-        label.className = 'mult-label';
-        label.htmlFor = `mult-${i}`;
-        label.textContent = `× ${i}`;
-
-        item.appendChild(input);
-        item.appendChild(label);
         container.appendChild(item);
       }
     }
 
     function renderPythagorasGrid() {
-      const wrapper = document.getElementById('pythagoras-grid-wrapper');
-      wrapper.innerHTML = '';
-
+      const wrapper = $('pythagoras-grid-wrapper'); wrapper.innerHTML = '';
       for (let r = 1; r <= 10; r++) {
         for (let c = 1; c <= 10; c++) {
-          const cell = document.createElement('div');
-          cell.className = 'pythagoras-cell';
-          const val = r * c;
-          cell.textContent = val;
-
-          if (r === 1 || c === 1) cell.classList.add('header-cell');
-
+          const cell = document.createElement('div'), val = r * c;
+          cell.className = `pythagoras-cell ${r === 1 || c === 1 ? 'header-cell' : ''}`;
+          cell.textContent = val; cell.dataset.row = r; cell.dataset.col = c;
           cell.onclick = () => {
             playSound('bell');
-            document.getElementById('table-info-bubble').innerHTML = 
-              `<span class="info-tag">${r} × ${c}</span>` +
-              `<span class="info-desc">Результат: <b style="color:#059669; font-size:1.15em;">${val}</b></span>`;
-            highlightPythagorasCross(r, c);
+            $('table-info-bubble').innerHTML = `<span class="info-tag">${r} × ${c}</span><span class="info-desc">Результат: <b style="color:#059669;font-size:1.15em">${val}</b></span>`;
+            document.querySelectorAll('.pythagoras-cell').forEach(el => {
+              const er = +el.dataset.row, ec = +el.dataset.col;
+              el.classList.toggle('target-cell', er === r && ec === c);
+              el.classList.toggle('cross-highlight', (er === r || ec === c) && !(er === r && ec === c));
+            });
           };
-
-          cell.setAttribute('data-row', r);
-          cell.setAttribute('data-col', c);
           wrapper.appendChild(cell);
         }
       }
     }
 
-    function highlightPythagorasCross(targetR, targetC) {
-      const cells = document.querySelectorAll('.pythagoras-cell');
-      cells.forEach(el => {
-        const r = parseInt(el.getAttribute('data-row'));
-        const c = parseInt(el.getAttribute('data-col'));
-        el.classList.remove('cross-highlight', 'target-cell');
-
-        if (r === targetR && c === targetC) {
-          el.classList.add('target-cell');
-        } else if (r === targetR || c === targetC) {
-          el.classList.add('cross-highlight');
-        }
-      });
-    }
-
     function renderNikitinHundredTable() {
-      const board = document.getElementById('nikitin-board');
-      board.innerHTML = '';
-
+      const board = $('nikitin-board'); board.innerHTML = '';
+      const makeDots = cnt => {
+        const col = n => `<div style="display:flex;flex-direction:column;gap:2px">${'<div class="n-dot"></div>'.repeat(n)}</div>`;
+        return `<div class="dot-pattern">${cnt <= 5 ? col(cnt) : `<div style="display:flex;gap:3px">${col(5)}${col(cnt-5)}</div>`}</div>`;
+      };
       for (let r = 1; r <= 10; r++) {
-        const unitCell = document.createElement('div');
-        unitCell.className = 'nikitin-unit-cell';
-        unitCell.id = `nikitin-unit-cell-${r}`;
-        unitCell.appendChild(createNikitinUnitDots(r));
-        board.appendChild(unitCell);
-
+        const u = document.createElement('div');
+        u.className = 'nikitin-unit-cell'; u.id = `nikitin-unit-cell-${r}`; u.innerHTML = makeDots(r);
+        board.appendChild(u);
         for (let col = 0; col < 10; col++) {
-          const cell = document.createElement('div');
-          cell.className = 'nikitin-cell';
-          const num = col * 10 + r;
-          cell.textContent = num;
-          cell.id = `nikitin-cell-${num}`;
-
-          if (r === 10) cell.classList.add('round-ten');
-
+          const cell = document.createElement('div'), num = col * 10 + r;
+          cell.className = `nikitin-cell ${r === 10 ? 'round-ten' : ''}`;
+          cell.textContent = num; cell.id = `nikitin-cell-${num}`;
           cell.onclick = () => selectNikitinNumber(num, r, col);
           board.appendChild(cell);
         }
       }
-
-      const corner = document.createElement('div');
-      corner.className = 'nikitin-corner-cell';
-      board.appendChild(corner);
-
+      const corner = document.createElement('div'); corner.className = 'nikitin-corner-cell'; board.appendChild(corner);
+      const singleBar = `<div class="ten-bar">${'<div class="ten-dot"></div>'.repeat(9)}<div class="ten-dot base-dot"></div></div>`;
       for (let col = 0; col < 10; col++) {
-        const tenCell = document.createElement('div');
-        tenCell.className = 'nikitin-ten-cell';
-        tenCell.id = `nikitin-ten-cell-${col}`;
-        tenCell.appendChild(createNikitinTenBars(col + 1));
-        board.appendChild(tenCell);
+        const t = document.createElement('div');
+        t.className = 'nikitin-ten-cell'; t.id = `nikitin-ten-cell-${col}`;
+        t.innerHTML = `<div class="tens-bars">${singleBar.repeat(col + 1)}</div>`;
+        board.appendChild(t);
       }
     }
 
-    function createNikitinUnitDots(count) {
-      const wrap = document.createElement('div');
-      wrap.className = 'dot-pattern';
+    function selectNikitinNumber(num, r, col) {
+      selectedNikitinNumber = num; playSound('popit');
+      $('table-info-bubble').innerHTML = `<span class="info-tag">Число ${num}</span><span class="info-desc">${formatNumberDecomposition(num)}</span>`;
+      document.querySelectorAll('.nikitin-cell').forEach(c => c.classList.toggle('selected', c.id === `nikitin-cell-${num}`));
+      document.querySelectorAll('.nikitin-unit-cell').forEach(c => c.classList.toggle('active-unit', c.id === `nikitin-unit-cell-${r}`));
+      document.querySelectorAll('.nikitin-ten-cell').forEach(c => c.classList.toggle('active-ten', c.id === `nikitin-ten-cell-${col}`));
+    }
 
-      if (count <= 5) {
-        for (let i = 0; i < count; i++) {
-          const d = document.createElement('div');
-          d.className = 'n-dot';
-          wrap.appendChild(d);
-        }
+    function setTableSubMode(sub) {
+      if (sub === 'pythagoras' && !pythagorasRendered) { renderPythagorasGrid(); pythagorasRendered = true; }
+      else if (sub === 'hundred' && !hundredRendered) { renderNikitinHundredTable(); hundredRendered = true; }
+      tableSubMode = sub;
+      $('btn-table-pythagoras').classList.toggle('active', sub === 'pythagoras');
+      $('btn-table-hundred').classList.toggle('active', sub === 'hundred');
+      $('pythagoras-grid-wrapper').style.display = sub === 'pythagoras' ? 'grid' : 'none';
+      $('hundred-grid-wrapper').style.display = sub === 'hundred' ? 'flex' : 'none';
+      $('table-view-heading').textContent = sub === 'pythagoras' ? 'Таблица Пифагора (Умножение):' : 'Сотня (1–100 по методике Никитиных):';
+      if (sub === 'pythagoras') {
+        $('table-info-bubble').innerHTML = `<span class="info-tag">Пифагор</span><span class="info-desc">Нажми на любое число для разбора</span>`;
+      } else if (selectedNikitinNumber) {
+        selectNikitinNumber(selectedNikitinNumber, ((selectedNikitinNumber - 1) % 10) + 1, Math.floor((selectedNikitinNumber - 1) / 10));
       } else {
-        const col1 = document.createElement('div');
-        col1.style.display = 'flex';
-        col1.style.flexDirection = 'column';
-        col1.style.gap = '2px';
-        const col2 = document.createElement('div');
-        col2.style.display = 'flex';
-        col2.style.flexDirection = 'column';
-        col2.style.gap = '2px';
-
-        for (let i = 0; i < 5; i++) {
-          const d = document.createElement('div');
-          d.className = 'n-dot';
-          col1.appendChild(d);
-        }
-        for (let i = 5; i < count; i++) {
-          const d = document.createElement('div');
-          d.className = 'n-dot';
-          col2.appendChild(d);
-        }
-        const doubleWrap = document.createElement('div');
-        doubleWrap.style.display = 'flex';
-        doubleWrap.style.gap = '3px';
-        doubleWrap.appendChild(col1);
-        doubleWrap.appendChild(col2);
-        wrap.appendChild(doubleWrap);
-      }
-      return wrap;
-    }
-
-    function createNikitinTenBars(tenCount) {
-      const wrap = document.createElement('div');
-      wrap.className = 'tens-bars';
-
-      for (let t = 0; t < tenCount; t++) {
-        const bar = document.createElement('div');
-        bar.className = 'ten-bar';
-        for (let d = 0; d < 9; d++) {
-          const dot = document.createElement('div');
-          dot.className = 'ten-dot';
-          bar.appendChild(dot);
-        }
-        const baseDot = document.createElement('div');
-        baseDot.className = 'ten-dot base-dot';
-        bar.appendChild(baseDot);
-        wrap.appendChild(bar);
-      }
-      return wrap;
-    }
-
-    function selectNikitinNumber(num, rowIdx, colIdx) {
-      selectedNikitinNumber = num;
-      playSound('popit');
-
-      const decomp = formatNumberDecomposition(num);
-      document.getElementById('table-info-bubble').innerHTML = 
-        `<span class="info-tag" style="margin-right: 12px; font-size:1.05em;">Число ${num}</span>` +
-        `<span class="info-desc">${decomp}</span>`;
-
-      document.querySelectorAll('.nikitin-cell').forEach(c => c.classList.remove('selected'));
-      const activeCell = document.getElementById(`nikitin-cell-${num}`);
-      if (activeCell) activeCell.classList.add('selected');
-
-      document.querySelectorAll('.nikitin-unit-cell').forEach(c => c.classList.remove('active-unit'));
-      const unitEl = document.getElementById(`nikitin-unit-cell-${rowIdx}`);
-      if (unitEl) unitEl.classList.add('active-unit');
-
-      document.querySelectorAll('.nikitin-ten-cell').forEach(c => c.classList.remove('active-ten'));
-      const tenEl = document.getElementById(`nikitin-ten-cell-${colIdx}`);
-      if (tenEl) tenEl.classList.add('active-ten');
-    }
-
-    function setTableSubMode(subMode) {
-      tableSubMode = subMode;
-      document.getElementById('btn-table-pythagoras').classList.toggle('active', subMode === 'pythagoras');
-      document.getElementById('btn-table-hundred').classList.toggle('active', subMode === 'hundred');
-
-      const pythWrap = document.getElementById('pythagoras-grid-wrapper');
-      const hundWrap = document.getElementById('hundred-grid-wrapper');
-      const heading = document.getElementById('table-view-heading');
-
-      if (subMode === 'pythagoras') {
-        pythWrap.style.display = 'grid';
-        hundWrap.style.display = 'none';
-        heading.textContent = 'Таблица Пифагора (Умножение):';
-        document.getElementById('table-info-bubble').innerHTML = 
-          `<span class="info-tag">Пифагор</span><span class="info-desc">Нажми на любое число для разбора</span>`;
-      } else {
-        pythWrap.style.display = 'none';
-        hundWrap.style.display = 'flex';
-        heading.textContent = 'Сотня (1–100 по методике Никитиных):';
-        if (selectedNikitinNumber) {
-          selectNikitinNumber(selectedNikitinNumber, ((selectedNikitinNumber - 1) % 10) + 1, Math.floor((selectedNikitinNumber - 1) / 10));
-        } else {
-          document.getElementById('table-info-bubble').innerHTML = 
-            `<span class="info-tag">Сотня</span><span class="info-desc">Нажми на число: изучай единицы (слева) и десятки (снизу)</span>`;
-        }
+        $('table-info-bubble').innerHTML = `<span class="info-tag">Сотня</span><span class="info-desc">Нажми на число: изучай единицы (слева) и десятки (снизу)</span>`;
       }
     }
 
     function toggleTableView() {
-      const tabBtn = document.getElementById('btn-tab-table');
-      const cardView = document.getElementById('card-wrapper');
-      const tableView = document.getElementById('table-view-container');
-
+      const tabBtn = $('btn-tab-table'), cardView = $('card-wrapper'), tableView = $('table-view-container');
       if (currentMode === 'table') {
-        currentMode = 'arithmetic';
-        tabBtn.classList.remove('active');
-        tableView.style.display = 'none';
-        cardView.style.display = 'flex';
-        updateOpButtonsVisual();
-        generateNext(true);
+        currentMode = 'arithmetic'; tabBtn.classList.remove('active');
+        tableView.style.display = 'none'; cardView.style.display = 'flex';
+        updateOpButtonsVisual(); generateNext(true);
       } else {
-        currentMode = 'table';
-        tabBtn.classList.add('active');
+        currentMode = 'table'; tabBtn.classList.add('active');
         document.querySelectorAll('.op-toggle-tab').forEach(b => b.classList.remove('active'));
-        clearCompareActiveStates();
-        cardView.style.display = 'none';
-        tableView.style.display = 'flex';
+        clearCompareActiveStates(); cardView.style.display = 'none'; tableView.style.display = 'flex';
         setTableSubMode(tableSubMode);
       }
       updateTimers();
     }
 
-    function hideTableView() {
-      document.getElementById('btn-tab-table').classList.remove('active');
-      document.getElementById('table-view-container').style.display = 'none';
-      document.getElementById('card-wrapper').style.display = 'flex';
-    }
-
     function toggleSoundMute() {
       isSoundMuted = !isSoundMuted;
-      document.getElementById('sound-mute-icon').textContent = isSoundMuted ? '🔇' : '🔊';
-      if (!isSoundMuted) playSound('softping');
+      $('sound-mute-icon').textContent = isSoundMuted ? '🔇' : '🔊';
+      if (!isSoundMuted) playSound();
     }
+    function changeSoundEffect(v) { currentSoundType = v; playSound(v); }
+    function changeFont(f) { document.body.className = `font-${f}`; }
+    function openHelpModal() { $('help-modal').classList.add('open'); }
+    function closeHelpModal() { $('help-modal').classList.remove('open'); }
 
-    function changeSoundEffect(val) {
-      currentSoundType = val;
-      playSound(val);
-    }
-
-    function changeFont(fontName) {
-      document.body.className = `font-${fontName}`;
-    }
-
-    function openHelpModal() {
-      document.getElementById('help-modal').classList.add('open');
-    }
-
-    function closeHelpModal() {
-      document.getElementById('help-modal').classList.remove('open');
-    }
-
-    function onHelpBackdropClick(e) {
-      if (e.target.id === 'help-modal') closeHelpModal();
-    }
-
-    const settingsPanel = document.getElementById('settings-panel');
-    const panelBackdrop = document.getElementById('panel-backdrop');
-
+    const settingsPanel = $('settings-panel'), panelBackdrop = $('panel-backdrop');
     function toggleSettingsPanel() {
-      const isMobile = window.innerWidth <= 900;
-      if (isMobile) {
+      if (window.innerWidth <= 900) {
         settingsPanel.classList.toggle('open');
         panelBackdrop.classList.toggle('active', settingsPanel.classList.contains('open'));
       } else {
         settingsPanel.classList.toggle('collapsed');
-        const isHidden = settingsPanel.classList.contains('collapsed');
-        document.getElementById('panel-btn-label').textContent = isHidden ? 'Параметры' : 'Скрыть';
+        $('panel-btn-label').textContent = settingsPanel.classList.contains('collapsed') ? 'Параметры' : 'Скрыть';
       }
     }
+    function closeSettingsPanel() { settingsPanel.classList.remove('open'); panelBackdrop.classList.remove('active'); }
 
-    function closeSettingsPanel() {
-      settingsPanel.classList.remove('open');
-      panelBackdrop.classList.remove('active');
-    }
+    if (window.innerWidth > 900) { settingsPanel.classList.remove('collapsed'); $('panel-btn-label').textContent = 'Скрыть'; }
 
-    if (window.innerWidth > 900) {
-      settingsPanel.classList.remove('collapsed');
-      document.getElementById('panel-btn-label').textContent = 'Скрыть';
-    }
-
-    window.addEventListener('keydown', (e) => {
-      if (currentMode === 'table') return;
-
-      if (e.code === 'ArrowLeft') {
+    window.addEventListener('keydown', e => {
+      if (e.code === 'Escape') { closeHelpModal(); closeSettingsPanel(); return; }
+      if (currentMode === 'table' || e.repeat) return;
+      if (e.code === 'ArrowLeft') { e.preventDefault(); prevCard(); }
+      else if (e.code === 'Space' || e.code === 'ArrowRight') {
         e.preventDefault();
-        if (!e.repeat) prevCard();
-      } else if (e.code === 'Space' || e.code === 'ArrowRight') {
-        e.preventDefault();
-        if (!e.repeat) {
-          if (!isQuizMode && !isAnswerRevealed) {
-            onCardClick();
-          } else {
-            nextCard();
-          }
-        }
-      } else if (e.code === 'Escape') {
-        closeHelpModal();
+        (!isQuizMode && !isAnswerRevealed) ? onCardClick() : nextCard();
       }
     });
 
-    let pythagorasRendered = false;
-    let hundredRendered = false;
-
-    function ensureTableRendered(subMode) {
-      if (subMode === 'pythagoras' && !pythagorasRendered) {
-        renderPythagorasGrid();
-        pythagorasRendered = true;
-      } else if (subMode === 'hundred' && !hundredRendered) {
-        renderNikitinHundredTable();
-        hundredRendered = true;
-      }
-    }
-
-    const originalSetTableSubMode = setTableSubMode;
-    setTableSubMode = function(subMode) {
-      ensureTableRendered(subMode);
-      originalSetTableSubMode(subMode);
-    };
+    let touchStartX = 0, touchStartY = 0, touchOnCard = false;
+    window.addEventListener('touchstart', e => {
+      touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY;
+      touchOnCard = !!e.target.closest('#math-card');
+    }, { passive: true });
+    window.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX, dy = e.changedTouches[0].clientY - touchStartY;
+      if (touchStartX < 36 && dx > 45 && Math.abs(dy) < 60) { settingsPanel.classList.add('open'); panelBackdrop.classList.add('active'); return; }
+      if (settingsPanel.classList.contains('open') && dx < -50 && Math.abs(dy) < 70) return closeSettingsPanel();
+      if (touchOnCard && Math.abs(dx) > 45 && Math.abs(dy) < 60) dx < 0 ? nextCard() : prevCard();
+    }, { passive: true });
 
     renderMultipliersCheckboxes();
     updateOpButtonsVisual();
     generateNext(true);
-
-    if (window.requestIdleCallback) {
-      requestIdleCallback(() => ensureTableRendered('pythagoras'));
-    } else {
-      setTimeout(() => ensureTableRendered('pythagoras'), 150);
-    }
   </script>
 </body>
 </html>
