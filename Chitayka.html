@@ -16,10 +16,10 @@
   <button class="panel-tab-pull" id="panel-tab-pull" onclick="openLettersPanel()" title="Открыть изученные буквы (Ctrl)"><span>⚙️</span></button>
   <canvas id="confetti-canvas"></canvas>
 
-  <!-- Модальное окно стикера -->
+  <!-- Модальное окно награды (Стикер) -->
   <div class="sticker-modal-backdrop" id="sticker-modal" onclick="if(event.target===this)closeStickerModal()">
     <div class="sticker-card">
-      <div class="sticker-badge-title">🎉 Награда за старание!</div>
+      <div class="sticker-badge-title" id="sticker-badge-title">🎉 Награда за старание!</div>
       <div class="sticker-animal-icon" id="sticker-icon">🦊</div>
       <div class="sticker-name" id="sticker-name">Хитрый лисёнок</div>
       <div class="sticker-message" id="sticker-message">Отлично читаешь!</div>
@@ -28,9 +28,25 @@
     </div>
   </div>
 
+  <!-- Модальное окно: Альбом наклеек «Мой зоопарк» (Фишка №4) -->
+  <div class="help-modal-backdrop" id="zoo-modal" onclick="if(event.target===this)closeZooModal()">
+    <div class="help-modal-card zoo-modal-card">
+      <div class="help-modal-header">
+        <div class="help-modal-title"><span>🏆</span> Мой зоопарк наклеек (<span id="zoo-modal-progress">0/20</span>)</div>
+        <button class="help-modal-close-btn" onclick="closeZooModal()">✕</button>
+      </div>
+      <div class="help-modal-body">
+        <div class="zoo-hint-bar">
+          Читай карточки без спешки, угадывай слоги на слух и открывай новых зверят! Нажми на открытого зверька, чтобы послушать его.
+        </div>
+        <div class="zoo-grid" id="zoo-grid"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="panel-backdrop" id="panel-backdrop" onclick="closeLettersPanel()"></div>
 
-  <!-- Справка -->
+  <!-- Модальное окно справки -->
   <div class="help-modal-backdrop" id="help-modal" onclick="if(event.target===this)closeHelpModal()">
     <div class="help-modal-card">
       <div class="help-modal-header">
@@ -40,7 +56,7 @@
       <div class="help-modal-body">
         <div class="help-section">
           <div class="help-section-title">🎓 Методическая основа и цветовое кодирование</div>
-          <p>Тренажёр построен на принципах плавного слогослияния (методика Букваря <b>Н. Жуковой</b> и складового чтения <b>Н. Зайцева</b>). Буквы вводятся от гласных и сонорных к парным и глухим согласным.</p>
+          <p>Тренажёр построен на принципах плавного слогослияния (методика Букваря <b>Н. Жуковой</b> и складового чтения <b>Н. Зайцева</b>). Буквы вводятся последовательно — от протяжных гласных и сонорных к парным и глухим согласным.</p>
           <ul class="help-list">
             <li><b style="color:#cb2d2d">● Красный</b> — гласные звуки.</li>
             <li><b style="color:#1e5cb8">● Синий</b> — твёрдые согласные (и всегда твёрдые <b>Ж, Ш, Ц</b>).</li>
@@ -49,26 +65,20 @@
           </ul>
         </div>
         <div class="help-section">
-          <div class="help-section-title">🧩 Режимы тренировки</div>
+          <div class="help-section-title">🧩 Режимы тренировки и новые игры</div>
           <ul class="help-list">
-            <li><b>Алфавит:</b> обзор всех букв и режим <i>«Помощник (Лента)»</i> (классификация звуков по звонкости, глухости и парности).</li>
-            <li><b>Слоги (Матрица):</b> таблица открытых и обратных слогов с озвучкой по клику и выбором порядка гласных (по умолчанию / по Зайцеву).</li>
-            <li><b>Прямые / Обратные / Слова (1–3 слога):</b> карточки слогов и слов с делением на склады и озвучкой.</li>
+            <li><b>Алфавит и Слоги (Матрица):</b> обзор всех букв, «Лента букв» и интерактивная таблица слогов с озвучкой.</li>
+            <li><b>Прямые / Обратные / Слова (1–3 слога):</b> карточки для чтения. В режимах слов работает <b>🎁 Картинка-сюрприз</b>: первый клик по прочитанному слову открывает картинку-подсказку и озвучивает слово, второй клик — листает дальше!</li>
+            <li><b>🚂 Вагончики (Конструктор):</b> паровозик везёт согласную букву. Прицепляй к нему вагончики с гласными и наблюдай, как согласная меняет цвет с синего на зелёный перед <i>И, Е, Ё, Ю, Я</i>!</li>
+            <li><b>🎧 На слух (Аудио-викторина):</b> слушай диктора и находи правильный слог или слово среди 4 карточек.</li>
+            <li><b>🏆 Мой зоопарк:</b> альбом из 20 говорящих зверят. Весь прогресс и выбранные буквы автоматически сохраняются!</li>
           </ul>
         </div>
         <div class="help-section">
-          <div class="help-section-title">⏱️ Контроль темпа и защита от спешки</div>
+          <div class="help-section-title">⏱️ Контроль темпа и управление</div>
           <ul class="help-list">
-            <li><b>Минимум 1.5 сек на карточку</b> и <b>пауза не менее 0.5 сек</b> между нажатиями.</li>
-            <li><b>Штраф за спам (>5 быстрых нажатий):</b> серия до награды сбрасывается в 0, звучит напоминание <i>«Сначала прочитай вслух!»</i> (не чаще 1 раза в 5 с).</li>
-            <li><b>Озвучка карточки:</b> не чаще 1 раза в 1 секунду.</li>
-          </ul>
-        </div>
-        <div class="help-section">
-          <div class="help-section-title">🎉 Мотивация и управление</div>
-          <ul class="help-list">
-            <li><b>Награды:</b> салют с похвалой (каждые 5/10/20 карточек) и стикеры с животными (каждые 10/20/40 карточек).</li>
-            <li><b>Управление:</b> <b>Пробел / → / Клик / Свайп влево</b> — вперёд; <b>← / Свайп вправо</b> — назад; <b>↑ / ↓</b> — озвучить; <b>Ctrl</b> — меню букв; <b>Esc</b> — закрыть окна.</li>
+            <li><b>Защита от спешки:</b> минимум 1.5 сек на карточку и пауза 0.5 сек между нажатиями. За спам (>5 быстрых нажатий) серия до стикера сбрасывается.</li>
+            <li><b>Управление:</b> <b>Пробел / → / Клик / Свайп влево</b> — вперёд; <b>← / Свайп вправо</b> — назад; <b>↑ / ↓</b> — озвучить; <b>Ctrl</b> — меню букв.</li>
           </ul>
         </div>
       </div>
@@ -82,9 +92,17 @@
     </div>
     <div class="stats-bar">
       <div class="stat-badge star" title="Прочитано карточек"><span>⭐</span><span id="star-count">0</span></div>
+      <button class="stat-badge zoo-badge" onclick="openZooModal()" title="Альбом наклеек «Мой зоопарк»">
+        <span>🏆</span><span id="zoo-count">0/20</span>
+      </button>
       <div class="stat-badge speed" id="speed-badge" title="Темп: карточек в минуту"><span>⚡</span><span id="speed-count">0</span><span class="unit-lbl">/мин</span></div>
-      <div class="stat-badge time" title="Общее время"><span>⏱</span><span id="session-time">00:00</span></div>
-      <div class="case-toggle-wrap" title="Смена регистра букв">
+      <div class="stat-badge time hide-sm" title="Общее время занятия"><span>⏱</span><span id="session-time">00:00</span></div>
+
+      <button class="btn-icon-header active-toggle" id="surprise-toggle-btn" onclick="toggleSurpriseMode()" title="Картинка-сюрприз после прочтения слова (вкл/выкл)">
+        <span>🎁</span>
+      </button>
+
+      <div class="case-toggle-wrap" title="Смена регистра букв (Аа)">
         <label class="case-toggle-label" for="case-toggle">
           <span>Аа</span>
           <div class="switch"><input type="checkbox" id="case-toggle" onchange="toggleCaseMixing(event)"><span class="slider"></span></div>
@@ -188,22 +206,31 @@
           </select>
         </div>
       </div>
+
+      <button class="preset-btn-col danger" onclick="resetSavedProgress()" style="justify-content:center">
+        <span>🗑️ Сбросить звёзды и зоопарк</span>
+      </button>
     </aside>
 
     <main class="stage">
+      <!-- Панель выбора режимов -->
       <div class="modes-categories-wrapper">
         <div class="mode-group mode-group-alphabet">
-          <button class="mode-tab" id="tab-alphabet" onclick="onAlphabetClick()"><span>Алфавит</span><span class="count-badge" id="count-alphabet">0</span></button>
-          <button class="mode-tab" id="tab-matrix" onclick="onMatrixClick()"><span>Слоги</span></button>
+          <button class="mode-tab" id="tab-alphabet" onclick="setPrimaryMode('alphabet')"><span>Алфавит</span><span class="count-badge" id="count-alphabet">0</span></button>
+          <button class="mode-tab" id="tab-matrix" onclick="setPrimaryMode('matrix')"><span>Слоги</span></button>
         </div>
         <div class="mode-group mode-group-syllables">
           <button class="mode-tab active" id="tab-open" onclick="toggleSyllableSubmode('open')"><span>Прямые</span><span class="count-badge" id="count-open">0</span></button>
           <button class="mode-tab" id="tab-reverse" onclick="toggleSyllableSubmode('reverse')"><span>Обратные</span><span class="count-badge" id="count-reverse">0</span></button>
         </div>
         <div class="mode-group mode-group-words">
-          <button class="mode-tab" id="tab-one_syllable" onclick="onWordModeClick('one_syllable')"><span>1 слог</span><span class="count-badge" id="count-one-syllable">0</span></button>
-          <button class="mode-tab" id="tab-words2" onclick="onWordModeClick('words2')"><span>2 слога</span><span class="count-badge" id="count-words2">0</span></button>
-          <button class="mode-tab" id="tab-words3" onclick="onWordModeClick('words3')"><span>3 слога</span><span class="count-badge" id="count-words3">0</span></button>
+          <button class="mode-tab" id="tab-one_syllable" onclick="setPrimaryMode('one_syllable')"><span>1 слог</span><span class="count-badge" id="count-one-syllable">0</span></button>
+          <button class="mode-tab" id="tab-words2" onclick="setPrimaryMode('words2')"><span>2 слога</span><span class="count-badge" id="count-words2">0</span></button>
+          <button class="mode-tab" id="tab-words3" onclick="setPrimaryMode('words3')"><span>3 слога</span><span class="count-badge" id="count-words3">0</span></button>
+        </div>
+        <div class="mode-group mode-group-games">
+          <button class="mode-tab" id="tab-trains" onclick="setPrimaryMode('trains')"><span>🚂 Вагончики</span></button>
+          <button class="mode-tab" id="tab-quiz" onclick="setPrimaryMode('quiz')"><span>🎧 На слух</span></button>
         </div>
       </div>
 
@@ -248,11 +275,13 @@
         </div>
       </div>
 
-      <!-- ВИД 3: КАРТОЧКИ -->
+      <!-- ВИД 3: КАРТОЧКИ (с поддержкой Картинки-сюрприза №6) -->
       <div class="card-wrapper" id="card-wrapper">
         <div class="card-container-relative">
           <div class="syllable-card" id="syllable-card" onclick="onCardClick(event)">
+            <div class="word-surprise-box" id="word-surprise-box"></div>
             <div class="syllable-text" id="syllable-text"></div>
+            <div class="surprise-tap-hint" id="surprise-tap-hint">🎁 Прочитай вслух и нажми, чтобы увидеть картинку!</div>
             <div class="empty-warning" id="empty-warning">
               <span class="empty-icon">🧩</span>
               <h3>Мало букв для этого режима</h3>
@@ -275,6 +304,64 @@
           <span>• Буквы:</span><span class="kbd-chip">Ctrl</span>
         </div>
       </div>
+
+      <!-- ВИД 4: КОНСТРУКТОР СЛОГОВ «ВАГОНЧИКИ» (Фишка №2) -->
+      <div class="trains-view-container" id="trains-view-container">
+        <div class="trains-toolbar">
+          <div class="trains-cons-label">Выбери согласную для паровозика:</div>
+          <div class="trains-cons-bar" id="trains-cons-bar"></div>
+        </div>
+
+        <div class="train-stage-card">
+          <div class="train-status-hint" id="train-status-hint">Нажми на любой вагончик с гласной, чтобы прицепить его!</div>
+          <div class="train-track">
+            <!-- Паровозик с согласной -->
+            <div class="train-locomotive" id="train-loco" onclick="playCurrentTrainSyllable()">
+              <div class="loco-smoke" id="loco-smoke">💨</div>
+              <div class="loco-cabin">
+                <span class="loco-letter" id="loco-letter">М</span>
+              </div>
+              <div class="loco-wheels"><div class="wheel"></div><div class="wheel"></div></div>
+            </div>
+            <!-- Прицепной вагончик с гласной -->
+            <div class="train-coupled-wagon hidden" id="train-wagon" onclick="playCurrentTrainSyllable()">
+              <div class="wagon-coupler"></div>
+              <div class="wagon-body">
+                <span class="wagon-letter" id="wagon-letter">А</span>
+              </div>
+              <div class="loco-wheels"><div class="wheel"></div><div class="wheel"></div></div>
+            </div>
+          </div>
+          <div class="train-rails"></div>
+        </div>
+
+        <div class="trains-depot">
+          <div class="depot-title">Вагончики с гласными (нажми, чтобы прицепить):</div>
+          <div class="depot-wagons-grid" id="depot-wagons-grid"></div>
+        </div>
+      </div>
+
+      <!-- ВИД 5: АУДИО-ВИКТОРИНА «НАЙДИ НА СЛУХ» (Фишка №3) -->
+      <div class="quiz-view-container" id="quiz-view-container">
+        <div class="quiz-toolbar">
+          <span class="alphabet-toolbar-title">Что ищем на слух:</span>
+          <div class="alphabet-toggle-group">
+            <button class="alpha-sort-btn active" id="btn-quiz-syl" onclick="setQuizSource('syllables')">Слоги</button>
+            <button class="alpha-sort-btn" id="btn-quiz-words" onclick="setQuizSource('words')">Слова</button>
+          </div>
+        </div>
+
+        <div class="quiz-speaker-stage">
+          <button class="quiz-big-speaker-btn" id="quiz-speaker-btn" onclick="playQuizPromptAudio()">
+            <span class="quiz-speaker-icon">🔊</span>
+            <span class="quiz-speaker-text">Послушать ещё раз</span>
+          </button>
+          <div class="quiz-feedback-label" id="quiz-feedback-label">Послушай внимательно и выбери правильную карточку!</div>
+        </div>
+
+        <div class="quiz-options-grid" id="quiz-options-grid"></div>
+      </div>
+
       <div></div>
     </main>
   </div>
@@ -328,13 +415,61 @@
       ["СНАЧАЛА_ПРОЧИТАЙ_ВСЛУХ.wav", "Сначала прочитай вслух!"]
     ]);
 
-    let WORDS_ONE_SYLLABLE_3_4 = [], DICTIONARY_WORDS_2 = [], DICTIONARY_WORDS_3 = [];
+    // Словарь эмодзи-иллюстраций для слов (Фишка №6)
+    const WORD_EMOJIS = {
+      // 1 слог
+      КОТ:'🐱', КИТ:'🐋', ДОМ:'🏠', ДЫМ:'💨', ЛЕС:'🌲', ЛЕВ:'🦁', ЖУК:'🪲', ЗУБ:'🦷', ШАР:'🎈', СЫР:'🧀',
+      СУП:'🍲', СОК:'🧃', СОН:'😴', НОС:'👃', РОТ:'👄', МЯЧ:'⚽', МЕЧ:'⚔️', МЁД:'🍯', ЛЁД:'🧊', ДЕД:'👴',
+      САД:'🌳', ЛУК:'🧅', мак:'🌺', МАК:'🌺', РАК:'🦞', БЫК:'🐂', ГУСЬ:'🪿', ЛОСЬ:'🫎', РЫСЬ:'🐈', МЫШЬ:'🐁',
+      КОНЬ:'🐴', СЛОН:'🐘', ТОРТ:'🎂', МОСТ:'🌉', ЛИСТ:'🍁', КУСТ:'🌿', ХЛЕБ:'🍞', СНЕГ:'❄️', ДОЖДЬ:'🌧️',
+      ГРИБ:'🍄', КРАН:'🏗️', ТАНК:'🚜', ФЛАГ:'🚩', ШКАФ:'🚪', СТОЛ:'🪑', СТУЛ:'🪑', ГЛАЗ:'👁️', КЛЮЧ:'🔑',
+      ВРАЧ:'🩺', ГРАЧ:'🐦‍⬛', ТИГР:'🐯', ВОЛК:'🐺', МОРЖ:'🦭', КРОТ:'🐾', КРАБ:'🦀', ПЛОТ:'🛶', ДРУГ:'🤝',
+      // 2 слога
+      МАМА:'👩', ПАПА:'👨', БАБА:'👵', ДЕДА:'👴', КИСА:'🐱', ЗАЯ:'🐰', ЛЯЛЯ:'👶', НЯНЯ:'👩‍🍼', ТЁТЯ:'👩', ДЯДЯ:'👨',
+      КАША:'🥣', СУША:'🏝️', РОЗА:'🌹', КОЗА:'🐐', ВАЗА:'🏺', ЛУНА:'🌙', СОВА:'🦉', ЛИСА:'🦊', РЫБА:'🐟', УТКА:'🦆',
+      РУКА:'✋', НОГА:'🦶', ЗИМА:'⛄', ЛЕТО:'☀️', МОРЕ:'🌊', ПОЛЕ:'🌾', НЕБО:'☁️', ОКНО:'🪟', ЯЙЦО:'🥚', МЫЛО:'🧼',
+      ЧАСЫ:'⌚', ОЧКИ:'👓', БУСЫ:'📿', САНИ:'🛷', ЛЫЖИ:'🎿', КОНЬКИ:'⛸️', ДОМА:'🏘️', РЕКА:'🏞️', ГОРА:'⛰️', ТУЧА:'🌩️',
+      ЛУЖА:'💧', КАПЛЯ:'💧', НОРА:'🕳️', ШАРЫ:'🎈', ЗУБЫ:'🦷', ГУБЫ:'👄', УШИ:'👂', ГЛАЗА:'👀', ЩЁКИ:'😊', ШЕЯ:'🧣',
+      КОШКА:'🐈', МЫШКА:'🐁', МИШКА:'🐻', ШИШКА:'🌲', ЧАШКА:'☕', ЛОЖКА:'🥄', ВИЛКА:'🍴', МИСКА:'🥣', КУКЛА:'🎎',
+      ШАПКА:'🧢', ШУБА:'🧥', ЮБКА:'👗', КОФТА:'🧥', НОСКИ:'🧦', ОБУВЬ:'👟', СУМКА:'👜', КНИГА:'📕', РУЧКА:'🖊️',
+      ПАРТА:'🪑', ШКОЛА:'🏫', ДОСКА:'📋', МЕЛКИ:'🖍️', КРАСКИ:'🎨', КИСТИ:'🖌️', ПЕСНЯ:'🎵', НОТЫ:'🎶', ТАНЕЦ:'💃',
+      ЗАЯЦ:'🐰', БЕЛКА:'🐿️', ЁЖИК:'🦔', ОЛЕНЬ:'🦌', КАБАН:'🐗', ЗЕБРА:'🦓', ЖИРАФ:'🦒', ПАНДА:'🐼', КОАЛА:'🐨',
+      ПЕТУХ:'🐓', Индюк:'🦃', ИНДЮК:'🦃', ГУСИ:'🪿', КУРЫ:'🐔', ОВЦА:'🐑', ОСЁЛ:'🫏', ПОНИ:'🐴', ЩЕНОК:'🐶',
+      ПИРОГ:'🥧', БАТОН:'🥖', БУЛКА:'🥐', БЛИНЫ:'🥞', САХАР:'🧂', ЛИМОН:'🍋', БАНАН:'🍌', ГРУША:'🍐', СЛИВА:'🫐',
+      АРБУЗ:'🍉', ДЫНЯ:'🍈', КИВИ:'🥝', МАНГО:'🥭', ПЕРСИК:'🍑', ОРЕХ:'🌰', ТЫКВА:'🎃', ОВОЩ:'🥕', ФРУКТ:'🍎',
+      ПОЕЗД:'🚆', ВАГОН:'🚃', ЛОДКА:'🚣', КАТЕР:'🚤', ТРАКТОР:'🚜', АВТО:'🚗', ТАКСИ:'🚕', МЕТРО:'🚇', РАКЕТА:'🚀',
+      ЗАМОК:'🏰', ЗАБОР:' fence ', ДВЕРИ:'🚪', КРЫША:'🏠', СВЕЧА:'🕯️', ЛАМПА:'💡', ВЕДРО:'🪣', МЕТЛА:'🧹', ЗОНТИК:'☂️',
+      // 3 слога
+      МАШИНА:'🚗', МАЛИНА:'🍓', КАЛИНА:'🍒', РЯБИНА:'🍒', КОРЗИНА:'🧺', КАРТИНА:'🖼️', РАДУГА:'🌈', ЯГОДА:'🍓',
+      ЯБЛОКО:'🍎', МОЛОКО:'🥛', КОobok:'🥯', КОЛОБОК:'🥯', ТЕРЕМОК:'🏡', САМОЛЁТ:'✈️', ВЕРТОЛЁТ:'🚁', ПАРОХОД:'🚢',
+      САМОКАТ:'🛴', АВТОБУС:'🚌', ТРАМВАЙ:'🚋', КОРАБЛЬ:'⛵', БАБОЧКА:'🦋', СТРЕКОЗА:'蜻', ГУСЕНИЦА:'🐛', УЛИТКА:'🐌',
+      МУРАВЕЙ:'🐜', ПАУЧОК:'🕷️', ПЧЁЛКА:'🐝', ВОРОБЕЙ:'🐦', ВОРОНА:'🐦‍⬛', СОРОКА:'🐦', КУКУШКА:'🐦', ПОПУГАЙ:'🦜',
+      ЛАСТОЧКА:'🐦', СИНИЦА:'🐦', ЦЫПЛЁНОК:'🐤', УТЁНОК:'🦆', КОТЁНОК:'🐱', ЛИСЁНОК:'🦊', ТИГРЁНОК:'🐯', ЛЬВЁНОК:'🦁',
+      МЕДВЕДЬ:'🐻', КРОКОДИЛ:'🐊', БЕГЕМОТ:'🦛', НОСОРОГ:'🦏', КЕНГУРУ:'🦘', ЧЕРЕПАХА:'🐢', ОБЕЗЬЯНА:'🐒', ДЕЛЬФИН:'🐬',
+      ОГУРЕЦ:'🥒', ПОМИДОР:'🍅', КАПУСТА:'🥬', МОРКОВЬ:'🥕', КАРТОШКА:'🥔', КОНФЕТА:'🍬', ПЕЧЕНЬЕ:'🍪', МОРОЖЕНОЕ:'🍦',
+      ШОКОЛАД:'🍫', АПЕЛЬСИН:'🍊', МАНДАРИН:'🍊', АНАНАС:'🍍', ВИНОГРАД:'🍇', КЛУБНИКА:'🍓', ТЕЛЕФОН:'📱', КОМПЬЮТЕР:'💻',
+      ГИТАРА:'🎸', БАРАБАН:'🥁', ИГРУШКИ:'🧸', КУБИКИ:'🧱', КАЧЕЛИ:'🎠', КАРУСЕЛЬ:'🎠', ПОДАРОК:'🎁', ПРАЗДНИК:'🎉',
+      СОЛНЫШКО:'🌞', ОБЛАКО:'☁️', ДЕРЕВО:'🌳', БЕРЁЗА:'🌳', РОМАШКА:'🌼', ТЮЛЬПАН:'🌷', КОЛОКОЛ:'🔔', ФОНАРИК:'🔦'
+    };
+
+    // Базовые слова на случай работы без внешнего Words.json
+    let WORDS_ONE_SYLLABLE_3_4 = ['КОТ','КИТ','ДОМ','ДЫМ','ЛЕС','ЖУК','ЗУБ','ШАР','СЫР','СУП','СОК','СОН','НОС','РОТ','МАК','РАК','БЫК','ЛУК','САД','МЁД'];
+    let DICTIONARY_WORDS_2 = ['МА-МА','ПА-ПА','БА-БА','КА-ША','РО-ЗА','КО-ЗА','ВА-ЗА','ЛУ-НА','СО-ВА','ЛИ-СА','РЫ-БА','УТ-КА','РУ-КА','НО-ГА','ЗИ-МА','МО-РЕ','КОШ-КА','МЫШ-КА','МИШ-КА','СУМ-КА'];
+    let DICTIONARY_WORDS_3 = ['МА-ШИ-НА','МА-ЛИ-НА','РА-ДУ-ГА','МО-ЛО-КО','СА-МО-ЛЁТ','БА-БОЧ-КА','КО-ТЁ-НОК','СОЛ-НЫШ-КО','КОР-ЗИ-НА','КАР-ТИ-НА'];
+
     let activeLetters = new Set(['А','У','О','М','С','Х','Р','Ы','Л','Н']);
+    let unlockedAnimals = new Set();
     let primaryMode = 'syllables', syllableModes = { open: true, reverse: false };
     let matrixMode = 'open', matrixVowelOrder = 'default', alphabetSortMode = 'all';
     let currentText = '', readCount = 0, cheerStreakCount = 0, allowLowercase = false;
+    let surpriseModeEnabled = true, isSurpriseRevealed = false;
+
     let historyStack = [], historyIndex = -1, currentAnimalDeckIndex = 0, lastCheerIndex = -1;
     let isStickerModalOpen = false, isSoundMuted = false, currentSoundType = 'softping', cheerFrequency = 'normal';
+
+    // Переменные для «Вагончиков» и «Викторины»
+    let trainSelectedCons = 'М', trainSelectedVowel = null;
+    let quizSourceMode = 'syllables', quizTarget = '', quizOptions = [], quizSolved = false;
 
     const CHEER_CONFIG = { often: { sticker: 10, cheer: 5 }, normal: { sticker: 20, cheer: 10 }, rare: { sticker: 40, cheer: 20 } };
     const CARD_MIN_VIEW_TIME_MS = 1500, KEY_DEBOUNCE_INTERVAL_MS = 500, SPAM_WARNING_COOLDOWN_MS = 5000, AUDIO_MIN_INTERVAL_MS = 1000;
@@ -345,28 +480,84 @@
     const audioAvailabilityCache = new Map();
     const $ = id => document.getElementById(id);
 
+    // Сохранение и загрузка прогресса в localStorage (Фишка №4)
+    const STORAGE_KEY = 'chitayka_state_v2';
+    function saveAppState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          letters: [...activeLetters],
+          readCount,
+          unlocked: [...unlockedAnimals],
+          font: $('font-select')?.value || 'schoolbook',
+          sound: currentSoundType,
+          cheer: cheerFrequency,
+          surprise: surpriseModeEnabled
+        }));
+      } catch (e) {}
+    }
+
+    function loadAppState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const d = JSON.parse(raw);
+        if (Array.isArray(d.letters) && d.letters.length) activeLetters = new Set(d.letters);
+        if (typeof d.readCount === 'number') readCount = d.readCount;
+        if (Array.isArray(d.unlocked)) unlockedAnimals = new Set(d.unlocked);
+        if (d.font) { $('font-select').value = d.font; document.body.className = `font-${d.font}`; }
+        if (d.sound) { currentSoundType = d.sound; $('sound-select').value = d.sound; }
+        if (d.cheer && CHEER_CONFIG[d.cheer]) { cheerFrequency = d.cheer; $('cheer-freq-select').value = d.cheer; }
+        if (typeof d.surprise === 'boolean') surpriseModeEnabled = d.surprise;
+      } catch (e) {}
+      $('star-count').textContent = readCount;
+      $('surprise-toggle-btn').classList.toggle('active-toggle', surpriseModeEnabled);
+      updateZooBadge();
+    }
+
+    function resetSavedProgress() {
+      if (!confirm('Сбросить счётчик прочитанных карточек и коллекцию открытых зверят в зоопарке?')) return;
+      readCount = 0; cheerStreakCount = 0; unlockedAnimals.clear();
+      $('star-count').textContent = 0;
+      updateZooBadge(); saveAppState();
+    }
+
     async function loadWordsData() {
       try {
         const res = await fetch('Words.json');
         if (!res.ok) return;
         const d = await res.json();
-        WORDS_ONE_SYLLABLE_3_4 = d.words1 || (Array.isArray(d) ? d : []);
-        if (d.words2) DICTIONARY_WORDS_2 = d.words2;
-        if (d.words3) DICTIONARY_WORDS_3 = d.words3;
+        const parseWordList = arr => arr.map(item => {
+          if (typeof item === 'object' && item.word) {
+            if (item.emoji) WORD_EMOJIS[item.word.replace(/-/g, '').toUpperCase()] = item.emoji;
+            return item.word;
+          }
+          return item;
+        });
+        if (d.words1) WORDS_ONE_SYLLABLE_3_4 = parseWordList(d.words1);
+        else if (Array.isArray(d)) WORDS_ONE_SYLLABLE_3_4 = parseWordList(d);
+        if (d.words2) DICTIONARY_WORDS_2 = parseWordList(d.words2);
+        if (d.words3) DICTIONARY_WORDS_3 = parseWordList(d.words3);
         if (d.animals) STICKER_ANIMALS = d.animals;
         if (d.super) SUPER_CHEERS = d.super.map(i => typeof i === 'string' ? i : i.audio);
         updateCategoryBadges();
-        if (!['alphabet','matrix'].includes(primaryMode)) generateNext(true);
+        updateZooBadge();
+        if (!['alphabet','matrix','trains','quiz'].includes(primaryMode)) generateNext(true);
       } catch (e) {}
     }
 
-    function changeCheerFrequency(val) { if (CHEER_CONFIG[val]) cheerFrequency = val; }
-    function changeFont(f) { document.body.className = `font-${f}`; }
-    function changeSoundEffect(v) { currentSoundType = v; playSoundEffect(); }
+    function changeCheerFrequency(val) { if (CHEER_CONFIG[val]) { cheerFrequency = val; saveAppState(); } }
+    function changeFont(f) { document.body.className = `font-${f}`; saveAppState(); }
+    function changeSoundEffect(v) { currentSoundType = v; playSoundEffect(); saveAppState(); }
     function toggleSoundMute() {
       isSoundMuted = !isSoundMuted;
       $('sound-mute-icon').textContent = isSoundMuted ? '🔇' : '🔊';
       if (!isSoundMuted) playSoundEffect();
+    }
+    function toggleSurpriseMode() {
+      surpriseModeEnabled = !surpriseModeEnabled;
+      $('surprise-toggle-btn').classList.toggle('active-toggle', surpriseModeEnabled);
+      saveAppState();
+      renderFormattedText(currentText);
     }
     function openHelpModal() { $('help-modal').classList.add('open'); }
     function closeHelpModal() { $('help-modal').classList.remove('open'); }
@@ -464,7 +655,7 @@
     }
 
     async function checkCurrentCardAudioAvailable(text) {
-      if (!text || ['alphabet','matrix'].includes(primaryMode)) return false;
+      if (!text || ['alphabet','matrix','trains','quiz'].includes(primaryMode)) return false;
       if (window.location.protocol === 'file:') return true;
       const firstPart = primaryMode === 'one_syllable' ? text : text.split(/[-–]/).map(s => s.trim()).filter(Boolean)[0];
       if (!firstPart) return false;
@@ -478,7 +669,7 @@
     async function updateSpeakerButtonState() {
       const btn = $('btn-card-audio');
       if (!btn) return;
-      const ok = !['alphabet','matrix'].includes(primaryMode) && currentText && await checkCurrentCardAudioAvailable(currentText);
+      const ok = !['alphabet','matrix','trains','quiz'].includes(primaryMode) && currentText && await checkCurrentCardAudioAvailable(currentText);
       btn.classList.toggle('disabled', !ok);
       btn.title = ok ? "Озвучить карточку" : "Озвучка не найдена";
     }
@@ -504,15 +695,16 @@
       });
     }
 
-    async function playSyllableAudio() {
-      if (['alphabet','matrix'].includes(primaryMode) || !currentText || isSoundMuted) return;
-      const now = Date.now();
-      if (now - lastAudioPlayTime < AUDIO_MIN_INTERVAL_MS) return handleSpamAttempt();
-      lastAudioPlayTime = now; rapidSpamCount = 0;
+    async function playWordOrSyllableText(text, forceOneSyllableFolder = false) {
+      if (!text || isSoundMuted) return;
       stopSyllableAudio(); stopExtraAudio();
       const seqId = currentSequenceId;
-      if (primaryMode === 'one_syllable') return await playSingleSyllable(currentText, seqId, 'audio1slog');
-      const parts = currentText.split(/[-–]/).map(s => s.trim()).filter(Boolean);
+      const cleanNoHyphen = text.replace(/[-–]/g, '');
+      if (forceOneSyllableFolder || (!text.includes('-') && cleanNoHyphen.length >= 3)) {
+        await playSingleSyllable(cleanNoHyphen, seqId, 'audio1slog');
+        return;
+      }
+      const parts = text.split(/[-–]/).map(s => s.trim()).filter(Boolean);
       for (let i = 0; i < parts.length; i++) {
         if (seqId !== currentSequenceId) break;
         await playSingleSyllable(parts[i], seqId, getFolderForSyllable(parts[i]));
@@ -521,11 +713,19 @@
       }
     }
 
+    async function playSyllableAudio() {
+      if (['alphabet','matrix','trains','quiz'].includes(primaryMode) || !currentText || isSoundMuted) return;
+      const now = Date.now();
+      if (now - lastAudioPlayTime < AUDIO_MIN_INTERVAL_MS) return handleSpamAttempt();
+      lastAudioPlayTime = now; rapidSpamCount = 0;
+      await playWordOrSyllableText(currentText, primaryMode === 'one_syllable');
+    }
+
     function updateTimers() {
       const now = Date.now(), sec = Math.floor((now - startTime) / 1000);
       $('session-time').textContent = `${String(Math.floor(sec / 60)).padStart(2,'0')}:${String(sec % 60).padStart(2,'0')}`;
       const sb = $('speed-badge'), sc = $('speed-count');
-      if (['alphabet','matrix'].includes(primaryMode)) {
+      if (['alphabet','matrix','trains'].includes(primaryMode)) {
         sb.classList.add('paused'); sc.textContent = '⏸'; return;
       }
       sb.classList.remove('paused');
@@ -534,7 +734,6 @@
     }
     setInterval(updateTimers, 1000);
 
-    // Компактный синтезатор всех 10 звуковых эффектов
     function playSoundEffect() {
       if (isSoundMuted) return;
       try {
@@ -576,6 +775,7 @@
             <label class="letter-label" for="letter-${ch}">${ch}${badge?`<span class="letter-badge-icon">${badge}</span>`:''}</label>`;
           div.querySelector('input').addEventListener('change', e => {
             e.target.checked ? activeLetters.add(ch) : activeLetters.delete(ch);
+            saveAppState();
             refreshCurrentMode();
           });
           el.appendChild(div);
@@ -621,7 +821,6 @@
       $('count-words3').textContent = getAvailableWords3().length;
     }
 
-    // Генерация «Ленты букв» (Помощник) компактным шаблоном
     function initHelperRibbon() {
       const vCell = (ch, dual) => `<div class="ribbon-cell ${dual?'bg-vowel-dual':'bg-vowel'}" ${dual?'title="2 звука в начале слова, после гласной или ъ/ь"':''}>${ch}</div>`;
       const cCell = (ch, cls) => `<div class="cons-cell ${cls}">${ch}</div>`;
@@ -677,16 +876,20 @@
 
     function setAlphabetSort(mode) {
       alphabetSortMode = mode;
-      $('btn-sort-all').classList.toggle('active', mode === 'all');$('btn-sort-helper').classList.toggle('active', mode === 'helper');
-      $('alpha-all-view').style.display = mode === 'all' ? 'flex' : 'none';$('alpha-helper-view').style.display = mode === 'helper' ? 'block' : 'none';
+      $('btn-sort-all').classList.toggle('active', mode === 'all');
+      $('btn-sort-helper').classList.toggle('active', mode === 'helper');
+      $('alpha-all-view').style.display = mode === 'all' ? 'flex' : 'none';
+      $('alpha-helper-view').style.display = mode === 'helper' ? 'block' : 'none';
       if (mode === 'all') renderAlphabetView();
     }
 
     function playMatrixSyllable(syl, cell) {
       if (isSoundMuted || !syl) return;
       matrixAudio = stopAudioRef(matrixAudio);
-      cell.classList.add('playing');
-      setTimeout(() => cell.classList.remove('playing'), 300);
+      if (cell) {
+        cell.classList.add('playing');
+        setTimeout(() => cell.classList.remove('playing'), 300);
+      }
       playCandidateList(getAudioVariants(syl, 'audio'), a => matrixAudio = a);
     }
 
@@ -727,15 +930,192 @@
 
     function setMatrixVowelOrder(order) {
       matrixVowelOrder = order;
-      $('btn-order-default').classList.toggle('active', order === 'default');$('btn-order-zaytsev').classList.toggle('active', order === 'zaytsev');
+      $('btn-order-default').classList.toggle('active', order === 'default');
+      $('btn-order-zaytsev').classList.toggle('active', order === 'zaytsev');
       renderMatrix();
     }
 
     function switchMatrixMode(mode) {
       matrixMode = mode;
       $('btn-matrix-open').classList.toggle('active', mode === 'open');
-      $('btn-matrix-reverse').classList.toggle('active', mode === 'reverse');$('matrix-order-toolbar').style.display = mode === 'open' ? 'flex' : 'none';
+      $('btn-matrix-reverse').classList.toggle('active', mode === 'reverse');
+      $('matrix-order-toolbar').style.display = mode === 'open' ? 'flex' : 'none';
       renderMatrix();
+    }
+
+    // =========================================================================
+    // ФИШКА №2: КОНСТРУКТОР СЛОГОВ «ВАГОНЧИКИ»
+    // =========================================================================
+    function renderTrainsView() {
+      const consBar = $('trains-cons-bar'), depotGrid = $('depot-wagons-grid');
+      const availCons = MATRIX_CONSONANTS.filter(c => activeLetters.has(c));
+      const availVowels = MATRIX_VOWELS_DEFAULT.filter(v => activeLetters.has(v));
+
+      if (!availCons.length || !availVowels.length) {
+        consBar.innerHTML = `<span style="color:#9c2525;font-weight:800">Отметьте хотя бы 1 согласную и 1 гласную в меню букв!</span>`;
+        depotGrid.innerHTML = '';
+        return;
+      }
+
+      if (!availCons.includes(trainSelectedCons)) trainSelectedCons = availCons[0];
+
+      consBar.innerHTML = '';
+      availCons.forEach(c => {
+        const btn = document.createElement('button');
+        const isSoftOnly = ALWAYS_SOFT.has(c);
+        btn.className = `train-cons-pill ${isSoftOnly ? 'soft-only' : ''} ${c === trainSelectedCons ? 'active' : ''}`;
+        btn.textContent = c;
+        btn.onclick = () => {
+          trainSelectedCons = c;
+          if (trainSelectedVowel && isInvalidOpen(c, trainSelectedVowel)) trainSelectedVowel = null;
+          playSoundEffect();
+          renderTrainsView();
+          if (trainSelectedVowel) playCurrentTrainSyllable();
+        };
+        consBar.appendChild(btn);
+      });
+
+      // Обновляем паровозик и прицепленный вагон
+      const isSoft = ALWAYS_SOFT.has(trainSelectedCons) ||
+                     (!ALWAYS_HARD.has(trainSelectedCons) && trainSelectedVowel && SOFTENING_LETTERS.has(trainSelectedVowel));
+      const loco = $('train-loco'), locoLet = $('loco-letter'), wagon = $('train-wagon'), wagonLet = $('wagon-letter');
+      loco.className = `train-locomotive ${isSoft ? 'loco-soft' : 'loco-hard'}`;
+      locoLet.textContent = trainSelectedCons;
+
+      if (trainSelectedVowel && !isInvalidOpen(trainSelectedCons, trainSelectedVowel)) {
+        wagon.classList.remove('hidden');
+        wagonLet.textContent = trainSelectedVowel;
+        $('train-status-hint').innerHTML = `Получился слог: <b>${trainSelectedCons}${trainSelectedVowel}</b> (${isSoft ? '<span style="color:#1b7a3e">мягкий согласный</span>' : '<span style="color:#1e5cb8">твёрдый согласный</span>'}). Нажми на поезд, чтобы озвучить!`;
+      } else {
+        wagon.classList.add('hidden');
+        $('train-status-hint').textContent = 'Нажми на любой вагончик с гласной снизу, чтобы прицепить его к паровозику!';
+      }
+
+      // Вагончики в депо
+      depotGrid.innerHTML = '';
+      availVowels.forEach(v => {
+        const invalid = isInvalidOpen(trainSelectedCons, v);
+        const btn = document.createElement('button');
+        const isSoftening = SOFTENING_LETTERS.has(v);
+        btn.className = `depot-wagon-btn ${isSoftening ? 'softening-vowel' : ''} ${v === trainSelectedVowel ? 'selected' : ''}`;
+        btn.disabled = invalid;
+        btn.innerHTML = `<span class="dw-letter">${v}</span><span class="dw-wheels">● ●</span>`;
+        btn.title = invalid ? `Слога ${trainSelectedCons}${v} нет в русском языке` : `Прицепить гласную ${v}`;
+        btn.onclick = () => {
+          trainSelectedVowel = v;
+          renderTrainsView();
+          const wEl = $('train-wagon');
+          wEl.classList.remove('couple-anim');
+          void wEl.offsetWidth;
+          wEl.classList.add('couple-anim');
+          playCurrentTrainSyllable();
+        };
+        depotGrid.appendChild(btn);
+      });
+    }
+
+    function playCurrentTrainSyllable() {
+      if (!trainSelectedCons) return;
+      if (trainSelectedVowel && !isInvalidOpen(trainSelectedCons, trainSelectedVowel)) {
+        playMatrixSyllable(trainSelectedCons + trainSelectedVowel, $('train-loco'));
+      } else {
+        playSoundEffect();
+      }
+    }
+
+    // =========================================================================
+    // ФИШКА №3: АУДИО-ВИКТОРИНА «НАЙДИ СЛОГ / СЛОВО НА СЛУХ»
+    // =========================================================================
+    function setQuizSource(src) {
+      quizSourceMode = src;
+      $('btn-quiz-syl').classList.toggle('active', src === 'syllables');
+      $('btn-quiz-words').classList.toggle('active', src === 'words');
+      startNewQuizRound();
+    }
+
+    function getQuizPool() {
+      if (quizSourceMode === 'words') {
+        return [...getAvailableWordsOneSyllable(), ...getAvailableWords2(), ...getAvailableWords3()];
+      }
+      return getAvailableSyllables(true, true);
+    }
+
+    function startNewQuizRound() {
+      const pool = getQuizPool();
+      const grid = $('quiz-options-grid'), fb = $('quiz-feedback-label');
+      grid.innerHTML = '';
+      quizSolved = false;
+
+      if (pool.length < 4) {
+        fb.textContent = 'Отметьте больше букв в меню слева (нужно хотя бы 4 доступных слога или слова)!';
+        quizTarget = '';
+        return;
+      }
+
+      fb.textContent = '🎧 Послушай и нажми на правильную карточку!';
+      fb.className = 'quiz-feedback-label';
+
+      // Выбираем цель и 3 дистрактора
+      let target = pool[Math.floor(Math.random() * pool.length)];
+      if (pool.length > 1 && target === quizTarget) {
+        const alt = pool.filter(x => x !== quizTarget);
+        target = alt[Math.floor(Math.random() * alt.length)];
+      }
+      quizTarget = target;
+
+      const distractors = pool.filter(x => x !== target).sort(() => Math.random() - 0.5).slice(0, 3);
+      quizOptions = [target, ...distractors].sort(() => Math.random() - 0.5);
+
+      quizOptions.forEach(opt => {
+        const card = document.createElement('button');
+        card.className = 'quiz-option-card';
+        const emoji = WORD_EMOJIS[opt.replace(/-/g, '').toUpperCase()] || '';
+        card.innerHTML = `<div class="quiz-opt-text">${buildColoredHTML(applyCaseRule(opt))}</div>${emoji ? `<div class="quiz-opt-emoji hidden-emoji">${emoji}</div>` : ''}`;
+        card.onclick = () => onQuizOptionClick(opt, card);
+        grid.appendChild(card);
+      });
+
+      setTimeout(() => playQuizPromptAudio(), 220);
+    }
+
+    function playQuizPromptAudio() {
+      if (!quizTarget) return;
+      const btn = $('quiz-speaker-btn');
+      btn.classList.add('pulsing');
+      setTimeout(() => btn.classList.remove('pulsing'), 500);
+      const isOneSylWord = quizSourceMode === 'words' && !quizTarget.includes('-');
+      playWordOrSyllableText(quizTarget, isOneSylWord);
+    }
+
+    function onQuizOptionClick(selected, cardEl) {
+      if (quizSolved) return;
+      const fb = $('quiz-feedback-label');
+      if (selected === quizTarget) {
+        quizSolved = true;
+        cardEl.classList.add('correct');
+        cardEl.querySelector('.quiz-opt-emoji')?.classList.remove('hidden-emoji');
+        fb.textContent = '🌟 Молодец! Правильно!';
+        fb.className = 'quiz-feedback-label success';
+        playSoundEffect();
+        registerSuccessfulRead();
+        setTimeout(() => {
+          if (primaryMode === 'quiz' && !isStickerModalOpen) startNewQuizRound();
+        }, 1200);
+      } else {
+        cardEl.classList.add('wrong');
+        fb.textContent = 'Попробуй ещё раз! Послушай внимательно 🔊';
+        fb.className = 'quiz-feedback-label error';
+        playQuizPromptAudio();
+      }
+    }
+
+    // =========================================================================
+    // КАРТОЧКИ И КАРТИНКА-СЮРПРИЗ (Фишка №6)
+    // =========================================================================
+    function getWordEmoji(str) {
+      if (!str || primaryMode === 'syllables') return null;
+      const clean = str.replace(/[-–]/g, '').toUpperCase();
+      return WORD_EMOJIS[clean] || null;
     }
 
     function applyCaseRule(text) {
@@ -757,9 +1137,52 @@
       card.classList.add('card-fade');
     }
 
+    function buildColoredHTML(casedText) {
+      const chars = [...casedText];
+      return chars.map((ch, idx) => {
+        const u = ch.toUpperCase();
+        if (ch === '-') return `<span class="word-hyphen">–</span>`;
+        if (VOWELS_SET.has(u)) return `<span class="char-vowel">${ch}</span>`;
+        if ('ЬЪ'.includes(u)) return `<span class="char-neutral">${ch}</span>`;
+        const nextCh = chars.slice(idx + 1).find(x => x !== '-')?.toUpperCase();
+        const soft = ALWAYS_SOFT.has(u) || (!ALWAYS_HARD.has(u) && nextCh && SOFTENING_LETTERS.has(nextCh));
+        return `<span class="${soft ? 'char-consonant-soft' : 'char-consonant'}">${ch}</span>`;
+      }).join('');
+    }
+
+    function renderFormattedText(str) {
+      const container = $('syllable-text');
+      const surpriseBox = $('word-surprise-box');
+      const tapHint = $('surprise-tap-hint');
+      container.innerHTML = '';
+      if (!str) {
+        surpriseBox.className = 'word-surprise-box';
+        tapHint.style.display = 'none';
+        return;
+      }
+
+      const cased = applyCaseRule(str), len = cased.replace(/-/g, '').length;
+      container.classList.toggle('text-long', len >= 7);
+      container.classList.toggle('text-medium', len >= 5 && len < 7);
+      container.innerHTML = buildColoredHTML(cased);
+
+      const emoji = getWordEmoji(str);
+      if (surpriseModeEnabled && emoji) {
+        surpriseBox.textContent = emoji;
+        surpriseBox.className = `word-surprise-box ${isSurpriseRevealed ? 'revealed' : ''}`;
+        tapHint.style.display = 'block';
+        tapHint.textContent = isSurpriseRevealed ? 'Нажми ещё раз — следующее слово ⟶' : '🎁 Прочитай вслух и нажми, чтобы открыть картинку!';
+      } else {
+        surpriseBox.textContent = '';
+        surpriseBox.className = 'word-surprise-box';
+        tapHint.style.display = 'none';
+      }
+    }
+
     function generateNext(resetHistory = false) {
-      if (['alphabet','matrix'].includes(primaryMode)) return;
+      if (['alphabet','matrix','trains','quiz'].includes(primaryMode)) return;
       stopSyllableAudio();
+      isSurpriseRevealed = false;
       if (resetHistory) { historyStack = []; historyIndex = -1; cheerStreakCount = 0; }
 
       const pools = {
@@ -773,6 +1196,7 @@
 
       if (!pool.length) {
         textEl.style.display = 'none'; emptyEl.classList.add('active');
+        $('word-surprise-box').className = 'word-surprise-box';$('surprise-tap-hint').style.display = 'none';
         currentText = ''; updateNavButtonsState(); updateSpeakerButtonState(); return;
       }
 
@@ -794,29 +1218,25 @@
     }
 
     function prevCard(e) {
-      if (['alphabet','matrix'].includes(primaryMode)) return;
+      if (['alphabet','matrix','trains','quiz'].includes(primaryMode)) return;
       if (e) e.stopPropagation();
       const now = Date.now(), diff = now - lastKeyPressTime;
       lastKeyPressTime = now;
       if (diff < KEY_DEBOUNCE_INTERVAL_MS || historyIndex <= 0) return handleSpamAttempt();
 
       rapidSpamCount = 0; lastCardSwitchTime = now; stopSyllableAudio();
+      isSurpriseRevealed = false;
       currentText = historyStack[--historyIndex];
       playSoundEffect(); renderFormattedText(currentText);
       updateNavButtonsState(); updateSpeakerButtonState(); animateCard();
     }
 
-    function nextCard(e) {
-      if (['alphabet','matrix'].includes(primaryMode)) return;
-      if (e) e.stopPropagation();
-      const now = Date.now(), sincePress = now - lastKeyPressTime, sinceCard = now - lastCardSwitchTime;
-      lastKeyPressTime = now;
-      if (sinceCard < CARD_MIN_VIEW_TIME_MS || sincePress < KEY_DEBOUNCE_INTERVAL_MS) return handleSpamAttempt();
-
-      rapidSpamCount = 0; lastCardSwitchTime = now;
-      stopSyllableAudio(); playSoundEffect();
+    function registerSuccessfulRead() {
+      const now = Date.now();
       readCount++; cheerStreakCount++; cardTimestamps.push(now);
-      $('star-count').textContent = readCount; updateTimers();
+      $('star-count').textContent = readCount;
+      saveAppState();
+      updateTimers();
 
       const h = $('subtle-cheer-text');
       if (h && h.textContent !== 'Сначала прочитай вслух!') h.textContent = '';
@@ -827,6 +1247,30 @@
       } else if (cheerStreakCount === cfg.cheer) {
         setTimeout(() => { launchConfetti(false); playRandomCheerAudio(); }, 150);
       }
+    }
+
+    function nextCard(e) {
+      if (['alphabet','matrix','trains','quiz'].includes(primaryMode)) return;
+      if (e) e.stopPropagation();
+      const now = Date.now(), sincePress = now - lastKeyPressTime, sinceCard = now - lastCardSwitchTime;
+      lastKeyPressTime = now;
+
+      // Если включён режим «Картинка-сюрприз» и у слова есть эмодзи — сначала открываем картинку!
+      const emoji = getWordEmoji(currentText);
+      if (surpriseModeEnabled && emoji && !isSurpriseRevealed) {
+        if (sinceCard < 900 || sincePress < KEY_DEBOUNCE_INTERVAL_MS) return handleSpamAttempt();
+        isSurpriseRevealed = true;
+        rapidSpamCount = 0;
+        renderFormattedText(currentText);
+        playSyllableAudio();
+        return;
+      }
+
+      if (sinceCard < CARD_MIN_VIEW_TIME_MS || sincePress < KEY_DEBOUNCE_INTERVAL_MS) return handleSpamAttempt();
+
+      rapidSpamCount = 0; lastCardSwitchTime = now; isSurpriseRevealed = false;
+      stopSyllableAudio(); playSoundEffect();
+      registerSuccessfulRead();
 
       if (historyIndex < historyStack.length - 1) {
         currentText = historyStack[++historyIndex];
@@ -837,40 +1281,54 @@
     }
     const onCardClick = e => nextCard(e);
 
-    function renderFormattedText(str) {
-      const container = $('syllable-text'); container.innerHTML = '';
-      if (!str) return;
-      const cased = applyCaseRule(str), len = cased.replace(/-/g, '').length;
-      container.classList.toggle('text-long', len >= 7);
-      container.classList.toggle('text-medium', len >= 5 && len < 7);
-
-      const chars = [...cased];
-      chars.forEach((ch, idx) => {
-        const u = ch.toUpperCase(), span = document.createElement('span');
-        if (ch === '-') {
-          span.className = 'word-hyphen'; span.textContent = '–';
-        } else if (VOWELS_SET.has(u)) {
-          span.className = 'char-vowel'; span.textContent = ch;
-        } else if ('ЬЪ'.includes(u)) {
-          span.className = 'char-neutral'; span.textContent = ch;
-        } else {
-          const nextCh = chars.slice(idx + 1).find(x => x !== '-')?.toUpperCase();
-          const soft = ALWAYS_SOFT.has(u) || (!ALWAYS_HARD.has(u) && nextCh && SOFTENING_LETTERS.has(nextCh));
-          span.className = soft ? 'char-consonant-soft' : 'char-consonant';
-          span.textContent = ch;
-        }
-        container.appendChild(span);
-      });
+    // =========================================================================
+    // ФИШКА №4: АЛЬБОМ НАКЛЕЕК «МОЙ ЗООПАРК» И СТИКЕРЫ
+    // =========================================================================
+    function updateZooBadge() {
+      const total = STICKER_ANIMALS.length;
+      const count = unlockedAnimals.size;
+      $('zoo-count').textContent = `${count}/${total}`;
+      $('zoo-modal-progress').textContent = `${count}/${total}`;
     }
 
-    // Конфетти и стикеры
+    function openZooModal() {
+      updateZooBadge();
+      const grid = $('zoo-grid');
+      grid.innerHTML = '';
+      STICKER_ANIMALS.forEach((a, idx) => {
+        const isUnlocked = unlockedAnimals.has(a.name);
+        const card = document.createElement('div');
+        card.className = `zoo-item-card ${isUnlocked ? 'unlocked' : 'locked'}`;
+        card.innerHTML = `
+          <div class="zoo-item-icon">${isUnlocked ? a.icon : '❓'}</div>
+          <div class="zoo-item-name">${isUnlocked ? a.name : `Зверёк #${idx + 1}`}</div>
+        `;
+        if (isUnlocked) {
+          card.onclick = () => {
+            card.classList.remove('bounce');
+            void card.offsetWidth;
+            card.classList.add('bounce');
+            if (a.audio) playAudioFile(a.audio);
+            else playSoundEffect();
+          };
+        }
+        grid.appendChild(card);
+      });
+      $('zoo-modal').classList.add('open');
+    }
+
+    function closeZooModal() {
+      $('zoo-modal').classList.remove('open');
+      stopExtraAudio();
+    }
+
     let confettiParticles = [], confettiAnimationId = null;
     function launchConfetti(withCheer = false) {
       if (withCheer) playRandomCheerAudio();
       const cv = $('confetti-canvas'); if (!cv) return;
       cv.width = window.innerWidth; cv.height = window.innerHeight;
       const rect = $('syllable-card')?.getBoundingClientRect() || { left: innerWidth/2, top: innerHeight/2, width: 0, height: 0 };
-      const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2;
+      const cx = rect.left + rect.width / 2 || innerWidth / 2, cy = rect.top + rect.height / 2 || innerHeight / 2;
       const cols = ['#ef4444','#f59e0b','#10b981','#3b82f6','#8b5cf6','#ec4899','#fde047'];
       for (let i = 0; i < 50; i++) {
         const a = Math.random() * Math.PI * 2, sp = 3 + Math.random() * 6;
@@ -894,13 +1352,26 @@
 
     function openStickerModal() {
       if (!STICKER_ANIMALS.length) return;
-      let idx = Math.floor(Math.random() * STICKER_ANIMALS.length);
-      if (STICKER_ANIMALS.length > 1 && idx === currentAnimalDeckIndex) idx = (idx + 1) % STICKER_ANIMALS.length;
+      // Приоритетно открываем ещё не открытых животных для Зоопарка
+      const lockedIndices = STICKER_ANIMALS.map((a, i) => unlockedAnimals.has(a.name) ? -1 : i).filter(i => i !== -1);
+      let idx;
+      if (lockedIndices.length > 0) {
+        idx = lockedIndices[Math.floor(Math.random() * lockedIndices.length)];
+      } else {
+        idx = Math.floor(Math.random() * STICKER_ANIMALS.length);
+        if (STICKER_ANIMALS.length > 1 && idx === currentAnimalDeckIndex) idx = (idx + 1) % STICKER_ANIMALS.length;
+      }
       currentAnimalDeckIndex = idx;
       const a = STICKER_ANIMALS[idx];
+      const isNew = !unlockedAnimals.has(a.name);
+      unlockedAnimals.add(a.name);
+      updateZooBadge();
+      saveAppState();
+
+      $('sticker-badge-title').textContent = isNew ? '🎉 Новый зверёк в Зоопарке!' : '🎉 Награда за старание!';
       $('sticker-icon').textContent = a.icon;
       $('sticker-name').textContent = a.name;
-      $('sticker-message').textContent = `Отлично читаешь! Пройдено уже ${readCount} карточек!`;
+      $('sticker-message').textContent = `Отлично читаешь! Пройдено уже ${readCount} карточек! В твоём зоопарке ${unlockedAnimals.size} из ${STICKER_ANIMALS.length} зверят!`;
       $('sticker-modal').classList.add('open');
       isStickerModalOpen = true;
       launchConfetti(false);
@@ -911,18 +1382,25 @@
       $('sticker-modal').classList.remove('open');
       isStickerModalOpen = false; stopExtraAudio();
       lastCardSwitchTime = lastKeyPressTime = Date.now(); rapidSpamCount = 0;
+      if (primaryMode === 'quiz' && quizSolved) startNewQuizRound();
     }
 
     function syncModeUI() {
       stopSyllableAudio();
-      ['alphabet','matrix','one_syllable','words2','words3'].forEach(m => $(`tab-${m}`).classList.toggle('active', primaryMode === m));
+      ['alphabet','matrix','one_syllable','words2','words3','trains','quiz'].forEach(m => {
+        const el = $(`tab-${m}`);
+        if (el) el.classList.toggle('active', primaryMode === m);
+      });
       $('tab-open').classList.toggle('active', primaryMode === 'syllables' && syllableModes.open);$('tab-reverse').classList.toggle('active', primaryMode === 'syllables' && syllableModes.reverse);
 
       $('alphabet-view-container').style.display = primaryMode === 'alphabet' ? 'flex' : 'none';
-      $('matrix-view-container').style.display = primaryMode === 'matrix' ? 'flex' : 'none';$('card-wrapper').style.display = !['alphabet','matrix'].includes(primaryMode) ? 'flex' : 'none';
+      $('matrix-view-container').style.display = primaryMode === 'matrix' ? 'flex' : 'none';$('trains-view-container').style.display = primaryMode === 'trains' ? 'flex' : 'none';
+      $('quiz-view-container').style.display = primaryMode === 'quiz' ? 'flex' : 'none';$('card-wrapper').style.display = !['alphabet','matrix','trains','quiz'].includes(primaryMode) ? 'flex' : 'none';
 
       if (primaryMode === 'alphabet') renderAlphabetView();
       else if (primaryMode === 'matrix') { $('matrix-order-toolbar').style.display = matrixMode === 'open' ? 'flex' : 'none'; renderMatrix(); }
+      else if (primaryMode === 'trains') renderTrainsView();
+      else if (primaryMode === 'quiz') startNewQuizRound();
       else generateNext(true);
       updateTimers();
     }
@@ -931,12 +1409,12 @@
       updateCategoryBadges();
       if (primaryMode === 'alphabet') renderAlphabetView();
       else if (primaryMode === 'matrix') renderMatrix();
+      else if (primaryMode === 'trains') renderTrainsView();
+      else if (primaryMode === 'quiz') startNewQuizRound();
       else generateNext(true);
     }
 
-    function onAlphabetClick() { primaryMode = 'alphabet'; syncModeUI(); }
-    function onMatrixClick() { primaryMode = 'matrix'; syncModeUI(); }
-    function onWordModeClick(m) { primaryMode = m; syncModeUI(); }
+    function setPrimaryMode(m) { primaryMode = m; syncModeUI(); }
     function toggleSyllableSubmode(sub) {
       if (primaryMode !== 'syllables') { primaryMode = 'syllables'; syllableModes[sub] = true; }
       else {
@@ -956,6 +1434,7 @@
       };
       activeLetters = new Set(sets[name] || []);
       document.querySelectorAll('.letter-item input').forEach(i => i.checked = activeLetters.has(i.value));
+      saveAppState();
       refreshCurrentMode();
     }
 
@@ -983,14 +1462,13 @@
     window.addEventListener('keydown', e => {
       if (e.key === 'Control' || e.code.startsWith('Control')) { e.preventDefault(); toggleLettersPanel(); return; }
       if (isStickerModalOpen) { if (['Space','Escape'].includes(e.code)) { e.preventDefault(); closeStickerModal(); } return; }
-      if (e.code === 'Escape') { closeHelpModal(); closeStickerModal(); closeLettersPanel(); return; }
-      if (['alphabet','matrix'].includes(primaryMode) || e.repeat) return;
+      if (e.code === 'Escape') { closeHelpModal(); closeZooModal(); closeStickerModal(); closeLettersPanel(); return; }
+      if (['alphabet','matrix','trains','quiz'].includes(primaryMode) || e.repeat) return;
       if (e.code === 'ArrowLeft') { e.preventDefault(); prevCard(); }
       else if (e.code === 'Space' || e.code === 'ArrowRight') { e.preventDefault(); nextCard(); }
       else if (e.code === 'ArrowUp' || e.code === 'ArrowDown') { e.preventDefault(); playSyllableAudio(); }
     });
 
-    // Жесты свайпов: для боковой панели И для перелистывания карточек на телефонах/планшетах
     let touchStartX = 0, touchStartY = 0, touchOnCard = false;
     window.addEventListener('touchstart', e => {
       touchStartX = e.touches[0].clientX;
@@ -1009,6 +1487,7 @@
     }, { passive: true });
 
     if (window.innerWidth > 900) lettersPanel.classList.remove('collapsed');
+    loadAppState();
     syncTabPullVisibility();
     initHelperRibbon();
     renderLetterGrids();
