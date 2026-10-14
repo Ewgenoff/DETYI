@@ -346,7 +346,7 @@
             <div class="train-drop-indicator" id="train-drop-after" title="Поставить после согласной"></div>
           </div>
           <div class="train-rails"></div>
-          <div class="train-swap-bar" id="train-swap-bar">
+          <div class="train-swap-bar hide-sm" id="train-swap-bar">
             <button class="train-swap-btn" id="train-swap-btn" onclick="swapTrainOrder()" style="display:none">
               🔄 Поменять местами (прямой / обратный слог)
             </button>
@@ -547,6 +547,9 @@
     let puzzleTilesData = [];
     let puzzleSolved = false;
     let puzzleRoundCounter = 0;
+    let currentPuzzleRoundId = 0;
+    let puzzleNextRoundTimer = null;
+    let puzzleAudioChain = Promise.resolve();
 
     // Система двух профилей
     const PROFILES_STORAGE_KEY = 'chitayka_profiles_v1';
@@ -562,7 +565,7 @@
 
     let lastCardSwitchTime = 0, lastKeyPressTime = 0, lastSpamWarningTime = 0, lastAudioPlayTime = 0, lastTrainActionTime = 0, lastZooAudioTime = 0;
     let rapidSpamCount = 0, lastSpamAttemptTime = 0, startTime = Date.now();
-    let currentSyllableAudio = null, currentSequenceId = 0, currentExtraAudio = null, matrixAudio = null, audioCtx = null;
+    let currentSyllableAudio = null, currentSyllableFinish = null, currentSequenceId = 0, currentExtraAudio = null, matrixAudio = null, audioCtx = null;
     const audioAvailabilityCache = new Map();
     const $ = id => document.getElementById(id);
 
@@ -738,7 +741,15 @@
       return null;
     }
     function stopExtraAudio() { currentExtraAudio = stopAudioRef(currentExtraAudio); }
-    function stopSyllableAudio() { currentSequenceId++; currentSyllableAudio = stopAudioRef(currentSyllableAudio); }
+    function stopSyllableAudio() {
+      currentSequenceId++;
+      currentSyllableAudio = stopAudioRef(currentSyllableAudio);
+      if (currentSyllableFinish) {
+        const fn = currentSyllableFinish;
+        currentSyllableFinish = null;
+        fn();
+      }
+    }
 
     function getAudioVariants(text, folder) {
       const t = text.trim();
@@ -835,12 +846,20 @@
 
     function playSingleSyllable(syl, seqId, folder = 'audio') {
       return new Promise(resolve => {
-        if (seqId !== null && seqId !== currentSequenceId) return resolve();
+        if (isSoundMuted || (seqId !== null && seqId !== currentSequenceId)) return resolve();
         const urls = getAudioVariants(syl, folder);
         if (!urls.length) return resolve();
         let done = false;
-        const finish = () => { if (!done) { done = true; clearTimeout(timer); resolve(); } };
-        const timer = setTimeout(finish, 4000);
+        const finish = () => {
+          if (!done) {
+            done = true;
+            clearTimeout(timer);
+            if (currentSyllableFinish === finish) currentSyllableFinish = null;
+            resolve();
+          }
+        };
+        currentSyllableFinish = finish;
+        const timer = setTimeout(finish, 3500);
         playCandidateList(urls, a => {
           if (seqId !== null && seqId !== currentSequenceId) return finish();
           currentSyllableAudio = a;
@@ -1118,7 +1137,6 @@
     function ensureValidTrainCombination() {
       if (!trainSelectedVowel) return;
       if (!isTrainPairValid(trainSelectedCons, trainSelectedVowel, trainIsReverse)) {
-        // Если в текущем порядке (например, обратном) озвучки нет, но есть в противоположном — переключаем порядок
         if (isTrainPairValid(trainSelectedCons, trainSelectedVowel, !trainIsReverse)) {
           trainIsReverse = !trainIsReverse;
         } else {
@@ -1177,7 +1195,7 @@
         const canSwap = isTrainPairValid(trainSelectedCons, trainSelectedVowel, !trainIsReverse);
         swapBtn.style.display = canSwap ? 'inline-flex' : 'none';
 
-        $('train-status-hint').innerHTML = `Слог: <b>${currentSyl}</b> (${isSoft ? '<span style="color:#1b7a3e">мягкий согласный</span>' : '<span style="color:#1e5cb8">твёрдый согласный</span>'}). Перетащи вагончик вперёд/назад или нажми на поезд!`;
+        $('train-status-hint').innerHTML = `Слог: <b>${currentSyl}</b> (${isSoft ? '<span style="color:#1b7a3e">мягкий согласный</span>' : '<span style="color:#1e5cb8">твёрдый согласный</span>'}). Нажми на поезд для озвучки!`;
       } else {
         wagon.classList.add('hidden');
         swapBtn.style.display = 'none';
@@ -1336,15 +1354,12 @@
         afterInd.classList.remove('active');
 
         if (trainDragState.sourceType === 'loco') {
-          // Если тянем паровозик с согласной относительно вагончика с гласной
           const wagonCenterX = wagonRect.left + wagonRect.width / 2;
-          // Если паровозик правее гласной -> гласная перед согласной (reverse = true)
           const wantReverse = e.clientX > wagonCenterX;
           trainDragState.dropSide = wantReverse ? 'before' : 'after';
           if (wantReverse) afterInd.classList.add('active');
           else beforeInd.classList.add('active');
         } else {
-          // Тянем вагончик с гласной (из депо или уже прицепленный) относительно согласной
           const locoCenterX = locoRect.left + locoRect.width / 2;
           const wantReverse = e.clientX < locoCenterX;
           trainDragState.dropSide = wantReverse ? 'before' : 'after';
@@ -1365,10 +1380,8 @@
       if (st.ghostEl) st.ghostEl.remove();
 
       if (!st.isDragging) {
-        // Обычный клик / тап без перетаскивания
         if (st.sourceType === 'depot') {
           if (!checkTrainAntiCheat()) return;
-          // При клике по гласной в депо сохраняем текущий режим (если он допустим), иначе прямой слог
           const preferRev = trainIsReverse && isValidReverseVoicedPair(st.letter, trainSelectedCons);
           applyVowelToTrain(st.letter, preferRev);
         } else if (st.sourceType === 'wagon' || st.sourceType === 'loco') {
@@ -1377,7 +1390,6 @@
         return;
       }
 
-      // Завершение перетаскивания
       if (!checkTrainAntiCheat()) return;
       const wantReverse = st.dropSide === 'before';
       const targetVowel = st.sourceType === 'depot' ? st.letter : trainSelectedVowel;
@@ -1403,6 +1415,16 @@
     // =========================================================================
     // ИГРА 1: 🧩 «СОБЕРИ СЛОВО ИЗ СЛОГОВ» (СЛОГОВОЙ ПАЗЛ)
     // =========================================================================
+    function clearPuzzleTimersAndAudio() {
+      currentPuzzleRoundId++;
+      if (puzzleNextRoundTimer) {
+        clearTimeout(puzzleNextRoundTimer);
+        puzzleNextRoundTimer = null;
+      }
+      puzzleAudioChain = Promise.resolve();
+      stopSyllableAudio();
+    }
+
     function setPuzzleWordLength(mode) {
       puzzleWordLengthMode = mode;
       $('btn-puzzle-2').classList.toggle('active', mode === '2');
@@ -1423,7 +1445,9 @@
     }
 
     function startNewPuzzleRound() {
-      stopSyllableAudio();
+      clearPuzzleTimersAndAudio();
+      const roundId = currentPuzzleRoundId;
+
       const pool = getPuzzlePool();
       const picBox = $('puzzle-picture-box');
       const fb = $('puzzle-feedback-label');
@@ -1472,7 +1496,7 @@
 
       // Озвучиваем голосовую подсказку «Собери слово!» каждую третью карточку (1-я, 4-я, 7-я...)
       puzzleRoundCounter++;
-      if ((puzzleRoundCounter - 1) % 3 === 0) {
+      if ((puzzleRoundCounter - 1) % 3 === 0 && roundId === currentPuzzleRoundId) {
         playAudioFile('Super/СОБЕРИ_СЛОВО.wav');
       }
     }
@@ -1508,23 +1532,22 @@
       });
     }
 
-    async function onPuzzleTileClick(tileObj, btnEl) {
+    function onPuzzleTileClick(tileObj, btnEl) {
       if (puzzleSolved || tileObj.used) return;
+      const roundId = currentPuzzleRoundId;
       const expectedSyl = puzzleTargetSyls[puzzleFilledCount];
       const fb = $('puzzle-feedback-label');
 
       if (tileObj.syl === expectedSyl) {
         tileObj.used = true;
         puzzleFilledCount++;
+        const isCompletedNow = (puzzleFilledCount === puzzleTargetSyls.length);
+        if (isCompletedNow) {
+          puzzleSolved = true;
+        }
         renderPuzzleSlotsAndTiles();
 
-        stopSyllableAudio();
-        const seqId = currentSequenceId;
-        await playSingleSyllable(tileObj.syl, seqId, getFolderForSyllable(tileObj.syl));
-
-        if (puzzleFilledCount === puzzleTargetSyls.length) {
-          puzzleSolved = true;
-          renderPuzzleSlotsAndTiles();
+        if (isCompletedNow) {
           fb.textContent = `🌟 Ура! Получилось слово: ${puzzleTargetWord.replace(/-/g, '–')}!`;
           fb.className = 'puzzle-feedback-label success';
 
@@ -1532,17 +1555,36 @@
           picBox.classList.remove('alive-bounce');
           void picBox.offsetWidth;
           picBox.classList.add('alive-bounce');
-
-          registerSuccessfulRead();
-
-          setTimeout(async () => {
-            if (primaryMode !== 'puzzle') return;
-            await playWordOrSyllableText(puzzleTargetWord, false);
-            setTimeout(() => {
-              if (primaryMode === 'puzzle' && !isStickerModalOpen) startNewPuzzleRound();
-            }, 1300);
-          }, 250);
         }
+
+        const clickedSyl = tileObj.syl;
+        const wordSnapshot = puzzleTargetWord;
+
+        // Ставим озвучку слогов в последовательную очередь, чтобы при быстром нажатии
+        // слоги не прерывали друг друга, а после них целиком звучало собранное слово
+        puzzleAudioChain = puzzleAudioChain.then(async () => {
+          if (roundId !== currentPuzzleRoundId || primaryMode !== 'puzzle') return;
+          stopExtraAudio();
+          const seqId = ++currentSequenceId;
+          await playSingleSyllable(clickedSyl, seqId, getFolderForSyllable(clickedSyl));
+
+          if (isCompletedNow) {
+            if (roundId !== currentPuzzleRoundId || primaryMode !== 'puzzle') return;
+            await new Promise(r => setTimeout(r, 320));
+            if (roundId !== currentPuzzleRoundId || primaryMode !== 'puzzle') return;
+            await playWordOrSyllableText(wordSnapshot, false);
+            if (roundId !== currentPuzzleRoundId || primaryMode !== 'puzzle') return;
+
+            registerSuccessfulRead();
+
+            puzzleNextRoundTimer = setTimeout(() => {
+              puzzleNextRoundTimer = null;
+              if (roundId === currentPuzzleRoundId && primaryMode === 'puzzle' && !isStickerModalOpen) {
+                startNewPuzzleRound();
+              }
+            }, 1200);
+          }
+        });
       } else {
         btnEl.classList.remove('wrong');
         void btnEl.offsetWidth;
@@ -1554,7 +1596,7 @@
     }
 
     function playPuzzleTargetWord() {
-      if (!puzzleTargetWord) return;
+      if (!puzzleTargetWord || puzzleSolved) return;
       const now = Date.now();
       if (now - lastAudioPlayTime < AUDIO_MIN_INTERVAL_MS) return handleSpamAttempt();
       lastAudioPlayTime = now;
@@ -1900,6 +1942,10 @@
 
     function openStickerModal() {
       if (!STICKER_ANIMALS.length) return;
+      if (puzzleNextRoundTimer) {
+        clearTimeout(puzzleNextRoundTimer);
+        puzzleNextRoundTimer = null;
+      }
       const lockedIndices = STICKER_ANIMALS.map((a, i) => unlockedAnimals.has(a.name) ? -1 : i).filter(i => i !== -1);
       let idx;
       if (lockedIndices.length > 0) {
@@ -1934,7 +1980,7 @@
     }
 
     function syncModeUI() {
-      stopSyllableAudio();
+      clearPuzzleTimersAndAudio();
       ['alphabet','matrix','one_syllable','words2','words3','trains','puzzle','quiz'].forEach(m => {
         const el = $(`tab-${m}`);
         if (el) el.classList.toggle('active', primaryMode === m);
