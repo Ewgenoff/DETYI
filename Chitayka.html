@@ -69,7 +69,7 @@
           <ul class="help-list">
             <li><b>Алфавит и Слоги (Матрица):</b> обзор всех букв, «Лента букв» и интерактивная таблица слогов с озвучкой.</li>
             <li><b>Прямые / Обратные / Слова (1–3 слога):</b> карточки для чтения. В режимах слов работает <b>🎁 Картинка-сюрприз</b>: первый клик по прочитанному слову открывает картинку-подсказку и озвучивает слово, второй клик — листает дальше!</li>
-            <li><b>🚂 Вагончики (Конструктор):</b> паровозик везёт согласную букву. Прицепляй к нему вагончики с гласными и наблюдай, как согласная меняет цвет с синего на зелёный перед <i>И, Е, Ё, Ю, Я</i>!</li>
+            <li><b>🚂 Вагончики (Конструктор):</b> паровозик везёт согласную букву, а вагончик — гласную. Перетаскивай вагончики мышкой или пальцем <b>перед</b> согласной или <b>после</b> неё, чтобы получать прямые (МА) и обратные (АМ) слоги!</li>
             <li><b>🧩 Собери слово (Слоговой пазл):</b> посмотри на картинку и собери слово по слогам в правильном порядке. Тренирует слоговой анализ и синтез!</li>
             <li><b>🎧 На слух (Аудио-викторина):</b> слушай диктора и находи правильный слог или слово среди 4 карточек.</li>
             <li><b>👥 Два профиля и 🏆 Мой зоопарк:</b> переключайся между двумя игроками в шапке (нажми ✏️, чтобы изменить имя). У каждого игрока сохраняются свои звёзды, открытые зверята и выбранные буквы!</li>
@@ -88,7 +88,8 @@
 
   <header>
     <div class="brand">
-      <a href="index.html" class="btn-icon-header" title="На главную"><span>🏠</span><span class="hide-xs">Домой</span></a>
+      <a href="index.html" class="btn-icon-header" title="На главную"><span>🏠</span><span class="hide-sm">Домой</span></a>
+      <button class="btn-icon-header hide-sm" onclick="toggleLettersPanel()" title="Открыть или скрыть настройки букв (Ctrl)"><span>⚙️</span><span>Настройки</span></button>
       <h1 class="brand-title">Читай-ка!</h1>
     </div>
     <div class="stats-bar">
@@ -325,28 +326,35 @@
         </div>
 
         <div class="train-stage-card">
-          <div class="train-status-hint" id="train-status-hint">Нажми на любой вагончик с гласной, чтобы прицепить его!</div>
-          <div class="train-track">
-            <div class="train-locomotive" id="train-loco" onclick="onTrainClick()">
+          <div class="train-status-hint" id="train-status-hint">Нажми на любой вагончик с гласной или перетащи его к паровозику!</div>
+          <div class="train-track" id="train-track">
+            <div class="train-drop-indicator" id="train-drop-before" title="Поставить перед согласной"></div>
+            <div class="train-locomotive" id="train-loco" title="Можно перетащить или нажать для озвучки">
               <div class="loco-smoke" id="loco-smoke">💨</div>
               <div class="loco-cabin">
                 <span class="loco-letter" id="loco-letter">М</span>
               </div>
               <div class="loco-wheels"><div class="wheel"></div><div class="wheel"></div></div>
             </div>
-            <div class="train-coupled-wagon hidden" id="train-wagon" onclick="onTrainClick()">
-              <div class="wagon-coupler"></div>
+            <div class="train-coupled-wagon hidden" id="train-wagon" title="Перетащи вагончик вперёд или назад, чтобы поменять буквы местами!">
+              <div class="wagon-coupler" id="wagon-coupler"></div>
               <div class="wagon-body">
                 <span class="wagon-letter" id="wagon-letter">А</span>
               </div>
               <div class="loco-wheels"><div class="wheel"></div><div class="wheel"></div></div>
             </div>
+            <div class="train-drop-indicator" id="train-drop-after" title="Поставить после согласной"></div>
           </div>
           <div class="train-rails"></div>
+          <div class="train-swap-bar" id="train-swap-bar">
+            <button class="train-swap-btn" id="train-swap-btn" onclick="swapTrainOrder()" style="display:none">
+              🔄 Поменять местами (прямой / обратный слог)
+            </button>
+          </div>
         </div>
 
         <div class="trains-depot">
-          <div class="depot-title">Вагончики с гласными (нажми, чтобы прицепить):</div>
+          <div class="depot-title">Вагончики с гласными (нажми или перетащи перед/после согласной):</div>
           <div class="depot-wagons-grid" id="depot-wagons-grid"></div>
         </div>
       </div>
@@ -490,7 +498,6 @@
       ШОКОЛАД:'🍫', АПЕЛЬСИН:'🍊', МАНДАРИН:'🍊', АНАНАС:'🍍', ВИНОГРАД:'🍇', КЛУБНИКА:'🍓', ТЕЛЕФОН:'📱', КОМПЬЮТЕР:'💻',
       ГИТАРА:'🎸', БАРАБАН:'🥁', ИГРУШКИ:'🧸', КУБИКИ:'🧱', КАЧЕЛИ:'🎠', КАРУСЕЛЬ:'🎠', ПОДАРОК:'🎁', ПРАЗДНИК:'🎉',
       СОЛНЫШКО:'🌞', ОБЛАКО:'☁️', ДЕРЕВО:'🌳', БЕРЁЗА:'🌳', РОМАШКА:'🌼', ТЮЛЬПАН:'🌷', КОЛОКОЛ:'🔔', ФОНАРИК:'🔦',
-      // Дополнительные эмодзи для базовых этапов и словаря
       ЛАМА:'🦙', МУХА:'🪰', ОСА:'🐝', ПЧЕЛА:'🐝', КОМАР:'🦟', ПАУК:'🕷️', РЫБКА:'🐠', ЩУКА:'🐟', ЖАБА:'🐸',
       КОФЕ:'☕', ВИШНЯ:'🍒', ГОРОХ:'🫛', МАСЛО:'🧈', САЛАТ:'🥗', КЕПКА:'🧢', ПАЛЬТО:'🧥', КУРТКА:'🧥', ШОРТЫ:'🩳',
       ДОМИК:'🏡', ДИВАН:'🛋️', ФОНАРЬ:'🏮', УТЮГ:'♨️', ЩЁТКА:'🪥', БОЧКА:'🛢️', ЧАЙНИК:'🫖', НОЖИК:'🔪',
@@ -528,7 +535,8 @@
     let isStickerModalOpen = false, isSoundMuted = false, currentSoundType = 'softping';
     let cheerFrequency = 'often';
 
-    let trainSelectedCons = 'М', trainSelectedVowel = null;
+    // Состояние игры «Вагончики»
+    let trainSelectedCons = 'М', trainSelectedVowel = null, trainIsReverse = false;
     let quizSourceMode = 'syllables', quizTarget = '', quizOptions = [], quizSolved = false;
 
     // Состояние игры «Собери слово из слогов»
@@ -538,6 +546,7 @@
     let puzzleFilledCount = 0;
     let puzzleTilesData = [];
     let puzzleSolved = false;
+    let puzzleRoundCounter = 0;
 
     // Система двух профилей
     const PROFILES_STORAGE_KEY = 'chitayka_profiles_v1';
@@ -549,9 +558,9 @@
 
     const CHEER_CONFIG = { often: { sticker: 10, cheer: 5 }, normal: { sticker: 20, cheer: 10 }, rare: { sticker: 40, cheer: 20 } };
     const CARD_MIN_VIEW_TIME_MS = 1500, KEY_DEBOUNCE_INTERVAL_MS = 500, SPAM_WARNING_COOLDOWN_MS = 5000, AUDIO_MIN_INTERVAL_MS = 1000;
-    const TRAIN_MIN_INTERVAL_MS = 1000;
+    const TRAIN_MIN_INTERVAL_MS = 1000, ZOO_AUDIO_INTERVAL_MS = 2000;
 
-    let lastCardSwitchTime = 0, lastKeyPressTime = 0, lastSpamWarningTime = 0, lastAudioPlayTime = 0, lastTrainActionTime = 0;
+    let lastCardSwitchTime = 0, lastKeyPressTime = 0, lastSpamWarningTime = 0, lastAudioPlayTime = 0, lastTrainActionTime = 0, lastZooAudioTime = 0;
     let rapidSpamCount = 0, lastSpamAttemptTime = 0, startTime = Date.now();
     let currentSyllableAudio = null, currentSequenceId = 0, currentExtraAudio = null, matrixAudio = null, audioCtx = null;
     const audioAvailabilityCache = new Map();
@@ -637,7 +646,6 @@
           if (typeof d.surprise === 'boolean') surpriseModeEnabled = d.surprise;
           applyCurrentProfileToMemory();
         } else {
-          // Миграция со старой версии сохранения в Игрока 1
           const rawOld = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('chitayka_state_v2');
           if (rawOld) {
             const d = JSON.parse(rawOld);
@@ -935,12 +943,25 @@
              (c === 'Ц' && ['Я','Ю','Ё','Э'].includes(v));
     }
 
+    function isValidOpenVoicedPair(c, v) {
+      return MATRIX_CONSONANTS.includes(c) && MATRIX_VOWELS_DEFAULT.includes(v) && !isInvalidOpen(c, v);
+    }
+
+    function isValidReverseVoicedPair(v, c) {
+      return MATRIX_VOWELS_REVERSE.includes(v) && MATRIX_CONSONANTS_REVERSE.includes(c);
+    }
+
+    function isTrainPairValid(c, v, isRev) {
+      if (!c || !v) return false;
+      return isRev ? isValidReverseVoicedPair(v, c) : isValidOpenVoicedPair(c, v);
+    }
+
     function getAvailableSyllables(open, rev) {
       const vowels = [...activeLetters].filter(l => VOWELS_SET.has(l));
       const cons = [...activeLetters].filter(l => !VOWELS_SET.has(l) && !'ЬЪ'.includes(l));
       const res = [];
-      if (open) cons.forEach(c => vowels.forEach(v => { if (MATRIX_CONSONANTS.includes(c) && MATRIX_VOWELS_DEFAULT.includes(v) && !isInvalidOpen(c, v)) res.push(c + v); }));
-      if (rev) vowels.forEach(v => cons.forEach(c => { if (MATRIX_VOWELS_REVERSE.includes(v) && MATRIX_CONSONANTS_REVERSE.includes(c)) res.push(v + c); }));
+      if (open) cons.forEach(c => vowels.forEach(v => { if (isValidOpenVoicedPair(c, v)) res.push(c + v); }));
+      if (rev) vowels.forEach(v => cons.forEach(c => { if (isValidReverseVoicedPair(v, c)) res.push(v + c); }));
       return res;
     }
 
@@ -1081,7 +1102,7 @@
     }
 
     // =========================================================================
-    // КОНСТРУКТОР СЛОГОВ «ВАГОНЧИКИ»
+    // КОНСТРУКТОР СЛОГОВ «ВАГОНЧИКИ» С ПЕРЕТАСКИВАНИЕМ (ПРЯМЫЕ И ОБРАТНЫЕ СЛОГИ)
     // =========================================================================
     function checkTrainAntiCheat() {
       const now = Date.now();
@@ -1094,6 +1115,19 @@
       return true;
     }
 
+    function ensureValidTrainCombination() {
+      if (!trainSelectedVowel) return;
+      if (!isTrainPairValid(trainSelectedCons, trainSelectedVowel, trainIsReverse)) {
+        // Если в текущем порядке (например, обратном) озвучки нет, но есть в противоположном — переключаем порядок
+        if (isTrainPairValid(trainSelectedCons, trainSelectedVowel, !trainIsReverse)) {
+          trainIsReverse = !trainIsReverse;
+        } else {
+          trainSelectedVowel = null;
+          trainIsReverse = false;
+        }
+      }
+    }
+
     function renderTrainsView() {
       const consBar = $('trains-cons-bar'), depotGrid = $('depot-wagons-grid');
       const availCons = MATRIX_CONSONANTS.filter(c => activeLetters.has(c));
@@ -1102,10 +1136,12 @@
       if (!availCons.length || !availVowels.length) {
         consBar.innerHTML = `<span style="color:#9c2525;font-weight:800">Отметьте хотя бы 1 согласную и 1 гласную в меню букв!</span>`;
         depotGrid.innerHTML = '';
+        $('train-swap-btn').style.display = 'none';
         return;
       }
 
       if (!availCons.includes(trainSelectedCons)) trainSelectedCons = availCons[0];
+      ensureValidTrainCombination();
 
       consBar.innerHTML = '';
       availCons.forEach(c => {
@@ -1116,7 +1152,7 @@
         btn.onclick = () => {
           if (!checkTrainAntiCheat()) return;
           trainSelectedCons = c;
-          if (trainSelectedVowel && isInvalidOpen(c, trainSelectedVowel)) trainSelectedVowel = null;
+          ensureValidTrainCombination();
           renderTrainsView();
           if (trainSelectedVowel) playCurrentTrainSyllable();
           else playSoundEffect();
@@ -1125,41 +1161,88 @@
       });
 
       const isSoft = ALWAYS_SOFT.has(trainSelectedCons) ||
-                     (!ALWAYS_HARD.has(trainSelectedCons) && trainSelectedVowel && SOFTENING_LETTERS.has(trainSelectedVowel));
+                     (!ALWAYS_HARD.has(trainSelectedCons) && !trainIsReverse && trainSelectedVowel && SOFTENING_LETTERS.has(trainSelectedVowel));
+      const track = $('train-track');
       const loco = $('train-loco'), locoLet = $('loco-letter'), wagon = $('train-wagon'), wagonLet = $('wagon-letter');
+      const swapBtn = $('train-swap-btn');
+
       loco.className = `train-locomotive ${isSoft ? 'loco-soft' : 'loco-hard'}`;
       locoLet.textContent = trainSelectedCons;
+      track.classList.toggle('reverse-order', Boolean(trainSelectedVowel && trainIsReverse));
 
-      if (trainSelectedVowel && !isInvalidOpen(trainSelectedCons, trainSelectedVowel)) {
+      if (trainSelectedVowel && isTrainPairValid(trainSelectedCons, trainSelectedVowel, trainIsReverse)) {
         wagon.classList.remove('hidden');
         wagonLet.textContent = trainSelectedVowel;
-        $('train-status-hint').innerHTML = `Получился слог: <b>${trainSelectedCons}${trainSelectedVowel}</b> (${isSoft ? '<span style="color:#1b7a3e">мягкий согласный</span>' : '<span style="color:#1e5cb8">твёрдый согласный</span>'}). Нажми на поезд, чтобы озвучить!`;
+        const currentSyl = trainIsReverse ? (trainSelectedVowel + trainSelectedCons) : (trainSelectedCons + trainSelectedVowel);
+        const canSwap = isTrainPairValid(trainSelectedCons, trainSelectedVowel, !trainIsReverse);
+        swapBtn.style.display = canSwap ? 'inline-flex' : 'none';
+
+        $('train-status-hint').innerHTML = `Слог: <b>${currentSyl}</b> (${isSoft ? '<span style="color:#1b7a3e">мягкий согласный</span>' : '<span style="color:#1e5cb8">твёрдый согласный</span>'}). Перетащи вагончик вперёд/назад или нажми на поезд!`;
       } else {
         wagon.classList.add('hidden');
-        $('train-status-hint').textContent = 'Нажми на любой вагончик с гласной снизу, чтобы прицепить его к паровозику!';
+        swapBtn.style.display = 'none';
+        $('train-status-hint').textContent = 'Нажми на вагончик с гласной или перетащи его перед/после паровозика!';
       }
 
       depotGrid.innerHTML = '';
       availVowels.forEach(v => {
-        const invalid = isInvalidOpen(trainSelectedCons, v);
+        const canOpen = isValidOpenVoicedPair(trainSelectedCons, v);
+        const canRev = isValidReverseVoicedPair(v, trainSelectedCons);
+        const invalid = !canOpen && !canRev;
         const btn = document.createElement('button');
         const isSoftening = SOFTENING_LETTERS.has(v);
         btn.className = `depot-wagon-btn ${isSoftening ? 'softening-vowel' : ''} ${v === trainSelectedVowel ? 'selected' : ''}`;
         btn.disabled = invalid;
         btn.innerHTML = `<span class="dw-letter">${v}</span>`;
-        btn.title = invalid ? `Слога ${trainSelectedCons}${v} нет в русском языке` : `Прицепить гласную ${v}`;
-        btn.onclick = () => {
-          if (!checkTrainAntiCheat()) return;
-          trainSelectedVowel = v;
-          renderTrainsView();
-          const wEl = $('train-wagon');
-          wEl.classList.remove('couple-anim');
-          void wEl.offsetWidth;
-          wEl.classList.add('couple-anim');
-          playCurrentTrainSyllable();
-        };
+        btn.title = invalid ? `Слога с буквами ${trainSelectedCons} и ${v} нет в озвучке` : `Нажми или перетащи гласную ${v}`;
+        if (!invalid) {
+          setupDepotWagonInteractions(btn, v);
+        }
         depotGrid.appendChild(btn);
       });
+    }
+
+    function applyVowelToTrain(v, preferReverse) {
+      let targetRev = preferReverse;
+      if (!isTrainPairValid(trainSelectedCons, v, targetRev)) {
+        if (isTrainPairValid(trainSelectedCons, v, !targetRev)) {
+          targetRev = !targetRev;
+          const hint = $('train-status-hint');
+          if (hint) {
+            hint.innerHTML = `<span style="color:#b45309">Для слога <b>${preferReverse ? v + trainSelectedCons : trainSelectedCons + v}</b> нет озвучки — собран слог <b>${targetRev ? v + trainSelectedCons : trainSelectedCons + v}</b>!</span>`;
+          }
+        } else {
+          return false;
+        }
+      }
+      trainSelectedVowel = v;
+      trainIsReverse = targetRev;
+      renderTrainsView();
+      const wEl = $('train-wagon');
+      wEl.classList.remove('couple-anim');
+      void wEl.offsetWidth;
+      wEl.classList.add('couple-anim');
+      playCurrentTrainSyllable();
+      return true;
+    }
+
+    function swapTrainOrder() {
+      if (!trainSelectedVowel) return;
+      if (!checkTrainAntiCheat()) return;
+      const nextRev = !trainIsReverse;
+      if (!isTrainPairValid(trainSelectedCons, trainSelectedVowel, nextRev)) {
+        const badSyl = nextRev ? (trainSelectedVowel + trainSelectedCons) : (trainSelectedCons + trainSelectedVowel);
+        $('train-status-hint').innerHTML = `<span style="color:#b91c1c">Слога <b>${badSyl}</b> нет в базе озвучки! Попробуй гласные А, О, У, И, Э.</span>`;
+        playSoundEffect();
+        return;
+      }
+      trainIsReverse = nextRev;
+      renderTrainsView();
+      const wEl = $('train-wagon');
+      wEl.classList.remove('couple-anim');
+      void wEl.offsetWidth;
+      wEl.classList.add('couple-anim');
+      playCurrentTrainSyllable();
     }
 
     function onTrainClick() {
@@ -1169,12 +1252,153 @@
 
     function playCurrentTrainSyllable() {
       if (!trainSelectedCons) return;
-      if (trainSelectedVowel && !isInvalidOpen(trainSelectedCons, trainSelectedVowel)) {
-        playMatrixSyllable(trainSelectedCons + trainSelectedVowel, $('train-loco'));
+      if (trainSelectedVowel && isTrainPairValid(trainSelectedCons, trainSelectedVowel, trainIsReverse)) {
+        const syl = trainIsReverse ? (trainSelectedVowel + trainSelectedCons) : (trainSelectedCons + trainSelectedVowel);
+        playMatrixSyllable(syl, $('train-loco'));
       } else {
         playSoundEffect();
       }
     }
+
+    // Перетаскивание вагончиков и паровозика мышкой или пальцем (Pointer Events)
+    let trainDragState = null;
+
+    function setupDepotWagonInteractions(btn, vowelChar) {
+      btn.addEventListener('pointerdown', e => {
+        if (btn.disabled) return;
+        if (e.button !== undefined && e.button !== 0) return;
+        startTrainPointerDrag(e, 'depot', vowelChar, btn);
+      });
+    }
+
+    function initTrainTrackDragHandlers() {
+      const wagonEl = $('train-wagon');
+      const locoEl = $('train-loco');
+
+      wagonEl.addEventListener('pointerdown', e => {
+        if (wagonEl.classList.contains('hidden') || !trainSelectedVowel) return;
+        if (e.button !== undefined && e.button !== 0) return;
+        startTrainPointerDrag(e, 'wagon', trainSelectedVowel, wagonEl);
+      });
+
+      locoEl.addEventListener('pointerdown', e => {
+        if (e.button !== undefined && e.button !== 0) return;
+        startTrainPointerDrag(e, 'loco', trainSelectedCons, locoEl);
+      });
+    }
+
+    function startTrainPointerDrag(e, sourceType, letter, sourceEl) {
+      e.preventDefault();
+      const startX = e.clientX;
+      const startY = e.clientY;
+      trainDragState = {
+        pointerId: e.pointerId,
+        sourceType, // 'depot' | 'wagon' | 'loco'
+        letter,
+        sourceEl,
+        startX,
+        startY,
+        isDragging: false,
+        ghostEl: null,
+        dropSide: null // 'before' | 'after'
+      };
+      try { sourceEl.setPointerCapture(e.pointerId); } catch (err) {}
+    }
+
+    window.addEventListener('pointermove', e => {
+      if (!trainDragState || e.pointerId !== trainDragState.pointerId) return;
+      const dx = e.clientX - trainDragState.startX;
+      const dy = e.clientY - trainDragState.startY;
+
+      if (!trainDragState.isDragging && Math.hypot(dx, dy) > 8) {
+        if (trainDragState.sourceType === 'loco' && !trainSelectedVowel) return;
+        trainDragState.isDragging = true;
+        const ghost = document.createElement('div');
+        const isLoco = trainDragState.sourceType === 'loco';
+        ghost.className = `train-drag-ghost ${isLoco ? 'ghost-cons' : 'ghost-vowel'}`;
+        ghost.textContent = trainDragState.letter;
+        document.body.appendChild(ghost);
+        trainDragState.ghostEl = ghost;
+        trainDragState.sourceEl.classList.add('dragging-source');
+      }
+
+      if (trainDragState.isDragging && trainDragState.ghostEl) {
+        trainDragState.ghostEl.style.left = `${e.clientX}px`;
+        trainDragState.ghostEl.style.top = `${e.clientY}px`;
+
+        const locoRect = $('train-loco').getBoundingClientRect();
+        const wagonEl = $('train-wagon');
+        const wagonRect = !wagonEl.classList.contains('hidden') ? wagonEl.getBoundingClientRect() : locoRect;
+
+        const beforeInd = $('train-drop-before');
+        const afterInd = $('train-drop-after');
+        beforeInd.classList.remove('active');
+        afterInd.classList.remove('active');
+
+        if (trainDragState.sourceType === 'loco') {
+          // Если тянем паровозик с согласной относительно вагончика с гласной
+          const wagonCenterX = wagonRect.left + wagonRect.width / 2;
+          // Если паровозик правее гласной -> гласная перед согласной (reverse = true)
+          const wantReverse = e.clientX > wagonCenterX;
+          trainDragState.dropSide = wantReverse ? 'before' : 'after';
+          if (wantReverse) afterInd.classList.add('active');
+          else beforeInd.classList.add('active');
+        } else {
+          // Тянем вагончик с гласной (из депо или уже прицепленный) относительно согласной
+          const locoCenterX = locoRect.left + locoRect.width / 2;
+          const wantReverse = e.clientX < locoCenterX;
+          trainDragState.dropSide = wantReverse ? 'before' : 'after';
+          if (wantReverse) beforeInd.classList.add('active');
+          else afterInd.classList.add('active');
+        }
+      }
+    });
+
+    function finishTrainPointerDrag(e) {
+      if (!trainDragState || (e && e.pointerId !== trainDragState.pointerId)) return;
+      const st = trainDragState;
+      trainDragState = null;
+
+      $('train-drop-before')?.classList.remove('active');
+      $('train-drop-after')?.classList.remove('active');
+      st.sourceEl?.classList.remove('dragging-source');
+      if (st.ghostEl) st.ghostEl.remove();
+
+      if (!st.isDragging) {
+        // Обычный клик / тап без перетаскивания
+        if (st.sourceType === 'depot') {
+          if (!checkTrainAntiCheat()) return;
+          // При клике по гласной в депо сохраняем текущий режим (если он допустим), иначе прямой слог
+          const preferRev = trainIsReverse && isValidReverseVoicedPair(st.letter, trainSelectedCons);
+          applyVowelToTrain(st.letter, preferRev);
+        } else if (st.sourceType === 'wagon' || st.sourceType === 'loco') {
+          onTrainClick();
+        }
+        return;
+      }
+
+      // Завершение перетаскивания
+      if (!checkTrainAntiCheat()) return;
+      const wantReverse = st.dropSide === 'before';
+      const targetVowel = st.sourceType === 'depot' ? st.letter : trainSelectedVowel;
+      if (!targetVowel) return;
+
+      if (!isTrainPairValid(trainSelectedCons, targetVowel, wantReverse)) {
+        const badSyl = wantReverse ? (targetVowel + trainSelectedCons) : (trainSelectedCons + targetVowel);
+        if (st.sourceType === 'depot' && isTrainPairValid(trainSelectedCons, targetVowel, !wantReverse)) {
+          applyVowelToTrain(targetVowel, !wantReverse);
+        } else {
+          $('train-status-hint').innerHTML = `<span style="color:#b91c1c">Слога <b>${badSyl}</b> нет в озвучке! Оставлен слог <b>${trainIsReverse ? targetVowel + trainSelectedCons : trainSelectedCons + targetVowel}</b>.</span>`;
+          playSoundEffect();
+        }
+        return;
+      }
+
+      applyVowelToTrain(targetVowel, wantReverse);
+    }
+
+    window.addEventListener('pointerup', finishTrainPointerDrag);
+    window.addEventListener('pointercancel', finishTrainPointerDrag);
 
     // =========================================================================
     // ИГРА 1: 🧩 «СОБЕРИ СЛОВО ИЗ СЛОГОВ» (СЛОГОВОЙ ПАЗЛ)
@@ -1184,6 +1408,7 @@
       $('btn-puzzle-2').classList.toggle('active', mode === '2');
       $('btn-puzzle-3').classList.toggle('active', mode === '3');
       $('btn-puzzle-all').classList.toggle('active', mode === 'all');
+      puzzleRoundCounter = 0;
       startNewPuzzleRound();
     }
 
@@ -1193,7 +1418,6 @@
       else if (puzzleWordLengthMode === '3') raw = getAvailableWords3();
       else raw = [...getAvailableWords2(), ...getAvailableWords3()];
 
-      // Предпочитаем слова, для которых есть красивая картинка-эмодзи
       const withEmoji = raw.filter(w => WORD_EMOJIS[w.replace(/[-–]/g, '').toUpperCase()]);
       return withEmoji.length >= 2 ? withEmoji : raw;
     }
@@ -1233,7 +1457,6 @@
       fb.textContent = '🧩 Нажимай на слоги по порядку, чтобы собрать слово!';
       fb.className = 'puzzle-feedback-label';
 
-      // Формируем пул карточек со слогами: правильные слоги + 2–3 отвлекающих слога
       const allOpenSyls = getAvailableSyllables(true, false);
       const otherWordsSyls = pool.flatMap(w => w.split(/[-–]/).map(s => s.trim()).filter(Boolean));
       const distractorCandidates = [...new Set([...otherWordsSyls, ...allOpenSyls])]
@@ -1247,8 +1470,11 @@
 
       renderPuzzleSlotsAndTiles();
 
-      // Озвучиваем голосовую подсказку «Собери слово!» (если файл есть в папке Super/)
-      playAudioFile('Super/СОБЕРИ_СЛОВО.wav');
+      // Озвучиваем голосовую подсказку «Собери слово!» каждую третью карточку (1-я, 4-я, 7-я...)
+      puzzleRoundCounter++;
+      if ((puzzleRoundCounter - 1) % 3 === 0) {
+        playAudioFile('Super/СОБЕРИ_СЛОВО.wav');
+      }
     }
 
     function renderPuzzleSlotsAndTiles() {
@@ -1292,12 +1518,10 @@
         puzzleFilledCount++;
         renderPuzzleSlotsAndTiles();
 
-        // Озвучиваем выбранный слог
         stopSyllableAudio();
         const seqId = currentSequenceId;
         await playSingleSyllable(tileObj.syl, seqId, getFolderForSyllable(tileObj.syl));
 
-        // Если собрали всё слово целиком
         if (puzzleFilledCount === puzzleTargetSyls.length) {
           puzzleSolved = true;
           renderPuzzleSlotsAndTiles();
@@ -1320,7 +1544,6 @@
           }, 250);
         }
       } else {
-        // Неверный слог
         btnEl.classList.remove('wrong');
         void btnEl.offsetWidth;
         btnEl.classList.add('wrong');
@@ -1625,6 +1848,11 @@
         `;
         if (isUnlocked) {
           card.onclick = () => {
+            const now = Date.now();
+            // 2-секундный интервал между воспроизведением звука в зоопарке наклеек
+            if (now - lastZooAudioTime < ZOO_AUDIO_INTERVAL_MS) return;
+            lastZooAudioTime = now;
+
             card.classList.remove('bounce');
             void card.offsetWidth;
             card.classList.add('bounce');
@@ -1720,7 +1948,7 @@
       if (primaryMode === 'alphabet') renderAlphabetView();
       else if (primaryMode === 'matrix') { $('matrix-order-toolbar').style.display = matrixMode === 'open' ? 'flex' : 'none'; renderMatrix(); }
       else if (primaryMode === 'trains') renderTrainsView();
-      else if (primaryMode === 'puzzle') startNewPuzzleRound();
+      else if (primaryMode === 'puzzle') { puzzleRoundCounter = 0; startNewPuzzleRound(); }
       else if (primaryMode === 'quiz') startNewQuizRound();
       else generateNext(true);
     }
@@ -1784,7 +2012,7 @@
     document.addEventListener('pointerdown', e => {
       if (!isPanelOpen()) return;
       if (isOverlayPanelViewport()) {
-        if (!lettersPanel.contains(e.target) && !panelTabPull.contains(e.target)) {
+        if (!lettersPanel.contains(e.target) && !panelTabPull.contains(e.target) && !e.target.closest('header')) {
           closeLettersPanel();
         }
       }
@@ -1811,14 +2039,16 @@
       else if (e.code === 'ArrowUp' || e.code === 'ArrowDown') { e.preventDefault(); playSyllableAudio(); }
     });
 
-    let touchStartX = 0, touchStartY = 0, touchOnCard = false;
+    let touchStartX = 0, touchStartY = 0, touchOnCard = false, touchInHeader = false;
     window.addEventListener('touchstart', e => {
       touchStartX = e.touches[0].clientX;
       touchStartY = e.touches[0].clientY;
       touchOnCard = !!e.target.closest('#syllable-card');
+      touchInHeader = !!e.target.closest('header');
     }, { passive: true });
 
     window.addEventListener('touchend', e => {
+      if (touchInHeader || trainDragState) return;
       const dx = e.changedTouches[0].clientX - touchStartX;
       const dy = e.changedTouches[0].clientY - touchStartY;
       if (touchStartX < 36 && dx > 45 && Math.abs(dy) < 60) return openLettersPanel();
@@ -1829,6 +2059,7 @@
     }, { passive: true });
 
     if (!isOverlayPanelViewport()) lettersPanel.classList.remove('collapsed');
+    initTrainTrackDragHandlers();
     renderLetterGrids();
     loadAppState();
     syncTabPullVisibility();
