@@ -37,7 +37,7 @@
       </div>
       <div class="help-modal-body">
         <div class="zoo-hint-bar">
-          Читай карточки без спешки, угадывай слоги на слух и открывай новых зверят! Нажми на открытого зверька, чтобы послушать его.
+          Читай карточки без спешки, собирай слова из слогов, угадывай на слух и открывай новых зверят! Нажми на открытого зверька, чтобы послушать его.
         </div>
         <div class="zoo-grid" id="zoo-grid"></div>
       </div>
@@ -70,8 +70,9 @@
             <li><b>Алфавит и Слоги (Матрица):</b> обзор всех букв, «Лента букв» и интерактивная таблица слогов с озвучкой.</li>
             <li><b>Прямые / Обратные / Слова (1–3 слога):</b> карточки для чтения. В режимах слов работает <b>🎁 Картинка-сюрприз</b>: первый клик по прочитанному слову открывает картинку-подсказку и озвучивает слово, второй клик — листает дальше!</li>
             <li><b>🚂 Вагончики (Конструктор):</b> паровозик везёт согласную букву. Прицепляй к нему вагончики с гласными и наблюдай, как согласная меняет цвет с синего на зелёный перед <i>И, Е, Ё, Ю, Я</i>!</li>
+            <li><b>🧩 Собери слово (Слоговой пазл):</b> посмотри на картинку и собери слово по слогам в правильном порядке. Тренирует слоговой анализ и синтез!</li>
             <li><b>🎧 На слух (Аудио-викторина):</b> слушай диктора и находи правильный слог или слово среди 4 карточек.</li>
-            <li><b>🏆 Мой зоопарк:</b> альбом из 20 говорящих зверят. Весь прогресс и выбранные буквы автоматически сохраняются в браузере!</li>
+            <li><b>👥 Два профиля и 🏆 Мой зоопарк:</b> переключайся между двумя игроками в шапке (нажми ✏️, чтобы изменить имя). У каждого игрока сохраняются свои звёзды, открытые зверята и выбранные буквы!</li>
           </ul>
         </div>
         <div class="help-section">
@@ -91,6 +92,17 @@
       <h1 class="brand-title">Читай-ка!</h1>
     </div>
     <div class="stats-bar">
+      <!-- Переключатель профилей: Игрок 1 / Игрок 2 -->
+      <div class="profile-switcher" title="Выбор профиля игрока">
+        <button class="profile-btn active" id="prof-btn-1" onclick="switchProfile(1)">
+          <span>👦</span><span class="profile-name-text" id="prof-name-1">Игрок 1</span>
+        </button>
+        <button class="profile-btn" id="prof-btn-2" onclick="switchProfile(2)">
+          <span>👦</span><span class="profile-name-text" id="prof-name-2">Игрок 2</span>
+        </button>
+        <button class="profile-edit-btn" onclick="renameCurrentProfile()" title="Изменить имя текущего игрока">✏️</button>
+      </div>
+
       <div class="stat-badge star" title="Прочитано карточек"><span>⭐</span><span id="star-count">0</span></div>
       <button class="stat-badge zoo-badge" onclick="openZooModal()" title="Альбом наклеек «Мой зоопарк»">
         <span>🏆</span><span id="zoo-count">0/20</span>
@@ -207,7 +219,7 @@
       </div>
 
       <button class="preset-btn-col danger" onclick="resetSavedProgress()" style="justify-content:center">
-        <span>🗑️ Сбросить звёзды и зоопарк</span>
+        <span>🗑️ Сбросить звёзды и зоопарк игрока</span>
       </button>
     </aside>
 
@@ -229,6 +241,7 @@
         </div>
         <div class="mode-group mode-group-games">
           <button class="mode-tab" id="tab-trains" onclick="setPrimaryMode('trains')"><span>🚂 Вагончики</span></button>
+          <button class="mode-tab" id="tab-puzzle" onclick="setPrimaryMode('puzzle')"><span>🧩 Собери слово</span></button>
           <button class="mode-tab" id="tab-quiz" onclick="setPrimaryMode('quiz')"><span>🎧 На слух</span></button>
         </div>
       </div>
@@ -338,7 +351,39 @@
         </div>
       </div>
 
-      <!-- ВИД 5: АУДИО-ВИКТОРИНА «НАЙДИ НА СЛУХ» -->
+      <!-- ВИД 5: ИГРА «СОБЕРИ СЛОВО ИЗ СЛОГОВ» (СЛОГОВОЙ ПАЗЛ) -->
+      <div class="puzzle-view-container" id="puzzle-view-container">
+        <div class="puzzle-toolbar">
+          <span class="alphabet-toolbar-title">Длина слов:</span>
+          <div class="alphabet-toggle-group">
+            <button class="alpha-sort-btn active" id="btn-puzzle-2" onclick="setPuzzleWordLength('2')">2 слога</button>
+            <button class="alpha-sort-btn" id="btn-puzzle-3" onclick="setPuzzleWordLength('3')">3 слога</button>
+            <button class="alpha-sort-btn" id="btn-puzzle-all" onclick="setPuzzleWordLength('all')">Все</button>
+          </div>
+        </div>
+
+        <div class="puzzle-stage-card">
+          <div class="puzzle-top-bar">
+            <button class="puzzle-btn-small" onclick="playPuzzleTargetWord()" title="Послушать слово">🔊 Послушать слово</button>
+            <button class="puzzle-btn-small" onclick="startNewPuzzleRound()" title="Пропустить и взять другое слово">🔄 Другое слово</button>
+          </div>
+
+          <div class="puzzle-picture-box" id="puzzle-picture-box" onclick="playPuzzleTargetWord()" title="Нажми, чтобы послушать слово">
+            🚗
+          </div>
+
+          <div class="puzzle-feedback-label" id="puzzle-feedback-label">🧩 Собери слово по слогам!</div>
+
+          <div class="puzzle-slots-row" id="puzzle-slots-row"></div>
+        </div>
+
+        <div class="puzzle-pool-container">
+          <div class="depot-title">Выбери нужный слог:</div>
+          <div class="puzzle-tiles-grid" id="puzzle-tiles-grid"></div>
+        </div>
+      </div>
+
+      <!-- ВИД 6: АУДИО-ВИКТОРИНА «НАЙДИ НА СЛУХ» -->
       <div class="quiz-view-container" id="quiz-view-container">
         <div class="quiz-toolbar">
           <span class="alphabet-toolbar-title">Что ищем на слух:</span>
@@ -409,7 +454,9 @@
     const SUPER_PHRASES = Object.fromEntries([
       ...Object.entries(SUPER_MAP).map(([k, v]) => [`${k}.wav`, v]),
       ["Сначала прочитай вслух.wav", "Сначала прочитай вслух!"],
-      ["СНАЧАЛА_ПРОЧИТАЙ_ВСЛУХ.wav", "Сначала прочитай вслух!"]
+      ["СНАЧАЛА_ПРОЧИТАЙ_ВСЛУХ.wav", "Сначала прочитай вслух!"],
+      ["СОБЕРИ_СЛОВО.wav", "Собери слово!"],
+      ["ПОПРОБУЙ_ЕЩЁ.wav", "Попробуй ещё раз!"]
     ]);
 
     const WORD_EMOJIS = {
@@ -442,14 +489,35 @@
       ОГУРЕЦ:'🥒', ПОМИДОР:'🍅', КАПУСТА:'🥬', МОРКОВЬ:'🥕', КАРТОШКА:'🥔', КОНФЕТА:'🍬', ПЕЧЕНЬЕ:'🍪', МОРОЖЕНОЕ:'🍦',
       ШОКОЛАД:'🍫', АПЕЛЬСИН:'🍊', МАНДАРИН:'🍊', АНАНАС:'🍍', ВИНОГРАД:'🍇', КЛУБНИКА:'🍓', ТЕЛЕФОН:'📱', КОМПЬЮТЕР:'💻',
       ГИТАРА:'🎸', БАРАБАН:'🥁', ИГРУШКИ:'🧸', КУБИКИ:'🧱', КАЧЕЛИ:'🎠', КАРУСЕЛЬ:'🎠', ПОДАРОК:'🎁', ПРАЗДНИК:'🎉',
-      СОЛНЫШКО:'🌞', ОБЛАКО:'☁️', ДЕРЕВО:'🌳', БЕРЁЗА:'🌳', РОМАШКА:'🌼', ТЮЛЬПАН:'🌷', КОЛОКОЛ:'🔔', ФОНАРИК:'🔦'
+      СОЛНЫШКО:'🌞', ОБЛАКО:'☁️', ДЕРЕВО:'🌳', БЕРЁЗА:'🌳', РОМАШКА:'🌼', ТЮЛЬПАН:'🌷', КОЛОКОЛ:'🔔', ФОНАРИК:'🔦',
+      // Дополнительные эмодзи для базовых этапов и словаря
+      ЛАМА:'🦙', МУХА:'🪰', ОСА:'🐝', ПЧЕЛА:'🐝', КОМАР:'🦟', ПАУК:'🕷️', РЫБКА:'🐠', ЩУКА:'🐟', ЖАБА:'🐸',
+      КОФЕ:'☕', ВИШНЯ:'🍒', ГОРОХ:'🫛', МАСЛО:'🧈', САЛАТ:'🥗', КЕПКА:'🧢', ПАЛЬТО:'🧥', КУРТКА:'🧥', ШОРТЫ:'🩳',
+      ДОМИК:'🏡', ДИВАН:'🛋️', ФОНАРЬ:'🏮', УТЮГ:'♨️', ЩЁТКА:'🪥', БОЧКА:'🛢️', ЧАЙНИК:'🫖', НОЖИК:'🔪',
+      НИТКА:'🧵', ПИЛА:'🪚', МОЛОТ:'🔨', ТОПОР:'🪓', КАСКА:'👷', ВЕСНА:'🌱', ОСЕНЬ:'🍂', МОРОЗ:'❄️', ГРОЗА:'⛈️',
+      ВЕТЕР:'🌬️', ЗВЕЗДА:'⭐', ВОДА:'💧', ВОЛНА:'🌊', ПЕСОК:'🏖️', ЦВЕТОК:'🌸', ВЕТКА:'🌿', ЁЛКА:'🎄', СОСНА:'🌲',
+      КОЛОС:'🌾', ТРАВА:'🌿', ШИНА:'🛞', НОГИ:'🦵', УХО:'👂', ЯЗЫК:'👅', ПЕНАЛ:'✏️', АЛЬБОМ:'📒', ЗВОНОК:'🔔',
+      РОБОТ:'🤖', МЯЧИК:'⚽', ШАРИК:'🎈', КУБИК:'🧊', ЮЛА:'🪀', МАСКА:'🎭', САНКИ:'🛷', ИГРА:'🎲', ФОТО:'📷',
+      КИНО:'🎬', ГОРОД:'🏙️', КОСА:'🌾', ПУШКА:'💣', МАРКА:'🏷️', БАБУШКА:'👵', ДЕДУШКА:'👴', ДЕВОЧКА:'👧',
+      РЕБЁНОК:'👶', КОСМОНАВТ:'👨‍🚀', СОБАКА:'🐕', СОБАЧКА:'🐶', КОРОВА:'🐄', КУРИЦА:'🐔', КУРОЧКА:'🐔', ПЕТУШОК:'🐓',
+      ЛОШАДКА:'🐴', ЛИСИЦА:'🦊', БЕЛОЧКА:'🐿️', АКУЛА:'🦈', МЕДУЗА:'🪼', ЛЯГУШКА:'🐸', МЫШОНОК:'🐭', ЯГОДКА:'🍓',
+      БАНАНЫ:'🍌', ЛИМОНЫ:'🍋', СМЕТАНА:'🥛', КОЛБАСА:'🌭', СОСИСКА:'🌭', ВАРЕНЬЕ:'🫙', ПИРОЖОК:'🥟', КАРАМЕЛЬ:'🍬',
+      ОДЕЖДА:'👚', САПОГИ:'👢', БОТИНОК:'👞', РУБАШКА:'👔', САРАФАН:'👗', ПАНАМА:'👒', ВАРЕЖКИ:'🧤', ПЕРЧАТКИ:'🧤',
+      ПОМАДА:'💄', ПОСУДА:'🍽️', ТАРЕЛКА:'🍽️', КОРЗИНКА:'🧺', КОРОБКА:'📦', ПОДУШКА:'🛌', БУТЫЛКА:'🍾', ЧЕМОДАН:'🧳',
+      КОМНАТА:'🛋️', БУМАГА:'📄', ПОСЫЛКА:'📦', ВОРОТА:'🥅', ЛОПАТКА:' лопатка', ПАЛАТКА:'⛺', МОЛОТОК:'🔨',
+      ДОРОГА:'🛣️', АПТЕКА:'🏥', МАГАЗИН:'🏪', БОЛЬНИЦА:'🏥', СВЕТОФОР:'🚦', ПЕШЕХОД:'🚶', ОЗЕРО:'🏞️',
+      СНЕЖИНКА:'❄️', СНЕГОВИК:'⛄', ВОДОПАД:'🏞️', КОМЕТА:'☄️', ПЛАНЕТА:'🪐', ГРУЗОВИК:'🚚', МОТОЦИКЛ:'🏍️',
+      ПАРОВОЗ:'🚂', КОРАБЛИК:'⛵', КОЛЕСО:'🛞', ГОЛОВА:'🗣️', БОРОДА:'🧔', УЧЕНИК:'🧑‍🎓', УЧИТЕЛЬ:'👩‍🏫', АЗБУКА:'🔤',
+      ЛИНЕЙКА:'📏', КИСТОЧКА:'🖌️', КАРАНДАШ:'✏️', ФЛОМАСТЕР:'🖍️', КАРТИНКА:'🖼️', РИСУНОК:'🎨', ИГРУШКА:'🧸',
+      МАТРЁШКА:'🪆', МУЗЫКА:'🎶', КОРОНА:'👑', ПОБЕДА:'🏆', САЛЮТЫ:'🎆', ГАЗЕТА:'📰', МОНЕТА:'🪙', КАЛЕНДАРЬ:'📅'
     };
 
     let WORDS_ONE_SYLLABLE_3_4 = ['КОТ','КИТ','ДОМ','ДЫМ','ЛЕС','ЖУК','ЗУБ','ШАР','СЫР','СУП','СОК','СОН','НОС','РОТ','МАК','РАК','БЫК','ЛУК','САД','МЁД'];
     let DICTIONARY_WORDS_2 = ['МА-МА','ПА-ПА','БА-БА','КА-ША','РО-ЗА','КО-ЗА','ВА-ЗА','ЛУ-НА','СО-ВА','ЛИ-СА','РЫ-БА','УТ-КА','РУ-КА','НО-ГА','ЗИ-МА','МО-РЕ','КОШ-КА','МЫШ-КА','МИШ-КА','СУМ-КА'];
     let DICTIONARY_WORDS_3 = ['МА-ШИ-НА','МА-ЛИ-НА','РА-ДУ-ГА','МО-ЛО-КО','СА-МО-ЛЁТ','БА-БОЧ-КА','КО-ТЁ-НОК','СОЛ-НЫШ-КО','КОР-ЗИ-НА','КАР-ТИ-НА'];
 
-    let activeLetters = new Set(['А','У','О','М','С','Х','Р','Ы','Л','Н']);
+    const DEFAULT_LETTERS = ['А','У','О','М','С','Х','Р','Ы','Л','Н'];
+    let activeLetters = new Set(DEFAULT_LETTERS);
     let unlockedAnimals = new Set();
     let primaryMode = 'syllables', syllableModes = { open: true, reverse: false };
     let matrixMode = 'open', matrixVowelOrder = 'default', alphabetSortMode = 'all';
@@ -458,15 +526,30 @@
 
     let historyStack = [], historyIndex = -1, currentAnimalDeckIndex = 0, lastCheerIndex = -1;
     let isStickerModalOpen = false, isSoundMuted = false, currentSoundType = 'softping';
-    // По умолчанию выбран режим частого подбадривания
     let cheerFrequency = 'often';
 
     let trainSelectedCons = 'М', trainSelectedVowel = null;
     let quizSourceMode = 'syllables', quizTarget = '', quizOptions = [], quizSolved = false;
 
+    // Состояние игры «Собери слово из слогов»
+    let puzzleWordLengthMode = '2'; // '2' | '3' | 'all'
+    let puzzleTargetWord = '';
+    let puzzleTargetSyls = [];
+    let puzzleFilledCount = 0;
+    let puzzleTilesData = [];
+    let puzzleSolved = false;
+
+    // Система двух профилей
+    const PROFILES_STORAGE_KEY = 'chitayka_profiles_v1';
+    let currentProfileId = 1;
+    let profilesData = {
+      1: { name: 'Игрок 1', letters: [...DEFAULT_LETTERS], readCount: 0, unlocked: [] },
+      2: { name: 'Игрок 2', letters: [...DEFAULT_LETTERS], readCount: 0, unlocked: [] }
+    };
+
     const CHEER_CONFIG = { often: { sticker: 10, cheer: 5 }, normal: { sticker: 20, cheer: 10 }, rare: { sticker: 40, cheer: 20 } };
     const CARD_MIN_VIEW_TIME_MS = 1500, KEY_DEBOUNCE_INTERVAL_MS = 500, SPAM_WARNING_COOLDOWN_MS = 5000, AUDIO_MIN_INTERVAL_MS = 1000;
-    const TRAIN_MIN_INTERVAL_MS = 1000; // Античит 1 сек для игры «Вагончики»
+    const TRAIN_MIN_INTERVAL_MS = 1000;
 
     let lastCardSwitchTime = 0, lastKeyPressTime = 0, lastSpamWarningTime = 0, lastAudioPlayTime = 0, lastTrainActionTime = 0;
     let rapidSpamCount = 0, lastSpamAttemptTime = 0, startTime = Date.now();
@@ -475,12 +558,18 @@
     const $ = id => document.getElementById(id);
 
     const STORAGE_KEY = 'chitayka_state_v3';
+
     function saveAppState() {
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        profilesData[currentProfileId] = {
+          name: profilesData[currentProfileId]?.name || `Игрок ${currentProfileId}`,
           letters: [...activeLetters],
           readCount,
-          unlocked: [...unlockedAnimals],
+          unlocked: [...unlockedAnimals]
+        };
+        localStorage.setItem(PROFILES_STORAGE_KEY, JSON.stringify({
+          currentProfileId,
+          profiles: profilesData,
           font: $('font-select')?.value || 'schoolbook',
           sound: currentSoundType,
           cheer: cheerFrequency,
@@ -489,29 +578,88 @@
       } catch (e) {}
     }
 
+    function applyCurrentProfileToMemory() {
+      const p = profilesData[currentProfileId] || { name: `Игрок ${currentProfileId}`, letters: [...DEFAULT_LETTERS], readCount: 0, unlocked: [] };
+      activeLetters = new Set(Array.isArray(p.letters) && p.letters.length ? p.letters : DEFAULT_LETTERS);
+      readCount = typeof p.readCount === 'number' ? p.readCount : 0;
+      unlockedAnimals = new Set(Array.isArray(p.unlocked) ? p.unlocked : []);
+      cheerStreakCount = 0;
+    }
+
+    function updateProfileUI() {
+      $('prof-name-1').textContent = profilesData[1]?.name || 'Игрок 1';
+      $('prof-name-2').textContent = profilesData[2]?.name || 'Игрок 2';
+      $('prof-btn-1').classList.toggle('active', currentProfileId === 1);
+      $('prof-btn-2').classList.toggle('active', currentProfileId === 2);
+      $('star-count').textContent = readCount;
+      updateZooBadge();
+      document.querySelectorAll('.letter-item input').forEach(i => {
+        i.checked = activeLetters.has(i.value);
+      });
+    }
+
+    function switchProfile(id) {
+      if (id === currentProfileId) return;
+      saveAppState();
+      currentProfileId = id;
+      applyCurrentProfileToMemory();
+      updateProfileUI();
+      saveAppState();
+      playSoundEffect();
+      refreshCurrentMode();
+    }
+
+    function renameCurrentProfile() {
+      const curName = profilesData[currentProfileId]?.name || `Игрок ${currentProfileId}`;
+      const entered = prompt(`Введите имя для профиля ${currentProfileId}:`, curName);
+      if (entered !== null) {
+        const clean = entered.trim().slice(0, 16) || `Игрок ${currentProfileId}`;
+        profilesData[currentProfileId].name = clean;
+        updateProfileUI();
+        saveAppState();
+      }
+    }
+
     function loadAppState() {
       try {
-        const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('chitayka_state_v2');
-        if (!raw) return;
-        const d = JSON.parse(raw);
-        if (Array.isArray(d.letters) && d.letters.length) activeLetters = new Set(d.letters);
-        if (typeof d.readCount === 'number') readCount = d.readCount;
-        if (Array.isArray(d.unlocked)) unlockedAnimals = new Set(d.unlocked);
-        if (d.font) { $('font-select').value = d.font; document.body.className = `font-${d.font}`; }
-        if (d.sound) { currentSoundType = d.sound; $('sound-select').value = d.sound; }
-        if (localStorage.getItem(STORAGE_KEY) && d.cheer && CHEER_CONFIG[d.cheer]) {
-          cheerFrequency = d.cheer;
+        const rawProfiles = localStorage.getItem(PROFILES_STORAGE_KEY);
+        if (rawProfiles) {
+          const d = JSON.parse(rawProfiles);
+          if (d.profiles) {
+            if (d.profiles[1]) profilesData[1] = d.profiles[1];
+            if (d.profiles[2]) profilesData[2] = d.profiles[2];
+          }
+          if (d.currentProfileId === 1 || d.currentProfileId === 2) currentProfileId = d.currentProfileId;
+          if (d.font) { $('font-select').value = d.font; document.body.className = `font-${d.font}`; }
+          if (d.sound) { currentSoundType = d.sound; $('sound-select').value = d.sound; }
+          if (d.cheer && CHEER_CONFIG[d.cheer]) cheerFrequency = d.cheer;
+          $('cheer-freq-select').value = cheerFrequency;
+          if (typeof d.surprise === 'boolean') surpriseModeEnabled = d.surprise;
+          applyCurrentProfileToMemory();
+        } else {
+          // Миграция со старой версии сохранения в Игрока 1
+          const rawOld = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('chitayka_state_v2');
+          if (rawOld) {
+            const d = JSON.parse(rawOld);
+            if (Array.isArray(d.letters) && d.letters.length) profilesData[1].letters = d.letters;
+            if (typeof d.readCount === 'number') profilesData[1].readCount = d.readCount;
+            if (Array.isArray(d.unlocked)) profilesData[1].unlocked = d.unlocked;
+            if (d.font) { $('font-select').value = d.font; document.body.className = `font-${d.font}`; }
+            if (d.sound) { currentSoundType = d.sound; $('sound-select').value = d.sound; }
+            if (d.cheer && CHEER_CONFIG[d.cheer]) cheerFrequency = d.cheer;
+            $('cheer-freq-select').value = cheerFrequency;
+            if (typeof d.surprise === 'boolean') surpriseModeEnabled = d.surprise;
+          }
+          applyCurrentProfileToMemory();
         }
-        $('cheer-freq-select').value = cheerFrequency;
-        if (typeof d.surprise === 'boolean') surpriseModeEnabled = d.surprise;
       } catch (e) {}
-      $('star-count').textContent = readCount;
       $('surprise-toggle-btn').classList.toggle('active-toggle', surpriseModeEnabled);
-      updateZooBadge();
+      updateProfileUI();
     }
 
     function resetSavedProgress() {
-      if (!confirm('Сбросить счётчик прочитанных карточек и коллекцию открытых зверят в зоопарке?')) return;
+      const pName = profilesData[currentProfileId]?.name || `Игрок ${currentProfileId}`;
+      if (!confirm(`Сбросить звёзды и коллекцию открытых зверят для профиля «${pName}»?`)) return;
       readCount = 0; cheerStreakCount = 0; unlockedAnimals.clear();
       $('star-count').textContent = 0;
       updateZooBadge(); saveAppState();
@@ -537,7 +685,8 @@
         if (d.super) SUPER_CHEERS = d.super.map(i => typeof i === 'string' ? i : i.audio);
         updateCategoryBadges();
         updateZooBadge();
-        if (!['alphabet','matrix','trains','quiz'].includes(primaryMode)) generateNext(true);
+        if (primaryMode === 'puzzle') startNewPuzzleRound();
+        else if (!['alphabet','matrix','trains','quiz'].includes(primaryMode)) generateNext(true);
       } catch (e) {}
     }
 
@@ -651,7 +800,7 @@
     }
 
     async function checkCurrentCardAudioAvailable(text) {
-      if (!text || ['alphabet','matrix','trains','quiz'].includes(primaryMode)) return false;
+      if (!text || ['alphabet','matrix','trains','puzzle','quiz'].includes(primaryMode)) return false;
       if (window.location.protocol === 'file:') return true;
       const firstPart = primaryMode === 'one_syllable' ? text : text.split(/[-–]/).map(s => s.trim()).filter(Boolean)[0];
       if (!firstPart) return false;
@@ -665,7 +814,7 @@
     async function updateSpeakerButtonState() {
       const btn = $('btn-card-audio');
       if (!btn) return;
-      const ok = !['alphabet','matrix','trains','quiz'].includes(primaryMode) && currentText && await checkCurrentCardAudioAvailable(currentText);
+      const ok = !['alphabet','matrix','trains','puzzle','quiz'].includes(primaryMode) && currentText && await checkCurrentCardAudioAvailable(currentText);
       btn.classList.toggle('disabled', !ok);
       btn.title = ok ? "Озвучить карточку" : "Озвучка не найдена";
     }
@@ -710,7 +859,7 @@
     }
 
     async function playSyllableAudio() {
-      if (['alphabet','matrix','trains','quiz'].includes(primaryMode) || !currentText || isSoundMuted) return;
+      if (['alphabet','matrix','trains','puzzle','quiz'].includes(primaryMode) || !currentText || isSoundMuted) return;
       const now = Date.now();
       if (now - lastAudioPlayTime < AUDIO_MIN_INTERVAL_MS) return handleSpamAttempt();
       lastAudioPlayTime = now; rapidSpamCount = 0;
@@ -878,7 +1027,7 @@
         cell.classList.add('playing');
         setTimeout(() => cell.classList.remove('playing'), 300);
       }
-      playCandidateList(getAudioVariants(syl, 'audio'), a => matrixAudio = a);
+      playCandidateList(getAudioVariants(syl, getFolderForSyllable(syl)), a => matrixAudio = a);
     }
 
     function renderMatrix() {
@@ -932,7 +1081,7 @@
     }
 
     // =========================================================================
-    // КОНСТРУКТОР СЛОГОВ «ВАГОНЧИКИ» (с античитом 1 сек и без лишних точек)
+    // КОНСТРУКТОР СЛОГОВ «ВАГОНЧИКИ»
     // =========================================================================
     function checkTrainAntiCheat() {
       const now = Date.now();
@@ -1028,6 +1177,168 @@
     }
 
     // =========================================================================
+    // ИГРА 1: 🧩 «СОБЕРИ СЛОВО ИЗ СЛОГОВ» (СЛОГОВОЙ ПАЗЛ)
+    // =========================================================================
+    function setPuzzleWordLength(mode) {
+      puzzleWordLengthMode = mode;
+      $('btn-puzzle-2').classList.toggle('active', mode === '2');
+      $('btn-puzzle-3').classList.toggle('active', mode === '3');
+      $('btn-puzzle-all').classList.toggle('active', mode === 'all');
+      startNewPuzzleRound();
+    }
+
+    function getPuzzlePool() {
+      let raw = [];
+      if (puzzleWordLengthMode === '2') raw = getAvailableWords2();
+      else if (puzzleWordLengthMode === '3') raw = getAvailableWords3();
+      else raw = [...getAvailableWords2(), ...getAvailableWords3()];
+
+      // Предпочитаем слова, для которых есть красивая картинка-эмодзи
+      const withEmoji = raw.filter(w => WORD_EMOJIS[w.replace(/[-–]/g, '').toUpperCase()]);
+      return withEmoji.length >= 2 ? withEmoji : raw;
+    }
+
+    function startNewPuzzleRound() {
+      stopSyllableAudio();
+      const pool = getPuzzlePool();
+      const picBox = $('puzzle-picture-box');
+      const fb = $('puzzle-feedback-label');
+      const slotsRow = $('puzzle-slots-row');
+      const tilesGrid = $('puzzle-tiles-grid');
+
+      puzzleSolved = false;
+      puzzleFilledCount = 0;
+      picBox.classList.remove('alive-bounce');
+
+      if (!pool.length) {
+        picBox.textContent = '🧩';
+        fb.textContent = 'Отметьте больше букв в меню слева, чтобы собирать слова из слогов!';
+        fb.className = 'puzzle-feedback-label error';
+        slotsRow.innerHTML = '';
+        tilesGrid.innerHTML = '';
+        puzzleTargetWord = '';
+        return;
+      }
+
+      let nextWord = pool[Math.floor(Math.random() * pool.length)];
+      if (pool.length > 1 && nextWord === puzzleTargetWord) {
+        const alt = pool.filter(w => w !== puzzleTargetWord);
+        nextWord = alt[Math.floor(Math.random() * alt.length)];
+      }
+      puzzleTargetWord = nextWord;
+      puzzleTargetSyls = nextWord.split(/[-–]/).map(s => s.trim()).filter(Boolean);
+
+      const cleanWord = nextWord.replace(/[-–]/g, '').toUpperCase();
+      picBox.textContent = WORD_EMOJIS[cleanWord] || '🎁';
+      fb.textContent = '🧩 Нажимай на слоги по порядку, чтобы собрать слово!';
+      fb.className = 'puzzle-feedback-label';
+
+      // Формируем пул карточек со слогами: правильные слоги + 2–3 отвлекающих слога
+      const allOpenSyls = getAvailableSyllables(true, false);
+      const otherWordsSyls = pool.flatMap(w => w.split(/[-–]/).map(s => s.trim()).filter(Boolean));
+      const distractorCandidates = [...new Set([...otherWordsSyls, ...allOpenSyls])]
+        .filter(s => !puzzleTargetSyls.includes(s));
+
+      const neededDistractors = Math.max(2, 5 - puzzleTargetSyls.length);
+      const distractors = distractorCandidates.sort(() => Math.random() - 0.5).slice(0, neededDistractors);
+
+      const combinedSyls = [...puzzleTargetSyls, ...distractors].sort(() => Math.random() - 0.5);
+      puzzleTilesData = combinedSyls.map((syl, idx) => ({ id: idx, syl, used: false }));
+
+      renderPuzzleSlotsAndTiles();
+
+      // Озвучиваем голосовую подсказку «Собери слово!» (если файл есть в папке Super/)
+      playAudioFile('Super/СОБЕРИ_СЛОВО.wav');
+    }
+
+    function renderPuzzleSlotsAndTiles() {
+      const slotsRow = $('puzzle-slots-row');
+      const tilesGrid = $('puzzle-tiles-grid');
+      slotsRow.innerHTML = '';
+      tilesGrid.innerHTML = '';
+
+      puzzleTargetSyls.forEach((syl, idx) => {
+        if (idx > 0) {
+          const dash = document.createElement('span');
+          dash.className = 'puzzle-slot-dash';
+          dash.textContent = '–';
+          slotsRow.appendChild(dash);
+        }
+        const slot = document.createElement('div');
+        const isFilled = idx < puzzleFilledCount;
+        const isCurrent = idx === puzzleFilledCount && !puzzleSolved;
+        slot.className = `puzzle-slot ${isFilled ? 'filled' : ''} ${isCurrent ? 'active-target' : ''} ${puzzleSolved ? 'solved-slot' : ''}`;
+        slot.innerHTML = isFilled ? buildColoredHTML(applyCaseRule(syl)) : '<span class="slot-placeholder">___</span>';
+        slotsRow.appendChild(slot);
+      });
+
+      puzzleTilesData.forEach(tileObj => {
+        const btn = document.createElement('button');
+        btn.className = `puzzle-syl-tile ${tileObj.used ? 'used' : ''}`;
+        btn.disabled = tileObj.used || puzzleSolved;
+        btn.innerHTML = buildColoredHTML(applyCaseRule(tileObj.syl));
+        btn.onclick = () => onPuzzleTileClick(tileObj, btn);
+        tilesGrid.appendChild(btn);
+      });
+    }
+
+    async function onPuzzleTileClick(tileObj, btnEl) {
+      if (puzzleSolved || tileObj.used) return;
+      const expectedSyl = puzzleTargetSyls[puzzleFilledCount];
+      const fb = $('puzzle-feedback-label');
+
+      if (tileObj.syl === expectedSyl) {
+        tileObj.used = true;
+        puzzleFilledCount++;
+        renderPuzzleSlotsAndTiles();
+
+        // Озвучиваем выбранный слог
+        stopSyllableAudio();
+        const seqId = currentSequenceId;
+        await playSingleSyllable(tileObj.syl, seqId, getFolderForSyllable(tileObj.syl));
+
+        // Если собрали всё слово целиком
+        if (puzzleFilledCount === puzzleTargetSyls.length) {
+          puzzleSolved = true;
+          renderPuzzleSlotsAndTiles();
+          fb.textContent = `🌟 Ура! Получилось слово: ${puzzleTargetWord.replace(/-/g, '–')}!`;
+          fb.className = 'puzzle-feedback-label success';
+
+          const picBox = $('puzzle-picture-box');
+          picBox.classList.remove('alive-bounce');
+          void picBox.offsetWidth;
+          picBox.classList.add('alive-bounce');
+
+          registerSuccessfulRead();
+
+          setTimeout(async () => {
+            if (primaryMode !== 'puzzle') return;
+            await playWordOrSyllableText(puzzleTargetWord, false);
+            setTimeout(() => {
+              if (primaryMode === 'puzzle' && !isStickerModalOpen) startNewPuzzleRound();
+            }, 1300);
+          }, 250);
+        }
+      } else {
+        // Неверный слог
+        btnEl.classList.remove('wrong');
+        void btnEl.offsetWidth;
+        btnEl.classList.add('wrong');
+        fb.textContent = 'Попробуй ещё раз! Найди следующий слог 🧩';
+        fb.className = 'puzzle-feedback-label error';
+        playAudioFile('Super/ПОПРОБУЙ_ЕЩЁ.wav');
+      }
+    }
+
+    function playPuzzleTargetWord() {
+      if (!puzzleTargetWord) return;
+      const now = Date.now();
+      if (now - lastAudioPlayTime < AUDIO_MIN_INTERVAL_MS) return handleSpamAttempt();
+      lastAudioPlayTime = now;
+      playWordOrSyllableText(puzzleTargetWord, false);
+    }
+
+    // =========================================================================
     // АУДИО-ВИКТОРИНА «НАЙДИ СЛОГ / СЛОВО НА СЛУХ»
     // =========================================================================
     function setQuizSource(src) {
@@ -1111,7 +1422,8 @@
         cardEl.classList.add('wrong');
         fb.textContent = 'Попробуй ещё раз! Послушай внимательно 🔊';
         fb.className = 'quiz-feedback-label error';
-        playQuizPromptAudio();
+        playAudioFile('Super/ПОПРОБУЙ_ЕЩЁ.wav');
+        setTimeout(() => playQuizPromptAudio(), 900);
       }
     }
 
@@ -1133,7 +1445,11 @@
       return [...text].map(ch => ch === '-' ? ch : (!first ? (first = true, ch.toUpperCase()) : ch.toLowerCase())).join('');
     }
 
-    function toggleCaseMixing(e) { allowLowercase = e.target.checked; renderFormattedText(currentText); }
+    function toggleCaseMixing(e) {
+      allowLowercase = e.target.checked;
+      if (primaryMode === 'puzzle') renderPuzzleSlotsAndTiles();
+      else renderFormattedText(currentText);
+    }
     function updateNavButtonsState() { $('btn-prev-card').disabled = historyIndex <= 0; }
 
     function animateCard() {
@@ -1186,7 +1502,7 @@
     }
 
     function generateNext(resetHistory = false) {
-      if (['alphabet','matrix','trains','quiz'].includes(primaryMode)) return;
+      if (['alphabet','matrix','trains','puzzle','quiz'].includes(primaryMode)) return;
       stopSyllableAudio();
       isSurpriseRevealed = false;
       if (resetHistory) { historyStack = []; historyIndex = -1; cheerStreakCount = 0; }
@@ -1225,7 +1541,7 @@
     }
 
     function prevCard(e) {
-      if (['alphabet','matrix','trains','quiz'].includes(primaryMode)) return;
+      if (['alphabet','matrix','trains','puzzle','quiz'].includes(primaryMode)) return;
       if (e) e.stopPropagation();
       const now = Date.now(), diff = now - lastKeyPressTime;
       lastKeyPressTime = now;
@@ -1255,7 +1571,7 @@
     }
 
     function nextCard(e) {
-      if (['alphabet','matrix','trains','quiz'].includes(primaryMode)) return;
+      if (['alphabet','matrix','trains','puzzle','quiz'].includes(primaryMode)) return;
       if (e) e.stopPropagation();
       const now = Date.now(), sincePress = now - lastKeyPressTime, sinceCard = now - lastCardSwitchTime;
       lastKeyPressTime = now;
@@ -1386,26 +1702,25 @@
       isStickerModalOpen = false; stopExtraAudio();
       lastCardSwitchTime = lastKeyPressTime = Date.now(); rapidSpamCount = 0;
       if (primaryMode === 'quiz' && quizSolved) startNewQuizRound();
+      if (primaryMode === 'puzzle' && puzzleSolved) startNewPuzzleRound();
     }
 
     function syncModeUI() {
       stopSyllableAudio();
-      ['alphabet','matrix','one_syllable','words2','words3','trains','quiz'].forEach(m => {
+      ['alphabet','matrix','one_syllable','words2','words3','trains','puzzle','quiz'].forEach(m => {
         const el = $(`tab-${m}`);
         if (el) el.classList.toggle('active', primaryMode === m);
       });
-      $('tab-open').classList.toggle('active', primaryMode === 'syllables' && syllableModes.open);
-      $('tab-reverse').classList.toggle('active', primaryMode === 'syllables' && syllableModes.reverse);
+      $('tab-open').classList.toggle('active', primaryMode === 'syllables' && syllableModes.open);$('tab-reverse').classList.toggle('active', primaryMode === 'syllables' && syllableModes.reverse);
 
-      $('alphabet-view-container').style.display = primaryMode === 'alphabet' ? 'flex' : 'none';
-      $('matrix-view-container').style.display = primaryMode === 'matrix' ? 'flex' : 'none';
-      $('trains-view-container').style.display = primaryMode === 'trains' ? 'flex' : 'none';
-      $('quiz-view-container').style.display = primaryMode === 'quiz' ? 'flex' : 'none';
-      $('card-wrapper').style.display = !['alphabet','matrix','trains','quiz'].includes(primaryMode) ? 'flex' : 'none';
+      $('alphabet-view-container').style.display = primaryMode === 'alphabet' ? 'flex' : 'none';$('matrix-view-container').style.display = primaryMode === 'matrix' ? 'flex' : 'none';
+      $('trains-view-container').style.display = primaryMode === 'trains' ? 'flex' : 'none';$('puzzle-view-container').style.display = primaryMode === 'puzzle' ? 'flex' : 'none';
+      $('quiz-view-container').style.display = primaryMode === 'quiz' ? 'flex' : 'none';$('card-wrapper').style.display = !['alphabet','matrix','trains','puzzle','quiz'].includes(primaryMode) ? 'flex' : 'none';
 
       if (primaryMode === 'alphabet') renderAlphabetView();
       else if (primaryMode === 'matrix') { $('matrix-order-toolbar').style.display = matrixMode === 'open' ? 'flex' : 'none'; renderMatrix(); }
       else if (primaryMode === 'trains') renderTrainsView();
+      else if (primaryMode === 'puzzle') startNewPuzzleRound();
       else if (primaryMode === 'quiz') startNewQuizRound();
       else generateNext(true);
     }
@@ -1415,6 +1730,7 @@
       if (primaryMode === 'alphabet') renderAlphabetView();
       else if (primaryMode === 'matrix') renderMatrix();
       else if (primaryMode === 'trains') renderTrainsView();
+      else if (primaryMode === 'puzzle') startNewPuzzleRound();
       else if (primaryMode === 'quiz') startNewQuizRound();
       else generateNext(true);
     }
@@ -1443,24 +1759,45 @@
       refreshCurrentMode();
     }
 
-    const lettersPanel = $('letters-panel'), panelBackdrop = $('panel-backdrop'), panelTabPull = $('panel-tab-pull');
-    const isPanelOpen = () => window.innerWidth <= 900 ? lettersPanel.classList.contains('open') : !lettersPanel.classList.contains('collapsed');
+    const lettersPanel = $('letters-panel'), panelBackdrop = $('panel-backdrop'), panelTabPull =$('panel-tab-pull');
+    const isOverlayPanelViewport = () => window.innerWidth <= 1366;
+    const isPanelOpen = () => isOverlayPanelViewport() ? lettersPanel.classList.contains('open') : !lettersPanel.classList.contains('collapsed');
     const syncTabPullVisibility = () => panelTabPull.classList.toggle('hidden', isPanelOpen());
 
     function openLettersPanel() {
       lettersPanel.classList.remove('collapsed');
-      if (window.innerWidth <= 900) { lettersPanel.classList.add('open'); panelBackdrop.classList.add('active'); }
+      if (isOverlayPanelViewport()) {
+        lettersPanel.classList.add('open');
+        panelBackdrop.classList.add('active');
+      }
       syncTabPullVisibility();
     }
     function closeLettersPanel() {
-      lettersPanel.classList.remove('open'); lettersPanel.classList.add('collapsed');
-      panelBackdrop.classList.remove('active'); syncTabPullVisibility();
+      lettersPanel.classList.remove('open');
+      lettersPanel.classList.add('collapsed');
+      panelBackdrop.classList.remove('active');
+      syncTabPullVisibility();
     }
     const toggleLettersPanel = () => isPanelOpen() ? closeLettersPanel() : openLettersPanel();
+
+    // Закрытие боковой панели при клике/тапе вне её области на планшетах и телефонах
+    document.addEventListener('pointerdown', e => {
+      if (!isPanelOpen()) return;
+      if (isOverlayPanelViewport()) {
+        if (!lettersPanel.contains(e.target) && !panelTabPull.contains(e.target)) {
+          closeLettersPanel();
+        }
+      }
+    });
 
     window.addEventListener('resize', () => {
       const cv = $('confetti-canvas');
       if (cv) { cv.width = innerWidth; cv.height = innerHeight; }
+      if (!isOverlayPanelViewport()) {
+        panelBackdrop.classList.remove('active');
+      } else if (lettersPanel.classList.contains('open')) {
+        panelBackdrop.classList.add('active');
+      }
       syncTabPullVisibility();
     });
 
@@ -1468,7 +1805,7 @@
       if (e.key === 'Control' || e.code.startsWith('Control')) { e.preventDefault(); toggleLettersPanel(); return; }
       if (isStickerModalOpen) { if (['Space','Escape'].includes(e.code)) { e.preventDefault(); closeStickerModal(); } return; }
       if (e.code === 'Escape') { closeHelpModal(); closeZooModal(); closeStickerModal(); closeLettersPanel(); return; }
-      if (['alphabet','matrix','trains','quiz'].includes(primaryMode) || e.repeat) return;
+      if (['alphabet','matrix','trains','puzzle','quiz'].includes(primaryMode) || e.repeat) return;
       if (e.code === 'ArrowLeft') { e.preventDefault(); prevCard(); }
       else if (e.code === 'Space' || e.code === 'ArrowRight') { e.preventDefault(); nextCard(); }
       else if (e.code === 'ArrowUp' || e.code === 'ArrowDown') { e.preventDefault(); playSyllableAudio(); }
@@ -1491,11 +1828,11 @@
       }
     }, { passive: true });
 
-    if (window.innerWidth > 900) lettersPanel.classList.remove('collapsed');
+    if (!isOverlayPanelViewport()) lettersPanel.classList.remove('collapsed');
+    renderLetterGrids();
     loadAppState();
     syncTabPullVisibility();
     initHelperRibbon();
-    renderLetterGrids();
     loadWordsData();
     updateCategoryBadges();
     syncModeUI();
