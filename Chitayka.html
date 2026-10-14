@@ -2,265 +2,169 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Читай-ка: Обучение чтению</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
-  
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@700&family=Comfortaa:wght@700&family=Lora:ital,wght@0,600;0,700;1,600&family=Nunito:wght@700;800;900&family=PT+Serif:wght@700&family=Rubik:wght@700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="font-schoolbook">
 
   <div class="subtle-cheer-hint" id="subtle-cheer-text"></div>
-
-  <button class="panel-tab-pull" id="panel-tab-pull" onclick="openLettersPanel()" title="Открыть изученные буквы (или клавиша Ctrl)">
-    <span>⚙️</span>
-  </button>
-
+  <button class="panel-tab-pull" id="panel-tab-pull" onclick="openLettersPanel()" title="Открыть изученные буквы (Ctrl)"><span>⚙️</span></button>
   <canvas id="confetti-canvas"></canvas>
 
-  <div class="sticker-modal-backdrop" id="sticker-modal" onclick="onStickerBackdropClick(event)">
+  <!-- Модальное окно стикера -->
+  <div class="sticker-modal-backdrop" id="sticker-modal" onclick="if(event.target===this)closeStickerModal()">
     <div class="sticker-card">
       <div class="sticker-badge-title">🎉 Награда за старание!</div>
       <div class="sticker-animal-icon" id="sticker-icon">🦊</div>
       <div class="sticker-name" id="sticker-name">Хитрый лисёнок</div>
-      <div class="sticker-message" id="sticker-message">Отлично читаешь! Пройдено ещё 20 карточек!</div>
+      <div class="sticker-message" id="sticker-message">Отлично читаешь!</div>
       <button class="sticker-btn" onclick="closeStickerModal()">Продолжить чтение 🚀</button>
-      <div style="font-size: 12px; color: #94a3b8; margin-top: 4px;">Можно закрыть клавишей <b>Пробел</b></div>
+      <div class="modal-subhint">Можно закрыть клавишей <b>Пробел</b> или <b>Тапом</b></div>
     </div>
   </div>
 
   <div class="panel-backdrop" id="panel-backdrop" onclick="closeLettersPanel()"></div>
 
-  <div class="help-modal-backdrop" id="help-modal" onclick="onHelpBackdropClick(event)">
+  <!-- Справка -->
+  <div class="help-modal-backdrop" id="help-modal" onclick="if(event.target===this)closeHelpModal()">
     <div class="help-modal-card">
       <div class="help-modal-header">
         <div class="help-modal-title"><span>📖</span> Справка по программе «Читай-ка»</div>
         <button class="help-modal-close-btn" onclick="closeHelpModal()">✕</button>
       </div>
-     <div class="help-modal-body">
-        
+      <div class="help-modal-body">
         <div class="help-section">
           <div class="help-section-title">🎓 Методическая основа и цветовое кодирование</div>
-          <p>Тренажёр построен на принципах плавного слогослияния (методика Букваря <b>Н. Жуковой</b> и складового чтения <b>Н. Зайцева</b>). Буквы вводятся последовательно — от протяжных гласных и звучных сонорных к парным и глухим согласным.</p>
-          <ul class="help-list" style="margin-top: 8px;">
-            <li><b style="color: #ef4444;">● Красный цвет</b> — гласные звуки.</li>
-            <li><b style="color: #2563eb;">● Синий цвет</b> — твёрдые согласные (а также всегда твёрдые <b>Ж, Ш, Ц</b>).</li>
-            <li><b style="color: #16a34a;">● Зелёный цвет</b> — мягкие согласные перед смягчающими гласными (<b>Е, Ё, И, Ю, Я</b>) и мягким знаком (а также всегда мягкие <b>Й, Ч, Щ</b>).</li>
-            <li><b style="color: #64748b;">● Серый цвет</b> — знаки <b>Ь</b> и <b>Ъ</b> (не имеют собственного звука).</li>
-            <li><b>Дефис (–)</b> — деление слов на склады для облегчения послогового чтения.</li>
+          <p>Тренажёр построен на принципах плавного слогослияния (методика Букваря <b>Н. Жуковой</b> и складового чтения <b>Н. Зайцева</b>). Буквы вводятся от гласных и сонорных к парным и глухим согласным.</p>
+          <ul class="help-list">
+            <li><b style="color:#cb2d2d">● Красный</b> — гласные звуки.</li>
+            <li><b style="color:#1e5cb8">● Синий</b> — твёрдые согласные (и всегда твёрдые <b>Ж, Ш, Ц</b>).</li>
+            <li><b style="color:#1b7a3e">● Зелёный</b> — мягкие согласные перед <b>Е, Ё, И, Ю, Я, Ь</b> (и всегда мягкие <b>Й, Ч, Щ</b>).</li>
+            <li><b style="color:#64748b">● Серый</b> — знаки <b>Ь, Ъ</b> (без звука). <b>Дефис (–)</b> — деление на склады.</li>
           </ul>
         </div>
-
         <div class="help-section">
           <div class="help-section-title">🧩 Режимы тренировки</div>
           <ul class="help-list">
-            <li><b>Алфавит:</b> обзор всех букв алфавита, а также режим <i>«Помощник (Лента)»</i> — наглядная классификация звуков по звонкости, глухости и парности.</li>
-            <li><b>Слоги (Матрица):</b> интерактивная таблица открытых и обратных слогов со звуковой озвучкой ячеек по клику. Доступно переключение порядка гласных: <i>по умолчанию</i> (твёрдые → мягкие) или <i>по Зайцеву</i> (парами твёрдая-мягкая).</li>
-            <li><b>Прямые / Обратные:</b> карточки двухбуквенных слогов (МА, СУ / АМ, УС).</li>
-            <li><b>1 слог / 2 слога / 3 слога:</b> осмысленные слова из словаря с делением на склады и озвучкой.</li>
+            <li><b>Алфавит:</b> обзор всех букв и режим <i>«Помощник (Лента)»</i> (классификация звуков по звонкости, глухости и парности).</li>
+            <li><b>Слоги (Матрица):</b> таблица открытых и обратных слогов с озвучкой по клику и выбором порядка гласных (по умолчанию / по Зайцеву).</li>
+            <li><b>Прямые / Обратные / Слова (1–3 слога):</b> карточки слогов и слов с делением на склады и озвучкой.</li>
           </ul>
         </div>
-
         <div class="help-section">
-          <div class="help-section-title">⏱️ Контроль темпа и защита от спешки (штрафы)</div>
-          <p>Чтобы ребёнок не «прокликивал» карточки наугад, а обязательно прочитывал каждую вслух, в программе работает строгий двойной контроль:</p>
-          <ul class="help-list" style="margin-top: 6px;">
-            <li><b>Минимум 1.5 секунды на карточку:</b> карточка не перелистнётся раньше этого времени, давая ребёнку возможность проговорить слог.</li>
-            <li><b>Пауза между нажатиями не менее 0.5 секунды:</b> если ребёнок нажимает клавиши хаотично и быстро, карточка остаётся на экране. Каждое быстрое нажатие сдвигает таймер ожидания — перелистывание произойдёт только тогда, когда ребёнок сделает спокойную паузу более 0.5 с.</li>
-            <li><b>Штраф за спам (более 5 быстрых нажатий подряд):</b>
-              <ul style="margin-top: 4px; padding-left: 18px;">
-                <li>Серия правильного чтения (прогресс до стикера или похвалы) <b>сбрасывается в 0</b> — ребёнку придётся прочитать порцию карточек заново без спешки.</li>
-                <li>Включается голосовое замечание: <i>«Сначала прочитай вслух!»</i> и появляется подсказка на экране.</li>
-                <li>Ограничитель звука: предупреждение звучит не чаще 1 раза в 5 секунд, предотвращая наслоение звуков.</li>
-              </ul>
-            </li>
-            <li><b>Ограничение озвучки карточки:</b> повторное воспроизведение слога/слова доступно не чаще 1 раза в 1 секунду.</li>
-          </ul>
-        </div>
-
-        <div class="help-section">
-          <div class="help-section-title">🎉 Мотивация и награды</div>
-          <p>За усердное непрерывное чтение ребёнок получает награды:</p>
-          <ul class="help-list" style="margin-top: 6px;">
-            <li><b>Салют и голосовая похвала:</b> взрыв конфетти и подбадривающая реплика (<i>«Супер!», «Отлично!», «Так держать!»</i>).</li>
-            <li><b>Карточки-стикеры с животными:</b> полноэкранная карточка с персонажем (Лисёнок, Панда, Львёнок и др.) и голосовым поздравлением.</li>
-            <li><b>Настройка в меню «Частота подбадривания»:</b>
-              <ul style="margin-top: 4px; padding-left: 18px;">
-                <li><i>Нормально (по умолчанию):</i> салют — каждые 10 карточек, стикер — каждые 20.</li>
-                <li><i>Часто (в 2 раза чаще):</i> салют — каждые 5 карточек, стикер — каждые 10.</li>
-                <li><i>Редко (в 2 раза реже):</i> салют — каждые 20 карточек, стикер — каждые 40.</li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-
-        <div class="help-section">
-          <div class="help-section-title">⌨️ Управление и горячие клавиши</div>
+          <div class="help-section-title">⏱️ Контроль темпа и защита от спешки</div>
           <ul class="help-list">
-            <li><b>Пробел</b> или <b>Стрелка вправо (→)</b> или <b>Клик по карточке:</b> следующая карточка.</li>
-            <li><b>Стрелка влево (←):</b> возврат к предыдущей карточке (с защитой 0.5 с).</li>
-            <li><b>Стрелка вверх (↑)</b> или <b>Стрелка вниз (↓):</b> озвучить текущую карточку.</li>
-            <li><b>Ctrl:</b> открыть / скрыть боковую панель изученных букв.</li>
-            <li><b>Esc:</b> закрыть окно справки, панель настроек или наградную карточку.</li>
-            <li><b>Переключатель «Аа»:</b> тренировка чтения заглавных и строчных букв.</li>
+            <li><b>Минимум 1.5 сек на карточку</b> и <b>пауза не менее 0.5 сек</b> между нажатиями.</li>
+            <li><b>Штраф за спам (>5 быстрых нажатий):</b> серия до награды сбрасывается в 0, звучит напоминание <i>«Сначала прочитай вслух!»</i> (не чаще 1 раза в 5 с).</li>
+            <li><b>Озвучка карточки:</b> не чаще 1 раза в 1 секунду.</li>
           </ul>
         </div>
-
-      </div>
-
+        <div class="help-section">
+          <div class="help-section-title">🎉 Мотивация и управление</div>
+          <ul class="help-list">
+            <li><b>Награды:</b> салют с похвалой (каждые 5/10/20 карточек) и стикеры с животными (каждые 10/20/40 карточек).</li>
+            <li><b>Управление:</b> <b>Пробел / → / Клик / Свайп влево</b> — вперёд; <b>← / Свайп вправо</b> — назад; <b>↑ / ↓</b> — озвучить; <b>Ctrl</b> — меню букв; <b>Esc</b> — закрыть окна.</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
 
   <header>
     <div class="brand">
-      <a href="index.html" class="btn-icon-header" title="На главную">
-        <span>🏠</span>
-        <span>Домой</span>
-      </a>
+      <a href="index.html" class="btn-icon-header" title="На главную"><span>🏠</span><span class="hide-xs">Домой</span></a>
       <h1 class="brand-title">Читай-ка!</h1>
     </div>
-
     <div class="stats-bar">
-      <div class="stat-badge star" title="Прочитано карточек за всё занятие">
-        <span>⭐</span>
-        <span id="star-count">0</span>
-      </div>
-
-      <div class="stat-badge speed" id="speed-badge" title="Темп: карточек в минуту">
-        <span>⚡</span>
-        <span id="speed-count">0</span>
-        <span style="font-size: 11px; opacity: 0.85;">/мин</span>
-      </div>
-
-      <div class="stat-badge time" title="Общее время занятия">
-        <span>⏱</span>
-        <span id="session-time">00:00</span>
-      </div>
-
-      <div class="case-toggle-wrap" title="Включить смену регистра букв">
+      <div class="stat-badge star" title="Прочитано карточек"><span>⭐</span><span id="star-count">0</span></div>
+      <div class="stat-badge speed" id="speed-badge" title="Темп: карточек в минуту"><span>⚡</span><span id="speed-count">0</span><span class="unit-lbl">/мин</span></div>
+      <div class="stat-badge time" title="Общее время"><span>⏱</span><span id="session-time">00:00</span></div>
+      <div class="case-toggle-wrap" title="Смена регистра букв">
         <label class="case-toggle-label" for="case-toggle">
           <span>Аа</span>
-          <div class="switch">
-            <input type="checkbox" id="case-toggle" onchange="toggleCaseMixing(event)">
-            <span class="slider"></span>
-          </div>
+          <div class="switch"><input type="checkbox" id="case-toggle" onchange="toggleCaseMixing(event)"><span class="slider"></span></div>
         </label>
       </div>
-
-      <button class="btn-icon-header" id="sound-mute-btn" onclick="toggleSoundMute()" title="Включить / отключить звуковые эффекты">
-        <span id="sound-mute-icon">🔊</span>
-      </button>
-
-      <button class="btn-icon-header" onclick="openHelpModal()" title="Справка по программе">
-        <span>❓</span>
-      </button>
+      <button class="btn-icon-header" id="sound-mute-btn" onclick="toggleSoundMute()" title="Звук"><span id="sound-mute-icon">🔊</span></button>
+      <button class="btn-icon-header" onclick="openHelpModal()" title="Справка"><span>❓</span></button>
     </div>
   </header>
 
   <div class="app-layout">
-    
     <aside class="letters-panel collapsed" id="letters-panel">
       <div class="panel-header-row">
         <div class="panel-title-wrap">
           <div class="panel-title">Изученные буквы</div>
-          <span class="panel-active-count-badge" id="panel-active-count" title="Количество выбранных букв">10/33</span>
+          <span class="panel-active-count-badge" id="panel-active-count">10/33</span>
         </div>
-        <button class="btn-panel-hide" id="btn-close-panel" onclick="closeLettersPanel()" title="Скрыть боковую панель">
-          <span>◀</span>
-          <span>Скрыть</span>
-        </button>
+        <button class="btn-panel-hide" onclick="closeLettersPanel()"><span>◀</span><span>Скрыть</span></button>
       </div>
 
       <div class="presets-box-column">
-        <button class="preset-btn-col" onclick="applyPreset('step1')">
-          <span>Этап 1: Базовые сонорные</span>
-          <span style="font-size: 11px; opacity: 0.7;">10 букв</span>
-        </button>
-        <button class="preset-btn-col" onclick="applyPreset('step2')">
-          <span>Этап 2: + Ш, К, П, Т, И, Б, В, Г, Д</span>
-          <span style="font-size: 11px; opacity: 0.7;">19 букв</span>
-        </button>
-        <button class="preset-btn-col" onclick="applyPreset('all')">
-          <span>Все буквы</span>
-          <span style="font-size: 11px; opacity: 0.7;">33 буквы</span>
-        </button>
-        <button class="preset-btn-col danger" onclick="applyPreset('clear')">
-          <span>Сброс</span>
-          <span style="font-size: 11px; opacity: 0.7;">0 букв</span>
-        </button>
+        <button class="preset-btn-col" onclick="applyPreset('step1')"><span>Этап 1: Базовые сонорные</span><small>10 букв</small></button>
+        <button class="preset-btn-col" onclick="applyPreset('step2')"><span>Этап 2: + Ш, К, П, Т, И, Б, В, Г, Д</span><small>19 букв</small></button>
+        <button class="preset-btn-col" onclick="applyPreset('all')"><span>Все буквы</span><small>33 буквы</small></button>
+        <button class="preset-btn-col danger" onclick="applyPreset('clear')"><span>Сброс</span><small>0 букв</small></button>
       </div>
 
       <div class="group-box">
-        <div class="group-header">
-          <span style="color: #ef4444;">●</span> Гласные буквы
-        </div>
+        <div class="group-header"><span style="color:#ef4444">●</span> Гласные буквы</div>
         <div class="sub-group-wrap">
           <div class="sub-group-label">Твердые:</div>
           <div class="letters-grid" id="grid-vowels-hard"></div>
-          <div class="sub-group-label" style="margin-top: 6px;">Смягчающие:</div>
+          <div class="sub-group-label" style="margin-top:4px">Смягчающие:</div>
           <div class="letters-grid" id="grid-vowels-soft"></div>
         </div>
       </div>
 
       <div class="group-box">
-        <div class="group-header">
-          <span style="color: #2563eb;">●</span> Звонкие непарные согласные
-        </div>
-        <div class="letters-grid" id="grid-consonants-sonor" style="grid-template-columns: repeat(4, 1fr);"></div>
+        <div class="group-header"><span style="color:#2563eb">●</span> Звонкие непарные</div>
+        <div class="letters-grid" id="grid-consonants-sonor"></div>
       </div>
 
       <div class="group-box">
-        <div class="group-header">
-          <span style="color: #2563eb;">●</span> Парные согласные
-        </div>
-        <div class="paired-consonants-wrap">
-          <div class="paired-row-label">Звонкие:</div>
+        <div class="group-header"><span style="color:#2563eb">●</span> Парные согласные</div>
+        <div class="sub-group-wrap">
+          <div class="sub-group-label">Звонкие:</div>
           <div class="paired-grid" id="grid-paired-voiced"></div>
-          <div class="paired-row-label">Глухие:</div>
+          <div class="sub-group-label">Глухие:</div>
           <div class="paired-grid" id="grid-paired-voiceless"></div>
         </div>
       </div>
 
       <div class="group-box">
-        <div class="group-header">
-          <span style="color: #2563eb;">●</span> Глухие непарные согласные
-        </div>
-        <div class="letters-grid" id="grid-consonants-other"></div>
+        <div class="group-header"><span style="color:#2563eb">●</span> Глухие непарные</div>
+        <div class="letters-grid" id="grid-consonants-other" style="grid-template-columns:repeat(4,1fr)"></div>
       </div>
 
       <div class="group-box">
-        <div class="group-header">
-          <span style="color: #64748b;">●</span> Знаки (не имеют звука)
-        </div>
-        <div class="letters-grid" id="grid-signs" style="grid-template-columns: repeat(2, 1fr);"></div>
+        <div class="group-header"><span style="color:#64748b">●</span> Знаки (без звука)</div>
+        <div class="letters-grid" id="grid-signs" style="grid-template-columns:repeat(2,1fr)"></div>
       </div>
 
       <div class="group-box">
-        <div class="group-header">
-          <span>🔤</span> Шрифт текста
-        </div>
+        <div class="group-header"><span>🔤</span> Шрифт текста</div>
         <div class="font-select-wrap">
           <select id="font-select" onchange="changeFont(this.value)">
             <option value="schoolbook" selected>Школьный (Букварь Жукова)</option>
-            <option value="comfortaa">Comfortaa (округлый / карточки)</option>
+            <option value="comfortaa">Comfortaa (округлый)</option>
             <option value="nunito">Nunito (мягкий гротеск)</option>
-            <option value="balsamiq">Balsamiq Sans (детский печатный)</option>
-            <option value="rubik">Rubik (чёткий геометрический)</option>
+            <option value="balsamiq">Balsamiq Sans (детский)</option>
+            <option value="rubik">Rubik (геометрический)</option>
           </select>
         </div>
       </div>
 
       <div class="group-box">
-        <div class="group-header">
-          <span>🔊</span> Звук нажатия
-        </div>
+        <div class="group-header"><span>🔊</span> Звук нажатия</div>
         <div class="font-select-wrap">
           <select id="sound-select" onchange="changeSoundEffect(this.value)">
-            <option value="softping" selected>Мягкий пинг (по умолчанию)</option>
+            <option value="softping" selected>Мягкий пинг</option>
             <option value="popit">Pop-it (пупырка)</option>
             <option value="bell">Колокольчик</option>
             <option value="xylophone">Ксилофон</option>
@@ -274,11 +178,8 @@
         </div>
       </div>
 
-      <!-- НАСТРОЙКА ЧАСТОТЫ ПОДБАДРИВАНИЯ -->
       <div class="group-box">
-        <div class="group-header">
-          <span>🎉</span> Частота подбадривания
-        </div>
+        <div class="group-header"><span>🎉</span> Частота подбадривания</div>
         <div class="font-select-wrap">
           <select id="cheer-freq-select" onchange="changeCheerFrequency(this.value)">
             <option value="often">Часто (в 2 раза чаще)</option>
@@ -287,50 +188,26 @@
           </select>
         </div>
       </div>
-
     </aside>
 
     <main class="stage">
-      
       <div class="modes-categories-wrapper">
         <div class="mode-group mode-group-alphabet">
-          <button class="mode-tab" id="tab-alphabet" onclick="onAlphabetClick()">
-            <span>Алфавит</span>
-            <span class="count-badge" id="count-alphabet">0</span>
-          </button>
-          <button class="mode-tab" id="tab-matrix" onclick="onMatrixClick()">
-            <span>Слоги</span>
-          </button>
+          <button class="mode-tab" id="tab-alphabet" onclick="onAlphabetClick()"><span>Алфавит</span><span class="count-badge" id="count-alphabet">0</span></button>
+          <button class="mode-tab" id="tab-matrix" onclick="onMatrixClick()"><span>Слоги</span></button>
         </div>
-
         <div class="mode-group mode-group-syllables">
-          <button class="mode-tab active" id="tab-open" onclick="toggleSyllableSubmode('open')">
-            <span>Прямые</span>
-            <span class="count-badge" id="count-open">0</span>
-          </button>
-          <button class="mode-tab" id="tab-reverse" onclick="toggleSyllableSubmode('reverse')">
-            <span>Обратные</span>
-            <span class="count-badge" id="count-reverse">0</span>
-          </button>
+          <button class="mode-tab active" id="tab-open" onclick="toggleSyllableSubmode('open')"><span>Прямые</span><span class="count-badge" id="count-open">0</span></button>
+          <button class="mode-tab" id="tab-reverse" onclick="toggleSyllableSubmode('reverse')"><span>Обратные</span><span class="count-badge" id="count-reverse">0</span></button>
         </div>
-
         <div class="mode-group mode-group-words">
-          <button class="mode-tab" id="tab-one_syllable" onclick="onWordModeClick('one_syllable')">
-            <span>1 слог</span>
-            <span class="count-badge" id="count-one-syllable">0</span>
-          </button>
-          <button class="mode-tab" id="tab-words2" onclick="onWordModeClick('words2')">
-            <span>2 слога</span>
-            <span class="count-badge" id="count-words2">0</span>
-          </button>
-          <button class="mode-tab" id="tab-words3" onclick="onWordModeClick('words3')">
-            <span>3 слога</span>
-            <span class="count-badge" id="count-words3">0</span>
-          </button>
+          <button class="mode-tab" id="tab-one_syllable" onclick="onWordModeClick('one_syllable')"><span>1 слог</span><span class="count-badge" id="count-one-syllable">0</span></button>
+          <button class="mode-tab" id="tab-words2" onclick="onWordModeClick('words2')"><span>2 слога</span><span class="count-badge" id="count-words2">0</span></button>
+          <button class="mode-tab" id="tab-words3" onclick="onWordModeClick('words3')"><span>3 слога</span><span class="count-badge" id="count-words3">0</span></button>
         </div>
       </div>
 
-      <!-- ВИД 1: РЕЖИМ АЛФАВИТА -->
+      <!-- ВИД 1: АЛФАВИТ -->
       <div class="alphabet-view-container" id="alphabet-view-container">
         <div class="alphabet-toolbar">
           <span class="alphabet-toolbar-title">Режим просмотра:</span>
@@ -339,177 +216,43 @@
             <button class="alpha-sort-btn" id="btn-sort-helper" onclick="setAlphabetSort('helper')">Помощник (Лента)</button>
           </div>
         </div>
-
         <div id="alpha-all-view" class="alphabet-category-card">
-          <div class="alphabet-category-header">
-            <span>🔤</span> Весь алфавит
-          </div>
+          <div class="alphabet-category-header"><span>🔤</span> Весь алфавит</div>
           <div class="alphabet-order-grid" id="alpha-all-grid"></div>
         </div>
-
-        <div id="alpha-helper-view" style="display: none; width: 100%;">
-          <div class="ribbon-wrapper">
-            <div class="ribbon-table">
-              <div class="ribbon-vowels">
-                <div class="col-title">Буквы гласных звуков</div>
-                <div class="vowel-row">
-                  <div class="row-hint">Гласные 1-го ряда обозначают твёрдость предшествующих согласных</div>
-                  <div class="letters-row">
-                    <div class="ribbon-cell bg-vowel">а</div>
-                    <div class="ribbon-cell bg-vowel">о</div>
-                    <div class="ribbon-cell bg-vowel">у</div>
-                    <div class="ribbon-cell bg-vowel">ы</div>
-                    <div class="ribbon-cell bg-vowel">э</div>
-                  </div>
-                </div>
-                <div class="vowel-row">
-                  <div class="row-hint">Гласные 2-го ряда обозначают мягкость предшествующих согласных</div>
-                  <div class="letters-row">
-                    <div class="ribbon-cell bg-vowel-dual" title="Обозначает 2 звука в начале слова, после гласной или ъ/ь">я</div>
-                    <div class="ribbon-cell bg-vowel-dual" title="Обозначает 2 звука в начале слова, после гласной или ъ/ь">ё</div>
-                    <div class="ribbon-cell bg-vowel-dual" title="Обозначает 2 звука в начале слова, после гласной или ъ/ь">ю</div>
-                    <div class="ribbon-cell bg-vowel">и</div>
-                    <div class="ribbon-cell bg-vowel-dual" title="Обозначает 2 звука в начале слова, после гласной или ъ/ь">е</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="ribbon-consonants">
-                <div class="col-title">Буквы согласных звуков</div>
-                <div class="consonant-body">
-                  <div class="cons-row cons-row-1">
-                    <div class="row-hint">В первом ряду — звонкие согласные звуки</div>
-                    <div class="cons-cells-row">
-                      <div class="cons-subgroup group-unpaired-voiced">
-                        <div class="cons-cell bg-green-soft" title="Всегда мягкий">й</div>
-                        <div class="cons-cell bg-split" title="Твёрдый или мягкий">н</div>
-                        <div class="cons-cell bg-split" title="Твёрдый или мягкий">м</div>
-                        <div class="cons-cell bg-split" title="Твёрдый или мягкий">л</div>
-                        <div class="cons-cell bg-split" title="Твёрдый или мягкий">р</div>
-                      </div>
-                      <div class="cons-subgroup group-paired">
-                        <div class="cons-cell bg-split">б</div>
-                        <div class="cons-cell bg-split">в</div>
-                        <div class="cons-cell bg-split">г</div>
-                        <div class="cons-cell bg-split">д</div>
-                        <div class="cons-cell bg-split">з</div>
-                        <div class="cons-cell bg-blue-hard" title="Всегда твёрдый">ж</div>
-                      </div>
-                      <div class="cons-subgroup group-unpaired-voiceless">
-                        <div class="cons-cell bg-empty bg-icon" title="Звонкие согласные">🔔</div>
-                        <div class="cons-cell bg-empty"></div>
-                        <div class="cons-cell bg-empty"></div>
-                        <div class="cons-cell bg-empty"></div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="cons-row">
-                    <div class="row-hint">Во втором ряду — глухие согласные звуки</div>
-                    <div class="cons-cells-row">
-                      <div class="cons-subgroup group-unpaired-voiceless">
-                        <div class="cons-cell bg-empty"></div>
-                        <div class="cons-cell bg-empty"></div>
-                        <div class="cons-cell bg-empty bg-icon" title="Глухие согласные">🎧</div>
-                        <div class="cons-cell bg-empty"></div>
-                        <div class="cons-cell bg-empty"></div>
-                      </div>
-                      <div class="cons-subgroup group-paired">
-                        <div class="cons-cell bg-split">п</div>
-                        <div class="cons-cell bg-split">ф</div>
-                        <div class="cons-cell bg-split">к</div>
-                        <div class="cons-cell bg-split">т</div>
-                        <div class="cons-cell bg-split">с</div>
-                        <div class="cons-cell bg-blue-hard" title="Всегда твёрдый">ш</div>
-                      </div>
-                      <div class="cons-subgroup group-unpaired-voiceless">
-                        <div class="cons-cell bg-split">х</div>
-                        <div class="cons-cell bg-split">ц</div>
-                        <div class="cons-cell bg-green-soft" title="Всегда мягкий">ч</div>
-                        <div class="cons-cell bg-green-soft" title="Всегда мягкий">щ</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="ribbon-signs">
-                <div class="col-title">Не обозначают звука</div>
-                <div class="sign-row">ъ</div>
-                <div class="sign-row">ь</div>
-              </div>
-            </div>
-
-            <div class="ribbon-footer-labels">
-              <div style="width: 250px;" class="foot-label">Гласные звуки</div>
-              <div style="flex: 5;" class="foot-label">Непарные звонкие</div>
-              <div style="flex: 6;" class="foot-label">Парные согласные</div>
-              <div style="flex: 4;" class="foot-label">Непарные глухие</div>
-              <div style="width: 70px;" class="foot-label">Знаки</div>
-            </div>
-
-            <div class="ribbon-legend">
-              <div class="legend-item">
-                <div class="legend-swatch bg-vowel-dual"></div>
-                <span><strong>Я, Ё, Ю, Е:</strong> 2 звука в начале слова, после гласной или Ъ/Ь</span>
-              </div>
-              <div class="legend-item">
-                <div class="legend-swatch bg-split"></div>
-                <span><strong>Двухцветный:</strong> парный по твёрдости/мягкости</span>
-              </div>
-              <div class="legend-item">
-                <div class="legend-swatch bg-blue-hard"></div>
-                <span><strong>Синий:</strong> всегда твёрдые звуки — [ж], [ш], [ц]</span>
-              </div>
-              <div class="legend-item">
-                <div class="legend-swatch bg-green-soft"></div>
-                <span><strong>Зелёный:</strong> всегда мягкие звуки — [й'], [ч'], [щ']</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
+        <div id="alpha-helper-view" style="display:none;width:100%"></div>
       </div>
 
-      <!-- ВИД 2: РЕЖИМ СЛОГОВОЙ МАТРИЦЫ -->
+      <!-- ВИД 2: МАТРИЦА -->
       <div class="matrix-view-container" id="matrix-view-container">
-        <div class="matrix-nav-bar">
-          <button class="matrix-subtab-btn active" id="btn-matrix-open" onclick="switchMatrixMode('open')">Открытые слоги (БА, КО, МУ)</button>
-          <button class="matrix-subtab-btn" id="btn-matrix-reverse" onclick="switchMatrixMode('reverse')">Обратные слоги (АБ, ОК, УМ)</button>
-        </div>
-
-        <!-- Переключатель порядка гласных (по умолчанию / по Зайцеву) -->
-        <div class="matrix-order-toolbar" id="matrix-order-toolbar">
-          <span class="matrix-order-label">Порядок гласных:</span>
-          <div class="matrix-order-toggle-group">
-            <button class="matrix-order-btn active" id="btn-order-default" onclick="setMatrixVowelOrder('default')">
-              по умолчанию
-            </button>
-            <button class="matrix-order-btn" id="btn-order-zaytsev" onclick="setMatrixVowelOrder('zaytsev')">
-              по Зайцеву
-            </button>
+        <div class="matrix-controls-row">
+          <div class="matrix-nav-bar">
+            <button class="matrix-subtab-btn active" id="btn-matrix-open" onclick="switchMatrixMode('open')">Открытые (БА, КО)</button>
+            <button class="matrix-subtab-btn" id="btn-matrix-reverse" onclick="switchMatrixMode('reverse')">Обратные (АБ, ОК)</button>
+          </div>
+          <div class="matrix-order-toolbar" id="matrix-order-toolbar">
+            <span class="matrix-order-label">Гласные:</span>
+            <div class="matrix-order-toggle-group">
+              <button class="matrix-order-btn active" id="btn-order-default" onclick="setMatrixVowelOrder('default')">обычный</button>
+              <button class="matrix-order-btn" id="btn-order-zaytsev" onclick="setMatrixVowelOrder('zaytsev')">по Зайцеву</button>
+            </div>
           </div>
         </div>
-
-        <div class="matrix-wrapper-card">
-          <table class="matrix-table" id="matrix-table"></table>
-        </div>
-
+        <div class="matrix-wrapper-card"><table class="matrix-table" id="matrix-table"></table></div>
         <div class="matrix-legend-bar">
-          <div class="matrix-legend-item"><div class="dot-vowel"></div> Красные — гласные</div>
-          <div class="matrix-legend-item"><div class="dot-cons-hard"></div> Синие — твёрдые согласные</div>
-          <div class="matrix-legend-item"><div class="dot-cons-soft"></div> Зелёные — мягкие согласные</div>
-          <div class="matrix-legend-item"><span>🔔</span> Звонкие согласные</div>
-          <div class="matrix-legend-item"><span style="color:#94a3b8; font-weight:900;">—</span> Прочерк — нет в русском языке</div>
+          <div class="matrix-legend-item"><div class="dot-vowel"></div>Гласные</div>
+          <div class="matrix-legend-item"><div class="dot-cons-hard"></div>Твёрдые</div>
+          <div class="matrix-legend-item"><div class="dot-cons-soft"></div>Мягкие</div>
+          <div class="matrix-legend-item"><span>🔔</span>Звонкие</div>
+          <div class="matrix-legend-item"><b style="color:#94a3b8">—</b>Нет в языке</div>
         </div>
       </div>
 
-      <!-- ВИД 3: РЕЖИМ КАРТОЧЕК -->
+      <!-- ВИД 3: КАРТОЧКИ -->
       <div class="card-wrapper" id="card-wrapper">
         <div class="card-container-relative">
           <div class="syllable-card" id="syllable-card" onclick="onCardClick(event)">
             <div class="syllable-text" id="syllable-text"></div>
-
             <div class="empty-warning" id="empty-warning">
               <span class="empty-icon">🧩</span>
               <h3>Мало букв для этого режима</h3>
@@ -518,722 +261,326 @@
           </div>
         </div>
 
-        <div class="card-sub-bar">
-          <button class="btn-speaker-card" id="btn-card-audio" onclick="onSpeakerCardClick(event)" title="Озвучить слог/слово">
-            <span class="speaker-icon">🔊</span>
-            <span style="font-size: 13px;">Озвучить</span>
+        <div class="card-controls-bar">
+          <button class="btn-nav-arrow" id="btn-prev-card" onclick="prevCard(event)" title="Предыдущая (← или свайп вправо)"><span class="arrow-icon">⟵</span></button>
+          <button class="btn-speaker-card" id="btn-card-audio" onclick="onSpeakerCardClick(event)" title="Озвучить (↑/↓)">
+            <span class="speaker-icon">🔊</span><span>Озвучить</span>
           </button>
-        </div>
-
-        <div class="controls-row">
-          <button class="btn-nav-arrow" id="btn-prev-card" onclick="prevCard(event)" title="Предыдущая карточка (стрелка влево)">
-            <span class="arrow-icon">⟵</span>
-          </button>
-          <button class="btn-nav-arrow" id="btn-next-card" onclick="nextCard(event)" title="Следующая карточка (пробел или стрелка вправо)">
-            <span class="arrow-icon">⟶</span>
-          </button>
+          <button class="btn-nav-arrow" id="btn-next-card" onclick="nextCard(event)" title="Следующая (Пробел, → или свайп влево)"><span class="arrow-icon">⟶</span></button>
         </div>
 
         <div class="hint-bar">
-          <span>Листать:</span>
-          <span class="kbd-chip">←</span>
-          <span class="kbd-chip">→</span>
-          <span>или</span>
-          <span class="kbd-chip">ПРОБЕЛ</span>
-          <span style="opacity: 0.5; margin: 0 4px;">•</span>
-          <span>Озвучка:</span>
-          <span class="kbd-chip">↑</span>
-          <span class="kbd-chip">↓</span>
-          <span style="opacity: 0.5; margin: 0 4px;">•</span>
-          <span>Меню букв:</span>
-          <span class="kbd-chip">Ctrl</span>
+          <span>Листать:</span><span class="kbd-chip">←</span><span class="kbd-chip">→</span><span class="kbd-chip">ПРОБЕЛ</span>
+          <span>• Озвучка:</span><span class="kbd-chip">↑</span><span class="kbd-chip">↓</span>
+          <span>• Буквы:</span><span class="kbd-chip">Ctrl</span>
         </div>
       </div>
-
       <div></div>
     </main>
-
   </div>
 
   <script>
     const LETTERS = {
-      vowelsHard: ['А', 'О', 'У', 'Ы', 'Э'],
-      vowelsSoft: ['Я', 'Ё', 'Ю', 'И', 'Е'],
-      consonantsSonor: ['Й', 'Л', 'М', 'Н', 'Р'],
-      pairedVoiced: ['Б', 'В', 'Г', 'Д', 'Ж', 'З'],
-      pairedVoiceless: ['П', 'Ф', 'К', 'Т', 'Ш', 'С'],
-      consonantsOther: ['Х', 'Ц', 'Ч', 'Щ'],
-      signs: ['Ь', 'Ъ']
+      vowelsHard: ['А','О','У','Ы','Э'],
+      vowelsSoft: ['Я','Ё','Ю','И','Е'],
+      consonantsSonor: ['Й','Л','М','Н','Р'],
+      pairedVoiced: ['Б','В','Г','Д','Ж','З'],
+      pairedVoiceless: ['П','Ф','К','Т','Ш','С'],
+      consonantsOther: ['Х','Ц','Ч','Щ'],
+      signs: ['Ь','Ъ']
     };
+    const ALWAYS_SOFT = new Set(['Й','Ч','Щ']), ALWAYS_HARD = new Set(['Ж','Ш','Ц']);
+    const SOFTENING_LETTERS = new Set(['Е','Ё','И','Ю','Я','Ь']);
+    const VOICED_CONSONANTS = new Set([...LETTERS.consonantsSonor, ...LETTERS.pairedVoiced]);
+    const VOICELESS_CONSONANTS = new Set([...LETTERS.pairedVoiceless, ...LETTERS.consonantsOther]);
+    const VOWELS_SET = new Set([...LETTERS.vowelsHard, ...LETTERS.vowelsSoft]);
+    const RUSSIAN_ALPHABET = [...'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'];
 
-    const ALWAYS_SOFT = new Set(['Й', 'Ч', 'Щ']);
-    const ALWAYS_HARD = new Set(['Ж', 'Ш', 'Ц']);
-    const SOFTENING_LETTERS = new Set(['Е', 'Ё', 'И', 'Ю', 'Я', 'Ь']);
-
-    const VOICED_CONSONANTS = new Set(['Б', 'В', 'Г', 'Д', 'Ж', 'З', 'Й', 'Л', 'М', 'Н', 'Р']);
-    const VOICELESS_CONSONANTS = new Set(['П', 'Ф', 'К', 'Т', 'Ш', 'С', 'Х', 'Ц', 'Ч', 'Щ']);
+    const MATRIX_CONSONANTS = [...'БВГДЖЗКЛМНПРСТФХЦЧШЩ'];
+    const MATRIX_VOWELS_DEFAULT = ['А','О','У','Ы','Э','И','Е','Ё','Ю','Я'];
+    const MATRIX_VOWELS_ZAYTSEV = ['А','Я','О','Ё','У','Ю','Ы','И','Э','Е'];
+    const MATRIX_VOWELS_REVERSE = ['А','О','У','И','Э'];
+    const MATRIX_CONSONANTS_REVERSE = [...'БВДКЛМНПРСТХ'];
 
     let STICKER_ANIMALS = [
-      { icon: '🦁', name: 'Львёнок-грамотей', audio: 'Animals/ЛЬВЁНОК_ГРАМОТЕЙ.wav' },
-      { icon: '🦊', name: 'Хитрый лисёнок', audio: 'Animals/ХИТРЫЙ_ЛИСЁНОК.wav' },
-      { icon: '🐼', name: 'Панда-умница', audio: 'Animals/ПАНДА_УМНИЦА.wav' },
-      { icon: '🦉', name: 'Мудрая совушка', audio: 'Animals/МУДРАЯ_СОВУШКА.wav' },
-      { icon: '🐬', name: 'Весёлый дельфин', audio: 'Animals/ВЕСЁЛЫЙ_ДЕЛЬФИН.wav' },
-      { icon: '🐯', name: 'Шустрый тигрёнок', audio: 'Animals/ШУСТРЫЙ_ТИГРЁНОК.wav' },
-      { icon: '🐻', name: 'Мишка-читатель', audio: 'Animals/МИШКА_ЧИТАТЕЛЬ.wav' },
-      { icon: '🦄', name: 'Сказочный единорог', audio: 'Animals/СКАЗОЧНЫЙ_ЕДИНОРОГ.wav' },
-      { icon: '🐶', name: 'Добрый пёсик', audio: 'Animals/ДОБРЫЙ_ПЁСИК.wav' },
-      { icon: '🐱', name: 'Кот-учёный', audio: 'Animals/КОТ_УЧЁНЫЙ.wav' },
-      { icon: '🐨', name: 'Милая коала', audio: 'Animals/МИЛАЯ_КОАЛА.wav' },
-      { icon: '🦝', name: 'Енот-всезнайка', audio: 'Animals/ЕНОТ_ВСЕЗНАЙКА.wav' },
-      { icon: '🦔', name: 'Любознательный ёжик', audio: 'Animals/ЛЮБОЗНАТЕЛЬНЫЙ_ЁЖИК.wav' },
-      { icon: '🐰', name: 'Быстрый зайчик', audio: 'Animals/БЫСТРЫЙ_ЗАЙЧИК.wav' },
-      { icon: '🦒', name: 'Внимательный жираф', audio: 'Animals/ВНИМАТЕЛЬНЫЙ_ЖИРАФ.wav' },
-      { icon: '🐧', name: 'Пингвин-отличник', audio: 'Animals/ПИНГВИН_ОТЛИЧНИК.wav' },
-      { icon: '🐿️', name: 'Ловкая белочка', audio: 'Animals/ЛОВКАЯ_БЕЛОЧКА.wav' },
-      { icon: '🦩', name: 'Изящный фламинго', audio: 'Animals/ИЗЯЩНЫЙ_ФЛАМИНГО.wav' },
-      { icon: '🐢', name: 'Мудрая черепаха', audio: 'Animals/МУДРАЯ_ЧЕРЕПАХА.wav' },
-      { icon: '🦈', name: 'Смелая акула', audio: 'Animals/СМЕЛАЯ_АКУЛА.wav' }
-    ];
+      ['🦁','Львёнок-грамотей','ЛЬВЁНОК_ГРАМОТЕЙ'],['🦊','Хитрый лисёнок','ХИТРЫЙ_ЛИСЁНОК'],
+      ['🐼','Панда-умница','ПАНДА_УМНИЦА'],['🦉','Мудрая совушка','МУДРАЯ_СОВУШКА'],
+      ['🐬','Весёлый дельфин','ВЕСЁЛЫЙ_ДЕЛЬФИН'],['🐯','Шустрый тигрёнок','ШУСТРЫЙ_ТИГРЁНОК'],
+      ['🐻','Мишка-читатель','МИШКА_ЧИТАТЕЛЬ'],['🦄','Сказочный единорог','СКАЗОЧНЫЙ_ЕДИНОРОГ'],
+      ['🐶','Добрый пёсик','ДОБРЫЙ_ПЁСИК'],['🐱','Кот-учёный','КОТ_УЧЁНЫЙ'],
+      ['🐨','Милая коала','МИЛАЯ_КОАЛА'],['🦝','Енот-всезнайка','ЕНОТ_ВСЕЗНАЙКА'],
+      ['🦔','Любознательный ёжик','ЛЮБОЗНАТЕЛЬНЫЙ_ЁЖИК'],['🐰','Быстрый зайчик','БЫСТРЫЙ_ЗАЙЧИК'],
+      ['🦒','Внимательный жираф','ВНИМАТЕЛЬНЫЙ_ЖИРАФ'],['🐧','Пингвин-отличник','ПИНГВИН_ОТЛИЧНИК'],
+      ['🐿️','Ловкая белочка','ЛОВКАЯ_БЕЛОЧКА'],['🦩','Изящный фламинго','ИЗЯЩНЫЙ_ФЛАМИНГО'],
+      ['🐢','Мудрая черепаха','МУДРАЯ_ЧЕРЕПАХА'],['🦈','Смелая акула','СМЕЛАЯ_АКУЛА']
+    ].map(([icon, name, f]) => ({ icon, name, audio: `Animals/${f}.wav` }));
 
-    let SUPER_CHEERS = [
-      "Super/ПОЗДРАВЛЯЮ.wav",
-      "Super/ТЫ_МОЛОДЕЦ.wav",
-      "Super/УРААА.wav",
-      "Super/ТАК_ДЕРЖАТЬ.wav",
-      "Super/УМНИЦА.wav",
-      "Super/СУПЕР.wav",
-      "Super/ОТЛИЧНО.wav",
-      "Super/ТЫ_СМОГ.wav",
-      "Super/КРАСОТА.wav",
-      "Super/ЗДОРОВО.wav",
-      "Super/ВСЁ_ВЕРНО.wav",
-      "Super/КАК_БЫСТРО.wav",
-      "Super/ВОТ_ЭТО_ДА.wav",
-      "Super/ХОРОШО.wav",
-      "Super/ТЫ_СПРАВИЛСЯ.wav",
-      "Super/ГОРЖУСЬ_ТОБОЙ.wav"
-    ];
-
-    const SUPER_PHRASES = {
-      "ПОЗДРАВЛЯЮ.wav": "Поздравляю!",
-      "ТЫ_МОЛОДЕЦ.wav": "Ты молодец!",
-      "УРААА.wav": "Урааа!",
-      "ТАК_ДЕРЖАТЬ.wav": "Так держать!",
-      "УМНИЦА.wav": "Умница!",
-      "СУПЕР.wav": "Супер!",
-      "ОТЛИЧНО.wav": "Отлично!",
-      "ТЫ_СМОГ.wav": "Ты смог!",
-      "КРАСОТА.wav": "Красота!",
-      "ЗДОРОВО.wav": "Здорово!",
-      "ВСЁ_ВЕРНО.wav": "Всё верно!",
-      "КАК_БЫСТРО.wav": "Как быстро!",
-      "ВОТ_ЭТО_ДА.wav": "Вот это да!",
-      "ХОРОШО.wav": "Хорошо!",
-      "ТЫ_СПРАВИЛСЯ.wav": "Ты справился!",
-      "ГОРЖУСЬ_ТОБОЙ.wav": "Горжусь тобой!",
-      "Сначала прочитай вслух.wav": "Сначала прочитай вслух!",
-      "СНАЧАЛА_ПРОЧИТАЙ_ВСЛУХ.wav": "Сначала прочитай вслух!"
+    const SUPER_MAP = {
+      ПОЗДРАВЛЯЮ:"Поздравляю!", ТЫ_МОЛОДЕЦ:"Ты молодец!", УРААА:"Урааа!", ТАК_ДЕРЖАТЬ:"Так держать!",
+      УМНИЦА:"Умница!", СУПЕР:"Супер!", ОТЛИЧНО:"Отлично!", ТЫ_СМОГ:"Ты смог!", КРАСОТА:"Красота!",
+      ЗДОРОВО:"Здорово!", ВСЁ_ВЕРНО:"Всё верно!", КАК_БЫСТРО:"Как быстро!", ВОТ_ЭТО_ДА:"Вот это да!",
+      ХОРОШО:"Хорошо!", ТЫ_СПРАВИЛСЯ:"Ты справился!", ГОРЖУСЬ_ТОБОЙ:"Горжусь тобой!"
     };
+    let SUPER_CHEERS = Object.keys(SUPER_MAP).map(k => `Super/${k}.wav`);
+    const SUPER_PHRASES = Object.fromEntries([
+      ...Object.entries(SUPER_MAP).map(([k, v]) => [`${k}.wav`, v]),
+      ["Сначала прочитай вслух.wav", "Сначала прочитай вслух!"],
+      ["СНАЧАЛА_ПРОЧИТАЙ_ВСЛУХ.wav", "Сначала прочитай вслух!"]
+    ]);
 
-    let WORDS_ONE_SYLLABLE_3_4 = [];
-    let DICTIONARY_WORDS_2 = [];
-    let DICTIONARY_WORDS_3 = [];
+    let WORDS_ONE_SYLLABLE_3_4 = [], DICTIONARY_WORDS_2 = [], DICTIONARY_WORDS_3 = [];
+    let activeLetters = new Set(['А','У','О','М','С','Х','Р','Ы','Л','Н']);
+    let primaryMode = 'syllables', syllableModes = { open: true, reverse: false };
+    let matrixMode = 'open', matrixVowelOrder = 'default', alphabetSortMode = 'all';
+    let currentText = '', readCount = 0, cheerStreakCount = 0, allowLowercase = false;
+    let historyStack = [], historyIndex = -1, currentAnimalDeckIndex = 0, lastCheerIndex = -1;
+    let isStickerModalOpen = false, isSoundMuted = false, currentSoundType = 'softping', cheerFrequency = 'normal';
+
+    const CHEER_CONFIG = { often: { sticker: 10, cheer: 5 }, normal: { sticker: 20, cheer: 10 }, rare: { sticker: 40, cheer: 20 } };
+    const CARD_MIN_VIEW_TIME_MS = 1500, KEY_DEBOUNCE_INTERVAL_MS = 500, SPAM_WARNING_COOLDOWN_MS = 5000, AUDIO_MIN_INTERVAL_MS = 1000;
+
+    let lastCardSwitchTime = 0, lastKeyPressTime = 0, lastSpamWarningTime = 0, lastAudioPlayTime = 0;
+    let rapidSpamCount = 0, lastSpamAttemptTime = 0, startTime = Date.now(), cardTimestamps = [];
+    let currentSyllableAudio = null, currentSequenceId = 0, currentExtraAudio = null, matrixAudio = null, audioCtx = null;
+    const audioAvailabilityCache = new Map();
+    const $ = id => document.getElementById(id);
 
     async function loadWordsData() {
       try {
-        const response = await fetch('Words.json');
-        if (response.ok) {
-          const data = await response.json();
-          if (data.words1) WORDS_ONE_SYLLABLE_3_4 = data.words1;
-          else if (Array.isArray(data)) WORDS_ONE_SYLLABLE_3_4 = data;
-
-          if (data.words2) DICTIONARY_WORDS_2 = data.words2;
-          if (data.words3) DICTIONARY_WORDS_3 = data.words3;
-          if (data.animals) STICKER_ANIMALS = data.animals;
-          if (data.super) {
-            SUPER_CHEERS = data.super.map(item => (typeof item === 'string' ? item : item.audio));
-          }
-          updateCategoryBadges();
-          if (!['alphabet', 'matrix'].includes(primaryMode)) {
-            generateNext(true);
-          }
-        }
-      } catch (e) {
-        console.warn("Words.json загружается через локальный сервер или HTTP.");
-      }
+        const res = await fetch('Words.json');
+        if (!res.ok) return;
+        const d = await res.json();
+        WORDS_ONE_SYLLABLE_3_4 = d.words1 || (Array.isArray(d) ? d : []);
+        if (d.words2) DICTIONARY_WORDS_2 = d.words2;
+        if (d.words3) DICTIONARY_WORDS_3 = d.words3;
+        if (d.animals) STICKER_ANIMALS = d.animals;
+        if (d.super) SUPER_CHEERS = d.super.map(i => typeof i === 'string' ? i : i.audio);
+        updateCategoryBadges();
+        if (!['alphabet','matrix'].includes(primaryMode)) generateNext(true);
+      } catch (e) {}
     }
 
-    let currentAnimalDeckIndex = 0;
-    let isStickerModalOpen = false;
-
-    const RUSSIAN_ALPHABET = [
-      'А','Б','В','Г','Д','Е','Ё','Ж','З','И','Й',
-      'К','Л','М','Н','О','П','Р','С','Т','У','Ф',
-      'Х','Ц','Ч','Ш','Щ','Ъ','Ы','Ь','Э','Ю','Я'
-    ];
-
-    const VOWELS_SET = new Set([...LETTERS.vowelsHard, ...LETTERS.vowelsSoft]);
-
-    let activeLetters = new Set(['А', 'У', 'О', 'М', 'С', 'Х', 'Р', 'Ы', 'Л', 'Н']);
-    let primaryMode = 'syllables';
-    let syllableModes = { open: true, reverse: false };
-
-    let currentText = '';
-    let readCount = 0;
-    let cheerStreakCount = 0;
-    let allowLowercase = false;
-    let alphabetSortMode = 'all';
-
-    let historyStack = [];
-    let historyIndex = -1;
-
-    let isSoundMuted = false;
-    let currentSoundType = 'softping';
-
-    // НАСТРОЙКИ ЧАСТОТЫ ПОДБАДРИВАНИЯ
-    let cheerFrequency = 'normal';
-    const CHEER_CONFIG = {
-      often: { sticker: 10, cheer: 5 },   // Часто: в 2 раза чаще
-      normal: { sticker: 20, cheer: 10 }, // Нормально: по умолчанию
-      rare: { sticker: 40, cheer: 20 }    // Редко: в 2 раза реже
-    };
-
-    function changeCheerFrequency(val) {
-      if (CHEER_CONFIG[val]) {
-        cheerFrequency = val;
-      }
+    function changeCheerFrequency(val) { if (CHEER_CONFIG[val]) cheerFrequency = val; }
+    function changeFont(f) { document.body.className = `font-${f}`; }
+    function changeSoundEffect(v) { currentSoundType = v; playSoundEffect(); }
+    function toggleSoundMute() {
+      isSoundMuted = !isSoundMuted;
+      $('sound-mute-icon').textContent = isSoundMuted ? '🔇' : '🔊';
+      if (!isSoundMuted) playSoundEffect();
     }
-
-    // ВРЕМЕННЫЕ ЛИМИТЫ И ЗАЩИТА ОТ СПАМА
-    const CARD_MIN_VIEW_TIME_MS = 1500;   // 1. Карточку можно перелистнуть не ранее чем через 1.5 сек
-    const KEY_DEBOUNCE_INTERVAL_MS = 500; // 2. Между любыми нажатиями должно пройти не менее 0.5 сек
-    const SPAM_WARNING_COOLDOWN_MS = 5000;// Голосовое предупреждение не чаще 1 раза в 5 сек
-    const AUDIO_MIN_INTERVAL_MS = 1000;   // Озвучка карточки не чаще 1 раза в 1 сек
-
-    let lastCardSwitchTime = 0;   // Время показа текущей карточки на экране
-    let lastKeyPressTime = 0;     // Время последнего нажатия кнопки/клика (включая заблокированные)
-    let lastSpamWarningTime = 0;
-    let lastAudioPlayTime = 0;
-
-    let rapidSpamCount = 0;
-    let lastSpamAttemptTime = 0;
-
-    let startTime = Date.now();
-    let cardTimestamps = [];
-
-    let currentSyllableAudio = null;
-    let currentSequenceId = 0;
-    let currentExtraAudio = null;
-    const audioAvailabilityCache = new Map();
+    function openHelpModal() { $('help-modal').classList.add('open'); }
+    function closeHelpModal() { $('help-modal').classList.remove('open'); }
 
     function handleSpamAttempt() {
       const now = Date.now();
-      // Если пауза между попытками больше 2 секунд — серия спама сбрасывается
-      if (now - lastSpamAttemptTime > 2000) {
-        rapidSpamCount = 0;
-      }
+      if (now - lastSpamAttemptTime > 2000) rapidSpamCount = 0;
       lastSpamAttemptTime = now;
-      rapidSpamCount++;
-
-      // Штраф начисляется, если жмёт подряд более 5 раз (с 6-го нажатия)
-      if (rapidSpamCount > 5) {
-        triggerSpamPenalty();
-      }
-    }
-
-    function triggerSpamPenalty() {
-      cheerStreakCount = 0; // Сброс серии подбадриваний/стикеров в 0
-      const now = Date.now();
-      if (now - lastSpamWarningTime >= SPAM_WARNING_COOLDOWN_MS) {
-        lastSpamWarningTime = now;
-        playAudioFile('Super/Сначала прочитай вслух.wav');
-        const hintEl = document.getElementById('subtle-cheer-text');
-        if (hintEl) {
-          hintEl.textContent = 'Сначала прочитай вслух!';
-          setTimeout(() => {
-            if (hintEl.textContent === 'Сначала прочитай вслух!') {
-              hintEl.textContent = '';
-            }
-          }, 3500);
+      if (++rapidSpamCount > 5) {
+        cheerStreakCount = 0;
+        if (now - lastSpamWarningTime >= SPAM_WARNING_COOLDOWN_MS) {
+          lastSpamWarningTime = now;
+          playAudioFile('Super/Сначала прочитай вслух.wav');
+          const h = $('subtle-cheer-text');
+          if (h) {
+            h.textContent = 'Сначала прочитай вслух!';
+            setTimeout(() => { if (h.textContent === 'Сначала прочитай вслух!') h.textContent = ''; }, 3500);
+          }
         }
       }
     }
 
-    function stopExtraAudio() {
-      if (currentExtraAudio) {
-        try {
-          currentExtraAudio.pause();
-          currentExtraAudio.currentTime = 0;
-        } catch (e) {}
-        currentExtraAudio = null;
-      }
+    function stopAudioRef(ref) {
+      if (ref) { try { ref.pause(); ref.currentTime = 0; } catch (e) {} }
+      return null;
+    }
+    function stopExtraAudio() { currentExtraAudio = stopAudioRef(currentExtraAudio); }
+    function stopSyllableAudio() { currentSequenceId++; currentSyllableAudio = stopAudioRef(currentSyllableAudio); }
+
+    function getAudioVariants(text, folder) {
+      const t = text.trim();
+      if (!t) return [];
+      const u = t.toUpperCase(), l = t.toLowerCase(), c = u[0] + l.slice(1);
+      return [...new Set([u, l, c, t])].map(v => `${folder}/${encodeURIComponent(v)}.wav`);
+    }
+
+    function playCandidateList(urls, onAudioCreated, onDone) {
+      let idx = 0;
+      const tryNext = () => {
+        if (idx >= urls.length) return onDone && onDone();
+        const a = new Audio(urls[idx++]);
+        if (onAudioCreated) onAudioCreated(a);
+        a.onended = () => onDone && onDone();
+        a.onerror = tryNext;
+        const p = a.play();
+        if (p) p.catch(tryNext);
+      };
+      tryNext();
     }
 
     function playAudioFile(path) {
       if (isSoundMuted || !path) return;
       stopExtraAudio();
-
-      const cleanPath = path.replace(/\\/g, '/');
-      const candidates = [
-        encodeURI(cleanPath),
-        cleanPath,
-        encodeURI(cleanPath.replace(/^super\//i, 'Super/')),
-        encodeURI(cleanPath.replace(/^super\//i, 'super/'))
-      ];
-      const uniqueCandidates = [...new Set(candidates)];
-
-      function tryPlay(index) {
-        if (index >= uniqueCandidates.length) {
-          console.warn('Не удалось загрузить аудио:', path);
-          return;
-        }
-        const candidateUrl = uniqueCandidates[index];
-        const audio = new Audio(candidateUrl);
-        currentExtraAudio = audio;
-
-        audio.onended = () => {
-          if (currentExtraAudio === audio) {
-            currentExtraAudio = null;
-          }
-        };
-
-        audio.onerror = () => {
-          tryPlay(index + 1);
-        };
-
-        const playPromise = audio.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(() => {});
-        }
-      }
-
-      tryPlay(0);
+      const cl = path.replace(/\\/g, '/');
+      const urls = [...new Set([encodeURI(cl), cl, encodeURI(cl.replace(/^super\//i, 'Super/')), encodeURI(cl.replace(/^super\//i, 'super/'))])];
+      playCandidateList(urls, a => currentExtraAudio = a, () => currentExtraAudio = null);
     }
 
-    let lastCheerIndex = -1;
     function playRandomCheerAudio() {
-      if (!SUPER_CHEERS || SUPER_CHEERS.length === 0) return;
-      
-      let randomIndex = Math.floor(Math.random() * SUPER_CHEERS.length);
-      if (SUPER_CHEERS.length > 1 && randomIndex === lastCheerIndex) {
-        randomIndex = (randomIndex + 1 + Math.floor(Math.random() * (SUPER_CHEERS.length - 1))) % SUPER_CHEERS.length;
+      if (!SUPER_CHEERS.length) return;
+      let idx = Math.floor(Math.random() * SUPER_CHEERS.length);
+      if (SUPER_CHEERS.length > 1 && idx === lastCheerIndex) idx = (idx + 1) % SUPER_CHEERS.length;
+      lastCheerIndex = idx;
+      const item = SUPER_CHEERS[idx], path = typeof item === 'string' ? item : item.audio;
+      const h = $('subtle-cheer-text');
+      if (h && path) {
+        const fn = path.split('/').pop();
+        h.textContent = SUPER_PHRASES[decodeURIComponent(fn)] || SUPER_PHRASES[fn] || "";
       }
-      lastCheerIndex = randomIndex;
-
-      const item = SUPER_CHEERS[randomIndex];
-      const audioPath = typeof item === 'string' ? item : item.audio;
-      
-      const hintEl = document.getElementById('subtle-cheer-text');
-      if (hintEl && audioPath) {
-        const fileName = audioPath.split('/').pop();
-        const decodedFileName = decodeURIComponent(fileName);
-        hintEl.textContent = SUPER_PHRASES[decodedFileName] || SUPER_PHRASES[fileName] || "";
-      }
-
-      if (!isSoundMuted && audioPath) {
-        playAudioFile(audioPath);
-      }
-    }
-
-    function stopSyllableAudio() {
-      currentSequenceId++;
-      if (currentSyllableAudio) {
-        try {
-          currentSyllableAudio.pause();
-          currentSyllableAudio.currentTime = 0;
-        } catch (e) {}
-        currentSyllableAudio = null;
-      }
+      if (!isSoundMuted && path) playAudioFile(path);
     }
 
     async function checkFileExists(url) {
-      if (audioAvailabilityCache.has(url)) {
-        return audioAvailabilityCache.get(url);
-      }
+      if (audioAvailabilityCache.has(url)) return audioAvailabilityCache.get(url);
       try {
-        const res = await fetch(url, { method: 'HEAD' });
-        const exists = res.ok;
-        audioAvailabilityCache.set(url, exists);
-        return exists;
+        const ok = (await fetch(url, { method: 'HEAD' })).ok;
+        audioAvailabilityCache.set(url, ok);
+        return ok;
       } catch (e) {
         audioAvailabilityCache.set(url, false);
         return false;
       }
     }
 
-    async function checkCardFileExists(folder, baseName) {
-      const text = baseName.trim();
-      if (!text) return false;
-      const upper = text.toUpperCase();
-      const lower = text.toLowerCase();
-      const capitalized = text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
-      const variants = [...new Set([upper, lower, capitalized, text])];
-
-      for (const v of variants) {
-        const url = `${folder}/${encodeURIComponent(v)}.wav`;
-        if (await checkFileExists(url)) {
-          return true;
-        }
+    function getFolderForSyllable(s) {
+      if (!s) return 'audio';
+      const cl = s.trim().toUpperCase();
+      if (cl.length === 1 && VOWELS_SET.has(cl)) return 'audioletters';
+      if (cl.length === 2) {
+        const v0 = VOWELS_SET.has(cl[0]), v1 = VOWELS_SET.has(cl[1]);
+        const c0 = !v0 && !'ЬЪ'.includes(cl[0]), c1 = !v1 && !'ЬЪ'.includes(cl[1]);
+        if ((c0 && v1) || (v0 && c1)) return 'audio';
       }
-      return false;
-    }
-
-    function getFolderForSyllable(syllable) {
-      if (!syllable) return 'audio';
-      const clean = syllable.trim().toUpperCase();
-
-      if (clean.length === 1 && VOWELS_SET.has(clean)) {
-        return 'audioletters';
-      }
-
-      if (clean.length === 2) {
-        const isV0 = VOWELS_SET.has(clean[0]);
-        const isV1 = VOWELS_SET.has(clean[1]);
-        const isSign0 = (clean[0] === 'Ь' || clean[0] === 'Ъ');
-        const isSign1 = (clean[1] === 'Ь' || clean[1] === 'Ъ');
-
-        const isConsonant0 = !isV0 && !isSign0;
-        const isConsonant1 = !isV1 && !isSign1;
-
-        if ((isConsonant0 && isV1) || (isV0 && isConsonant1)) {
-          return 'audio';
-        }
-      }
-
       return 'audio_slogi';
     }
 
     async function checkCurrentCardAudioAvailable(text) {
-      if (!text || ['alphabet', 'matrix'].includes(primaryMode)) return false;
+      if (!text || ['alphabet','matrix'].includes(primaryMode)) return false;
       if (window.location.protocol === 'file:') return true;
-
-      if (primaryMode === 'one_syllable') {
-        return await checkCardFileExists('audio1slog', text);
+      const firstPart = primaryMode === 'one_syllable' ? text : text.split(/[-–]/).map(s => s.trim()).filter(Boolean)[0];
+      if (!firstPart) return false;
+      const folder = primaryMode === 'one_syllable' ? 'audio1slog' : getFolderForSyllable(firstPart);
+      for (const url of getAudioVariants(firstPart, folder)) {
+        if (await checkFileExists(url)) return true;
       }
-
-      const parts = text.split(/[-–]/).map(s => s.trim()).filter(Boolean);
-      if (parts.length === 0) return false;
-
-      const folder = getFolderForSyllable(parts[0]);
-      return await checkCardFileExists(folder, parts[0]);
+      return false;
     }
 
     async function updateSpeakerButtonState() {
-      const btn = document.getElementById('btn-card-audio');
+      const btn = $('btn-card-audio');
       if (!btn) return;
-      if (['alphabet', 'matrix'].includes(primaryMode) || !currentText) {
-        btn.classList.add('disabled');
-        return;
-      }
-      const available = await checkCurrentCardAudioAvailable(currentText);
-      if (available) {
-        btn.classList.remove('disabled');
-        btn.title = "Озвучить карточку";
-      } else {
-        btn.classList.add('disabled');
-        btn.title = "Озвучка не найдена";
-      }
+      const ok = !['alphabet','matrix'].includes(primaryMode) && currentText && await checkCurrentCardAudioAvailable(currentText);
+      btn.classList.toggle('disabled', !ok);
+      btn.title = ok ? "Озвучить карточку" : "Озвучка не найдена";
     }
 
     function onSpeakerCardClick(e) {
       if (e) e.stopPropagation();
-      const btn = document.getElementById('btn-card-audio');
-      if (btn && btn.classList.contains('disabled')) return;
-      playSyllableAudio();
+      const btn = $('btn-card-audio');
+      if (btn && !btn.classList.contains('disabled')) playSyllableAudio();
     }
 
-    function playSingleSyllable(syllable, sequenceId, folder = 'audio') {
-      return new Promise((resolve) => {
-        if (sequenceId !== null && sequenceId !== currentSequenceId) {
-          resolve();
-          return;
-        }
-        const text = syllable.trim();
-        if (!text) {
-          resolve();
-          return;
-        }
-
-        const upper = text.toUpperCase();
-        const lower = text.toLowerCase();
-        const capitalized = text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
-
-        const variants = [...new Set([upper, lower, capitalized, text])];
-        const candidateUrls = variants.map(v => `${folder}/${encodeURIComponent(v)}.wav`);
-
-        let index = 0;
-        let finished = false;
-
-        const finish = () => {
-          if (!finished) {
-            finished = true;
-            resolve();
-          }
-        };
-
-        const timer = setTimeout(() => {
-          finish();
-        }, 4000);
-
-        function tryNext() {
-          if (finished || (sequenceId !== null && sequenceId !== currentSequenceId)) {
-            clearTimeout(timer);
-            finish();
-            return;
-          }
-          if (index >= candidateUrls.length) {
-            clearTimeout(timer);
-            finish();
-            return;
-          }
-
-          const url = candidateUrls[index++];
-          const audio = new Audio(url);
-          currentSyllableAudio = audio;
-
-          audio.onended = () => {
-            clearTimeout(timer);
-            finish();
-          };
-
-          audio.onerror = () => {
-            tryNext();
-          };
-
-          const promise = audio.play();
-          if (promise !== undefined) {
-            promise.catch(() => {
-              tryNext();
-            });
-          }
-        }
-
-        tryNext();
+    function playSingleSyllable(syl, seqId, folder = 'audio') {
+      return new Promise(resolve => {
+        if (seqId !== null && seqId !== currentSequenceId) return resolve();
+        const urls = getAudioVariants(syl, folder);
+        if (!urls.length) return resolve();
+        let done = false;
+        const finish = () => { if (!done) { done = true; clearTimeout(timer); resolve(); } };
+        const timer = setTimeout(finish, 4000);
+        playCandidateList(urls, a => {
+          if (seqId !== null && seqId !== currentSequenceId) return finish();
+          currentSyllableAudio = a;
+        }, finish);
       });
     }
 
     async function playSyllableAudio() {
-      if (['alphabet', 'matrix'].includes(primaryMode)) return;
-      if (!currentText) return;
-      if (isSoundMuted) return;
-
+      if (['alphabet','matrix'].includes(primaryMode) || !currentText || isSoundMuted) return;
       const now = Date.now();
-      if (now - lastAudioPlayTime < AUDIO_MIN_INTERVAL_MS) {
-        handleSpamAttempt();
-        return;
-      }
-      lastAudioPlayTime = now;
-      rapidSpamCount = 0;
-
-      stopSyllableAudio();
-      stopExtraAudio();
-      const sequenceId = currentSequenceId;
-
-      if (primaryMode === 'one_syllable') {
-        await playSingleSyllable(currentText, sequenceId, 'audio1slog');
-        return;
-      }
-
+      if (now - lastAudioPlayTime < AUDIO_MIN_INTERVAL_MS) return handleSpamAttempt();
+      lastAudioPlayTime = now; rapidSpamCount = 0;
+      stopSyllableAudio(); stopExtraAudio();
+      const seqId = currentSequenceId;
+      if (primaryMode === 'one_syllable') return await playSingleSyllable(currentText, seqId, 'audio1slog');
       const parts = currentText.split(/[-–]/).map(s => s.trim()).filter(Boolean);
-      if (parts.length === 0) return;
-
       for (let i = 0; i < parts.length; i++) {
-        if (sequenceId !== currentSequenceId) break;
-        const folder = getFolderForSyllable(parts[i]);
-        await playSingleSyllable(parts[i], sequenceId, folder);
-        if (sequenceId !== currentSequenceId) break;
-        if (i < parts.length - 1) {
-          await new Promise(r => setTimeout(r, 70));
-        }
+        if (seqId !== currentSequenceId) break;
+        await playSingleSyllable(parts[i], seqId, getFolderForSyllable(parts[i]));
+        if (seqId !== currentSequenceId) break;
+        if (i < parts.length - 1) await new Promise(r => setTimeout(r, 70));
       }
     }
 
     function updateTimers() {
-      const now = Date.now();
-      const elapsedSecTotal = Math.floor((now - startTime) / 1000);
-      const mins = Math.floor(elapsedSecTotal / 60).toString().padStart(2, '0');
-      const secs = (elapsedSecTotal % 60).toString().padStart(2, '0');
-      document.getElementById('session-time').textContent = `${mins}:${secs}`;
-
-      const speedBadge = document.getElementById('speed-badge');
-      const speedCountEl = document.getElementById('speed-count');
-
-      if (['alphabet', 'matrix'].includes(primaryMode)) {
-        speedBadge.classList.add('paused');
-        speedCountEl.textContent = '⏸';
-        return;
-      } else {
-        speedBadge.classList.remove('paused');
+      const now = Date.now(), sec = Math.floor((now - startTime) / 1000);
+      $('session-time').textContent = `${String(Math.floor(sec / 60)).padStart(2,'0')}:${String(sec % 60).padStart(2,'0')}`;
+      const sb = $('speed-badge'), sc = $('speed-count');
+      if (['alphabet','matrix'].includes(primaryMode)) {
+        sb.classList.add('paused'); sc.textContent = '⏸'; return;
       }
-
+      sb.classList.remove('paused');
       cardTimestamps = cardTimestamps.filter(t => now - t <= 60000);
-      let speed = cardTimestamps.length;
-      
-      if (elapsedSecTotal > 3 && elapsedSecTotal < 60) {
-        speed = Math.round((readCount / elapsedSecTotal) * 60);
-      }
-      speedCountEl.textContent = speed;
+      sc.textContent = (sec > 3 && sec < 60) ? Math.round((readCount / sec) * 60) : cardTimestamps.length;
     }
-
     setInterval(updateTimers, 1000);
 
-    let audioCtx = null;
-
+    // Компактный синтезатор всех 10 звуковых эффектов
     function playSoundEffect() {
       if (isSoundMuted) return;
-
       try {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         if (audioCtx.state === 'suspended') audioCtx.resume();
-
-        const t = audioCtx.currentTime;
-
-        switch (currentSoundType) {
-          case 'softping': {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(659.25, t);
-            gain.gain.setValueAtTime(0.14, t);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start(t);
-            osc.stop(t + 0.17);
-            break;
-          }
-          case 'popit': {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(450, t);
-            osc.frequency.exponentialRampToValueAtTime(140, t + 0.045);
-            gain.gain.setValueAtTime(0.25, t);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start(t);
-            osc.stop(t + 0.055);
-            break;
-          }
-          case 'bell': {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(880, t);
-            gain.gain.setValueAtTime(0.2, t);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start(t);
-            osc.stop(t + 0.41);
-            break;
-          }
-          default: {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(880, t);
-            gain.gain.setValueAtTime(0.15, t);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start(t);
-            osc.stop(t + 0.13);
-            break;
-          }
-        }
+        const t = audioCtx.currentTime, osc = audioCtx.createOscillator(), g = audioCtx.createGain();
+        const presets = {
+          softping:  ['sine', 659.25, null, 0.14, 0.16],
+          popit:     ['sine', 450, 140, 0.25, 0.05],
+          bell:      ['sine', 880, null, 0.2, 0.4],
+          xylophone: ['triangle', 1046.5, null, 0.22, 0.18],
+          woodblock: ['sine', 780, 320, 0.28, 0.06],
+          waterdrop: ['sine', 300, 950, 0.22, 0.12],
+          marimba:   ['sine', 523.25, null, 0.25, 0.22],
+          boing:     ['sine', 220, 580, 0.2, 0.28],
+          flute:     ['triangle', 1318.5, 1567.9, 0.14, 0.22],
+          magic:     ['sine', 1567.98, 2093, 0.15, 0.35]
+        };
+        const [type, f1, f2, vol, dur] = presets[currentSoundType] || ['triangle', 880, null, 0.15, 0.12];
+        osc.type = type;
+        osc.frequency.setValueAtTime(f1, t);
+        if (f2) osc.frequency.exponentialRampToValueAtTime(f2, t + dur * 0.9);
+        g.gain.setValueAtTime(vol, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+        osc.connect(g); g.connect(audioCtx.destination);
+        osc.start(t); osc.stop(t + dur + 0.01);
       } catch (e) {}
     }
 
-    function toggleSoundMute() {
-      isSoundMuted = !isSoundMuted;
-      document.getElementById('sound-mute-icon').textContent = isSoundMuted ? '🔇' : '🔊';
-      if (!isSoundMuted) {
-        playSoundEffect();
-      }
-    }
-
-    function changeSoundEffect(val) {
-      currentSoundType = val;
-      playSoundEffect();
-    }
-
-    function changeFont(fontName) {
-      document.body.className = `font-${fontName}`;
-    }
-
-    function openHelpModal() {
-      document.getElementById('help-modal').classList.add('open');
-    }
-
-    function closeHelpModal() {
-      document.getElementById('help-modal').classList.remove('open');
-    }
-
-    function onHelpBackdropClick(e) {
-      if (e.target.id === 'help-modal') closeHelpModal();
-    }
-
-    function createLetterCheckbox(char, type) {
-      const item = document.createElement('div');
-      item.className = `letter-item ${type}`;
-
-      const input = document.createElement('input');
-      input.type = 'checkbox';
-      input.id = `letter-${char}`;
-      input.value = char;
-      input.checked = activeLetters.has(char);
-
-      input.addEventListener('change', (e) => {
-        if (e.target.checked) activeLetters.add(char);
-        else activeLetters.delete(char);
-        updateCategoryBadges();
-        if (primaryMode === 'alphabet') {
-          renderAlphabetView();
-        } else if (primaryMode === 'matrix') {
-          renderMatrix();
-        } else {
-          generateNext(true);
-        }
-      });
-
-      const label = document.createElement('label');
-      label.className = 'letter-label';
-      label.htmlFor = `letter-${char}`;
-      label.textContent = char;
-
-      if (VOICED_CONSONANTS.has(char)) {
-        const iconSpan = document.createElement('span');
-        iconSpan.className = 'letter-badge-icon';
-        iconSpan.textContent = '🔔';
-        label.appendChild(iconSpan);
-      } else if (VOICELESS_CONSONANTS.has(char)) {
-        const iconSpan = document.createElement('span');
-        iconSpan.className = 'letter-badge-icon';
-        iconSpan.textContent = '🎧';
-        label.appendChild(iconSpan);
-      }
-
-      item.appendChild(input);
-      item.appendChild(label);
-      return item;
-    }
-
     function renderLetterGrids() {
-      const mount = (id, list, defaultType) => {
-        const el = document.getElementById(id);
-        el.innerHTML = '';
-        list.forEach(c => {
-          let itemType = defaultType;
-          if (ALWAYS_SOFT.has(c)) {
-            itemType = 'consonant-soft';
-          }
-          el.appendChild(createLetterCheckbox(c, itemType));
+      const mount = (id, list, defType) => {
+        const el = $(id); el.innerHTML = '';
+        list.forEach(ch => {
+          const type = ALWAYS_SOFT.has(ch) ? 'consonant-soft' : defType;
+          const badge = VOICED_CONSONANTS.has(ch) ? '🔔' : (VOICELESS_CONSONANTS.has(ch) ? '🎧' : '');
+          const div = document.createElement('div');
+          div.className = `letter-item ${type}`;
+          div.innerHTML = `<input type="checkbox" id="letter-${ch}" value="${ch}" ${activeLetters.has(ch)?'checked':''}>
+            <label class="letter-label" for="letter-${ch}">${ch}${badge?`<span class="letter-badge-icon">${badge}</span>`:''}</label>`;
+          div.querySelector('input').addEventListener('change', e => {
+            e.target.checked ? activeLetters.add(ch) : activeLetters.delete(ch);
+            refreshCurrentMode();
+          });
+          el.appendChild(div);
         });
       };
-
       mount('grid-vowels-hard', LETTERS.vowelsHard, 'vowel');
       mount('grid-vowels-soft', LETTERS.vowelsSoft, 'vowel');
       mount('grid-consonants-sonor', LETTERS.consonantsSonor, 'consonant');
@@ -1243,752 +590,272 @@
       mount('grid-signs', LETTERS.signs, 'sign');
     }
 
-    /* БАЗОВЫЕ НАБОРЫ ДЛЯ МАТРИЦЫ И КАРТОЧЕК */
-    const MATRIX_CONSONANTS = ["Б", "В", "Г", "Д", "Ж", "З", "К", "Л", "М", "Н", "П", "Р", "С", "Т", "Ф", "Х", "Ц", "Ч", "Ш", "Щ"];
-    
-    // Порядок гласных по умолчанию (твёрдые -> мягкие)
-    const MATRIX_VOWELS_DEFAULT = ["А", "О", "У", "Ы", "Э", "И", "Е", "Ё", "Ю", "Я"];
-    // Порядок гласных по Зайцеву (пары твёрдая–мягкая)
-    const MATRIX_VOWELS_ZAYTSEV = ["А", "Я", "О", "Ё", "У", "Ю", "Ы", "И", "Э", "Е"];
-    
-    let matrixVowelOrder = 'default';
-
-    const MATRIX_VOWELS_REVERSE = ["А", "О", "У", "И", "Э"];
-    const MATRIX_CONSONANTS_REVERSE = ["Б", "В", "Д", "К", "Л", "М", "Н", "П", "Р", "С", "Т", "Х"];
-
     function isInvalidOpen(c, v) {
-      if (['Ж', 'Ш'].includes(c) && ['Ы', 'Я', 'Ю'].includes(v)) return true;
-      if (['Ч', 'Щ'].includes(c) && ['Я', 'Ю', 'Ы'].includes(v)) return true;
-      if (['Г', 'К', 'Х'].includes(c) && ['Ы', 'Э', 'Я', 'Ю', 'Ё'].includes(v)) return true;
-      if (c === 'Ц' && ['Я', 'Ю', 'Ё', 'Э'].includes(v)) return true;
-      return false;
+      return (['Ж','Ш'].includes(c) && ['Ы','Я','Ю'].includes(v)) ||
+             (['Ч','Щ'].includes(c) && ['Я','Ю','Ы'].includes(v)) ||
+             (['Г','К','Х'].includes(c) && ['Ы','Э','Я','Ю','Ё'].includes(v)) ||
+             (c === 'Ц' && ['Я','Ю','Ё','Э'].includes(v));
     }
 
-    function isValidOpenSyllable(c, v) {
-      if (!MATRIX_CONSONANTS.includes(c)) return false;
-      if (!MATRIX_VOWELS_DEFAULT.includes(v)) return false;
-      return !isInvalidOpen(c, v);
-    }
-
-    function isValidReverseSyllable(v, c) {
-      return MATRIX_VOWELS_REVERSE.includes(v) && MATRIX_CONSONANTS_REVERSE.includes(c);
-    }
-
-    function getAvailableSyllables(allowOpen, allowReverse) {
+    function getAvailableSyllables(open, rev) {
       const vowels = [...activeLetters].filter(l => VOWELS_SET.has(l));
-      const consonants = [...activeLetters].filter(l => !VOWELS_SET.has(l) && l !== 'Ь' && l !== 'Ъ');
+      const cons = [...activeLetters].filter(l => !VOWELS_SET.has(l) && !'ЬЪ'.includes(l));
       const res = [];
-
-      if (allowOpen) {
-        consonants.forEach(c => {
-          vowels.forEach(v => {
-            if (isValidOpenSyllable(c, v)) res.push(c + v);
-          });
-        });
-      }
-
-      if (allowReverse) {
-        vowels.forEach(v => {
-          consonants.forEach(c => {
-            if (isValidReverseSyllable(v, c)) res.push(v + c);
-          });
-        });
-      }
-
+      if (open) cons.forEach(c => vowels.forEach(v => { if (MATRIX_CONSONANTS.includes(c) && MATRIX_VOWELS_DEFAULT.includes(v) && !isInvalidOpen(c, v)) res.push(c + v); }));
+      if (rev) vowels.forEach(v => cons.forEach(c => { if (MATRIX_VOWELS_REVERSE.includes(v) && MATRIX_CONSONANTS_REVERSE.includes(c)) res.push(v + c); }));
       return res;
     }
 
-    function getAvailableWordsOneSyllable() {
-      return WORDS_ONE_SYLLABLE_3_4.filter(word => {
-        return word.split('').every(ch => activeLetters.has(ch));
-      });
-    }
-
-    function getAvailableWords2() {
-      return DICTIONARY_WORDS_2.filter(w => {
-        const clean = w.replace(/-/g, '').split('');
-        return clean.every(ch => activeLetters.has(ch));
-      });
-    }
-
-    function getAvailableWords3() {
-      return DICTIONARY_WORDS_3.filter(w => {
-        const clean = w.replace(/-/g, '').split('');
-        return clean.every(ch => activeLetters.has(ch));
-      });
-    }
+    const filterWords = list => list.filter(w => [...w.replace(/-/g, '')].every(ch => activeLetters.has(ch)));
+    const getAvailableWordsOneSyllable = () => filterWords(WORDS_ONE_SYLLABLE_3_4);
+    const getAvailableWords2 = () => filterWords(DICTIONARY_WORDS_2);
+    const getAvailableWords3 = () => filterWords(DICTIONARY_WORDS_3);
 
     function updateCategoryBadges() {
-      const alphaCount = activeLetters.size;
-      const openCount = getAvailableSyllables(true, false).length;
-      const reverseCount = getAvailableSyllables(false, true).length;
-      const oneSyllableCount = getAvailableWordsOneSyllable().length;
-      const words2Count = getAvailableWords2().length;
-      const words3Count = getAvailableWords3().length;
-
-      document.getElementById('panel-active-count').textContent = `${alphaCount}/33`;
-      document.getElementById('count-alphabet').textContent = alphaCount;
-      document.getElementById('count-open').textContent = openCount;
-      document.getElementById('count-reverse').textContent = reverseCount;
-      document.getElementById('count-one-syllable').textContent = oneSyllableCount;
-      document.getElementById('count-words2').textContent = words2Count;
-      document.getElementById('count-words3').textContent = words3Count;
+      $('panel-active-count').textContent = `${activeLetters.size}/33`;
+      $('count-alphabet').textContent = activeLetters.size;
+      $('count-open').textContent = getAvailableSyllables(true, false).length;
+      $('count-reverse').textContent = getAvailableSyllables(false, true).length;
+      $('count-one-syllable').textContent = getAvailableWordsOneSyllable().length;
+      $('count-words2').textContent = getAvailableWords2().length;
+      $('count-words3').textContent = getAvailableWords3().length;
     }
 
-    function createAlphabetTile(upperChar, type, isInactive = false) {
-      const tile = document.createElement('div');
-      let effectiveType = type;
-      if (ALWAYS_SOFT.has(upperChar)) {
-        effectiveType = 'consonant-soft';
-      }
-      tile.className = `alphabet-letter-tile ${effectiveType} ${isInactive ? 'inactive' : ''}`;
-      tile.title = `Буква ${upperChar}`;
-
-      const upper = document.createElement('span');
-      upper.className = 'tile-upper';
-      upper.textContent = upperChar;
-
-      const lower = document.createElement('span');
-      lower.className = 'tile-lower';
-      lower.textContent = upperChar.toLowerCase();
-
-      tile.appendChild(upper);
-      tile.appendChild(lower);
-      return tile;
+    // Генерация «Ленты букв» (Помощник) компактным шаблоном
+    function initHelperRibbon() {
+      const vCell = (ch, dual) => `<div class="ribbon-cell ${dual?'bg-vowel-dual':'bg-vowel'}" ${dual?'title="2 звука в начале слова, после гласной или ъ/ь"':''}>${ch}</div>`;
+      const cCell = (ch, cls) => `<div class="cons-cell ${cls}">${ch}</div>`;
+      $('alpha-helper-view').innerHTML = `
+        <div class="ribbon-wrapper">
+          <div class="ribbon-table">
+            <div class="ribbon-vowels">
+              <div class="col-title">Буквы гласных звуков</div>
+              <div class="vowel-row"><div class="row-hint">Гласные 1-го ряда обозначают твёрдость согласных</div><div class="letters-row">${['а','о','у','ы','э'].map(c=>vCell(c,false)).join('')}</div></div>
+              <div class="vowel-row"><div class="row-hint">Гласные 2-го ряда обозначают мягкость согласных</div><div class="letters-row">${['я','ё','ю','и','е'].map(c=>vCell(c,c!=='и')).join('')}</div></div>
+            </div>
+            <div class="ribbon-consonants">
+              <div class="col-title">Буквы согласных звуков</div>
+              <div class="consonant-body">
+                <div class="cons-row cons-row-1"><div class="row-hint">В первом ряду — звонкие согласные звуки</div>
+                  <div class="cons-cells-row">
+                    <div class="cons-subgroup group-unpaired-voiced">${cCell('й','bg-green-soft')}${['н','м','л','р'].map(c=>cCell(c,'bg-split')).join('')}</div>
+                    <div class="cons-subgroup group-paired">${['б','в','г','д','з'].map(c=>cCell(c,'bg-split')).join('')}${cCell('ж','bg-blue-hard')}</div>
+                    <div class="cons-subgroup group-unpaired-voiceless">${cCell('🔔','bg-empty bg-icon')}${cCell('','bg-empty').repeat(3)}</div>
+                  </div>
+                </div>
+                <div class="cons-row"><div class="row-hint">Во втором ряду — глухие согласные звуки</div>
+                  <div class="cons-cells-row">
+                    <div class="cons-subgroup group-unpaired-voiceless">${cCell('','bg-empty').repeat(2)}${cCell('🎧','bg-empty bg-icon')}${cCell('','bg-empty').repeat(2)}</div>
+                    <div class="cons-subgroup group-paired">${['п','ф','к','т','с'].map(c=>cCell(c,'bg-split')).join('')}${cCell('ш','bg-blue-hard')}</div>
+                    <div class="cons-subgroup group-unpaired-voiceless">${['х','ц'].map(c=>cCell(c,'bg-split')).join('')}${['ч','щ'].map(c=>cCell(c,'bg-green-soft')).join('')}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="ribbon-signs"><div class="col-title">Без звука</div><div class="sign-row">ъ</div><div class="sign-row">ь</div></div>
+          </div>
+          <div class="ribbon-legend">
+            <div class="legend-item"><div class="legend-swatch bg-vowel-dual"></div><span><strong>Я, Ё, Ю, Е:</strong> 2 звука</span></div>
+            <div class="legend-item"><div class="legend-swatch bg-split"></div><span><strong>Двухцветный:</strong> твёрдый/мягкий</span></div>
+            <div class="legend-item"><div class="legend-swatch bg-blue-hard"></div><span><strong>Синий:</strong> всегда твёрдые [ж, ш, ц]</span></div>
+            <div class="legend-item"><div class="legend-swatch bg-green-soft"></div><span><strong>Зелёный:</strong> всегда мягкие [й', ч', щ']</span></div>
+          </div>
+        </div>`;
     }
 
     function renderAlphabetView() {
       if (alphabetSortMode === 'helper') return;
-
-      const allGrid = document.getElementById('alpha-all-grid');
-      allGrid.innerHTML = '';
-
+      const g = $('alpha-all-grid'); g.innerHTML = '';
       RUSSIAN_ALPHABET.forEach(ch => {
-        let type = 'consonant';
-        if (VOWELS_SET.has(ch)) type = 'vowel';
-        else if (ch === 'Ь' || ch === 'Ъ') type = 'sign';
-
-        const isActive = activeLetters.has(ch);
-        allGrid.appendChild(createAlphabetTile(ch, type, !isActive));
+        const type = VOWELS_SET.has(ch) ? 'vowel' : ('ЬЪ'.includes(ch) ? 'sign' : (ALWAYS_SOFT.has(ch) ? 'consonant-soft' : 'consonant'));
+        const div = document.createElement('div');
+        div.className = `alphabet-letter-tile ${type} ${activeLetters.has(ch) ? '' : 'inactive'}`;
+        div.innerHTML = `<span class="tile-upper">${ch}</span><span class="tile-lower">${ch.toLowerCase()}</span>`;
+        g.appendChild(div);
       });
     }
 
     function setAlphabetSort(mode) {
       alphabetSortMode = mode;
-      document.getElementById('btn-sort-all').classList.toggle('active', mode === 'all');
-      document.getElementById('btn-sort-helper').classList.toggle('active', mode === 'helper');
-
-      document.getElementById('alpha-all-view').style.display = mode === 'all' ? 'block' : 'none';
-      document.getElementById('alpha-helper-view').style.display = mode === 'helper' ? 'block' : 'none';
-
-      if (mode === 'all') {
-        renderAlphabetView();
-      }
+      $('btn-sort-all').classList.toggle('active', mode === 'all');$('btn-sort-helper').classList.toggle('active', mode === 'helper');
+      $('alpha-all-view').style.display = mode === 'all' ? 'flex' : 'none';$('alpha-helper-view').style.display = mode === 'helper' ? 'block' : 'none';
+      if (mode === 'all') renderAlphabetView();
     }
 
-    let matrixMode = 'open';
-    let matrixAudio = null;
-
-    function playMatrixSyllable(syl, cellElement) {
+    function playMatrixSyllable(syl, cell) {
       if (isSoundMuted || !syl) return;
-      if (matrixAudio) {
-        try {
-          matrixAudio.pause();
-          matrixAudio.currentTime = 0;
-        } catch (e) {}
-        matrixAudio = null;
-      }
-
-      cellElement.classList.add('playing');
-      setTimeout(() => cellElement.classList.remove('playing'), 300);
-
-      const text = syl.trim();
-      const upper = text.toUpperCase();
-      const lower = text.toLowerCase();
-      const capitalized = text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
-      const variants = [...new Set([upper, lower, capitalized, text])];
-      const candidateUrls = variants.map(v => `audio/${encodeURIComponent(v)}.wav`);
-
-      let idx = 0;
-      function tryNext() {
-        if (idx >= candidateUrls.length) return;
-        const audio = new Audio(candidateUrls[idx++]);
-        matrixAudio = audio;
-        audio.play().catch(() => tryNext());
-      }
-      tryNext();
-    }
-
-    function createColoredSyllableHTML(c, v, isReverse = false) {
-      const vSpan = `<span class="m-char" style="color: var(--vowel-color);">${v}</span>`;
-      
-      let isSoft = false;
-      if (ALWAYS_SOFT.has(c)) {
-        isSoft = true;
-      } else if (!ALWAYS_HARD.has(c)) {
-        if (!isReverse && SOFTENING_LETTERS.has(v)) {
-          isSoft = true;
-        }
-      }
-
-      const cColor = isSoft ? 'var(--consonant-soft-color)' : 'var(--consonant-color)';
-      const cSpan = `<span class="m-char" style="color: ${cColor};">${c}</span>`;
-
-      return isReverse ? (vSpan + cSpan) : (cSpan + vSpan);
+      matrixAudio = stopAudioRef(matrixAudio);
+      cell.classList.add('playing');
+      setTimeout(() => cell.classList.remove('playing'), 300);
+      playCandidateList(getAudioVariants(syl, 'audio'), a => matrixAudio = a);
     }
 
     function renderMatrix() {
-      const table = document.getElementById('matrix-table');
+      const table = $('matrix-table');
       if (!table) return;
-      table.innerHTML = '';
+      const isRev = matrixMode === 'reverse';
+      const vowels = isRev ? MATRIX_VOWELS_REVERSE : (matrixVowelOrder === 'zaytsev' ? MATRIX_VOWELS_ZAYTSEV : MATRIX_VOWELS_DEFAULT);
+      const cons = isRev ? MATRIX_CONSONANTS_REVERSE : MATRIX_CONSONANTS;
 
-      if (matrixMode === 'open') {
-        const thead = document.createElement('thead');
-        const headerRow = document.createElement('tr');
-        
-        const corner = document.createElement('th');
-        corner.className = 'corner-cell';
-        corner.innerHTML = 'Согл.<br>↓ Глас.→';
-        headerRow.appendChild(corner);
-
-        const currentVowelsOpen = (matrixVowelOrder === 'zaytsev') ? MATRIX_VOWELS_ZAYTSEV : MATRIX_VOWELS_DEFAULT;
-
-        currentVowelsOpen.forEach((v, colIdx) => {
-          const th = document.createElement('th');
-          th.className = 'vowel-header';
-          th.id = `col-header-${colIdx}`;
-          th.textContent = v;
-          headerRow.appendChild(th);
-        });
-        thead.appendChild(headerRow);
-
-        const tbody = document.createElement('tbody');
-        MATRIX_CONSONANTS.forEach((c, rowIdx) => {
-          const tr = document.createElement('tr');
-          
-          const thCons = document.createElement('th');
-          const isVoiced = VOICED_CONSONANTS.has(c);
-          thCons.className = `consonant-header ${isVoiced ? 'voiced-cons' : ''}`;
-          thCons.id = `row-header-${rowIdx}`;
-          thCons.textContent = c;
-          if (isVoiced) {
-            thCons.title = `Буква ${c} — звонкая согласная`;
+      let html = `<thead><tr><th class="corner-cell">Согл.<br>↓ Глас.→</th>${vowels.map((v, i) => `<th class="vowel-header" id="col-header-${i}">${v}</th>`).join('')}</tr></thead><tbody>`;
+      cons.forEach((c, rIdx) => {
+        const voiced = VOICED_CONSONANTS.has(c);
+        html += `<tr><th class="consonant-header ${voiced?'voiced-cons':''}" id="row-header-${rIdx}">${c}</th>`;
+        vowels.forEach((v, cIdx) => {
+          if (!isRev && isInvalidOpen(c, v)) {
+            html += `<td class="disabled-cell" title="Нет в языке">—</td>`;
+          } else {
+            const act = activeLetters.has(c) && activeLetters.has(v);
+            const soft = ALWAYS_SOFT.has(c) || (!ALWAYS_HARD.has(c) && !isRev && SOFTENING_LETTERS.has(v));
+            const cSpan = `<span class="m-char" style="color:var(${soft?'--consonant-soft-color':'--consonant-color'})">${c}</span>`;
+            const vSpan = `<span class="m-char" style="color:var(--vowel-color)">${v}</span>`;
+            const syl = isRev ? v + c : c + v;
+            html += `<td class="syllable-cell ${act?'':'inactive-syllable'}" data-syl="${act?syl:''}" data-r="${rIdx}" data-c="${cIdx}">${isRev ? vSpan + cSpan : cSpan + vSpan}</td>`;
           }
-          tr.appendChild(thCons);
-
-          currentVowelsOpen.forEach((v, colIdx) => {
-            const td = document.createElement('td');
-            const syl = c + v;
-
-            if (isInvalidOpen(c, v)) {
-              td.className = 'disabled-cell';
-              td.textContent = '—';
-              td.title = `Слога "${syl}" нет в правилах русского языка`;
-            } else {
-              const isActive = activeLetters.has(c) && activeLetters.has(v);
-              td.className = `syllable-cell ${isActive ? '' : 'inactive-syllable'}`;
-              td.innerHTML = createColoredSyllableHTML(c, v, false);
-
-              if (isActive) {
-                td.onclick = () => playMatrixSyllable(syl, td);
-                td.onmouseenter = () => {
-                  const r = document.getElementById(`row-header-${rowIdx}`);
-                  const cl = document.getElementById(`col-header-${colIdx}`);
-                  if (r) r.classList.add('highlight-header');
-                  if (cl) cl.classList.add('highlight-header');
-                };
-                td.onmouseleave = () => {
-                  const r = document.getElementById(`row-header-${rowIdx}`);
-                  const cl = document.getElementById(`col-header-${colIdx}`);
-                  if (r) r.classList.remove('highlight-header');
-                  if (cl) cl.classList.remove('highlight-header');
-                };
-              }
-            }
-            tr.appendChild(td);
-          });
-
-          tbody.appendChild(tr);
         });
-        table.appendChild(thead);
-        table.appendChild(tbody);
+        html += `</tr>`;
+      });
+      table.innerHTML = html + `</tbody>`;
 
-      } else {
-        const thead = document.createElement('thead');
-        const headerRow = document.createElement('tr');
-        
-        const corner = document.createElement('th');
-        corner.className = 'corner-cell';
-        corner.innerHTML = 'Согл.<br>↓ Глас.→';
-        headerRow.appendChild(corner);
-
-        MATRIX_VOWELS_REVERSE.forEach((v, colIdx) => {
-          const th = document.createElement('th');
-          th.className = 'vowel-header';
-          th.id = `col-header-${colIdx}`;
-          th.textContent = v;
-          headerRow.appendChild(th);
-        });
-        thead.appendChild(headerRow);
-
-        const tbody = document.createElement('tbody');
-        MATRIX_CONSONANTS_REVERSE.forEach((c, rowIdx) => {
-          const tr = document.createElement('tr');
-
-          const thCons = document.createElement('th');
-          const isVoiced = VOICED_CONSONANTS.has(c);
-          thCons.className = `consonant-header ${isVoiced ? 'voiced-cons' : ''}`;
-          thCons.id = `row-header-${rowIdx}`;
-          thCons.textContent = c;
-          if (isVoiced) {
-            thCons.title = `Буква ${c} — звонкая согласная`;
-          }
-          tr.appendChild(thCons);
-
-          MATRIX_VOWELS_REVERSE.forEach((v, colIdx) => {
-            const td = document.createElement('td');
-            const syl = v + c;
-            const isActive = activeLetters.has(c) && activeLetters.has(v);
-
-            td.className = `syllable-cell ${isActive ? '' : 'inactive-syllable'}`;
-            td.innerHTML = createColoredSyllableHTML(c, v, true);
-
-            if (isActive) {
-              td.onclick = () => playMatrixSyllable(syl, td);
-              td.onmouseenter = () => {
-                const r = document.getElementById(`row-header-${rowIdx}`);
-                const cl = document.getElementById(`col-header-${colIdx}`);
-                if (r) r.classList.add('highlight-header');
-                if (cl) cl.classList.add('highlight-header');
-              };
-              td.onmouseleave = () => {
-                const r = document.getElementById(`row-header-${rowIdx}`);
-                const cl = document.getElementById(`col-header-${colIdx}`);
-                if (r) r.classList.remove('highlight-header');
-                if (cl) cl.classList.remove('highlight-header');
-              };
-            }
-
-            tr.appendChild(td);
-          });
-
-          tbody.appendChild(tr);
-        });
-        table.appendChild(thead);
-        table.appendChild(tbody);
-      }
+      table.querySelectorAll('td[data-syl]:not([data-syl=""])').forEach(td => {
+        const r = $(`row-header-${td.dataset.r}`), cl = $(`col-header-${td.dataset.c}`);
+        td.onclick = () => playMatrixSyllable(td.dataset.syl, td);
+        td.onmouseenter = () => { r?.classList.add('highlight-header'); cl?.classList.add('highlight-header'); };
+        td.onmouseleave = () => { r?.classList.remove('highlight-header'); cl?.classList.remove('highlight-header'); };
+      });
     }
 
     function setMatrixVowelOrder(order) {
       matrixVowelOrder = order;
-      const btnDef = document.getElementById('btn-order-default');
-      const btnZayt = document.getElementById('btn-order-zaytsev');
-      if (btnDef) btnDef.classList.toggle('active', order === 'default');
-      if (btnZayt) btnZayt.classList.toggle('active', order === 'zaytsev');
+      $('btn-order-default').classList.toggle('active', order === 'default');$('btn-order-zaytsev').classList.toggle('active', order === 'zaytsev');
       renderMatrix();
     }
 
     function switchMatrixMode(mode) {
       matrixMode = mode;
-      document.getElementById('btn-matrix-open').classList.toggle('active', mode === 'open');
-      document.getElementById('btn-matrix-reverse').classList.toggle('active', mode === 'reverse');
-      
-      const orderToolbar = document.getElementById('matrix-order-toolbar');
-      if (orderToolbar) {
-        orderToolbar.style.display = (mode === 'open') ? 'flex' : 'none';
-      }
-
+      $('btn-matrix-open').classList.toggle('active', mode === 'open');
+      $('btn-matrix-reverse').classList.toggle('active', mode === 'reverse');$('matrix-order-toolbar').style.display = mode === 'open' ? 'flex' : 'none';
       renderMatrix();
     }
 
-    function onMatrixClick() {
-      primaryMode = 'matrix';
-      syncModeUI();
-    }
-
     function applyCaseRule(text) {
-      if (!text) return text;
-      if (!allowLowercase) return text.toUpperCase();
-
-      const style = Math.floor(Math.random() * 3);
-      if (style === 0) return text.toLowerCase();
-      if (style === 1) return text.toUpperCase();
-
-      let firstFound = false;
-      return text.split('').map(ch => {
-        if (ch === '-') return ch;
-        if (!firstFound) {
-          firstFound = true;
-          return ch.toUpperCase();
-        }
-        return ch.toLowerCase();
-      }).join('');
+      if (!text || !allowLowercase) return text ? text.toUpperCase() : text;
+      const st = Math.floor(Math.random() * 3);
+      if (st === 0) return text.toLowerCase();
+      if (st === 1) return text.toUpperCase();
+      let first = false;
+      return [...text].map(ch => ch === '-' ? ch : (!first ? (first = true, ch.toUpperCase()) : ch.toLowerCase())).join('');
     }
 
-    function toggleCaseMixing(e) {
-      allowLowercase = e.target.checked;
-      renderFormattedText(currentText);
-    }
+    function toggleCaseMixing(e) { allowLowercase = e.target.checked; renderFormattedText(currentText); }
+    function updateNavButtonsState() { $('btn-prev-card').disabled = historyIndex <= 0; }
 
-    function updateNavButtonsState() {
-      const prevBtn = document.getElementById('btn-prev-card');
-      if (prevBtn) {
-        prevBtn.disabled = (historyIndex <= 0);
-      }
+    function animateCard() {
+      const card = $('syllable-card');
+      card.classList.remove('card-fade');
+      void card.offsetWidth;
+      card.classList.add('card-fade');
     }
 
     function generateNext(resetHistory = false) {
-      if (['alphabet', 'matrix'].includes(primaryMode)) return;
+      if (['alphabet','matrix'].includes(primaryMode)) return;
       stopSyllableAudio();
+      if (resetHistory) { historyStack = []; historyIndex = -1; cheerStreakCount = 0; }
 
-      if (resetHistory) {
-        historyStack = [];
-        historyIndex = -1;
-        cheerStreakCount = 0;
+      const pools = {
+        words2: getAvailableWords2,
+        words3: getAvailableWords3,
+        one_syllable: getAvailableWordsOneSyllable,
+        syllables: () => getAvailableSyllables(syllableModes.open, syllableModes.reverse)
+      };
+      const pool = pools[primaryMode] ? pools[primaryMode]() : [];
+      const textEl = $('syllable-text'), emptyEl =$('empty-warning');
+
+      if (!pool.length) {
+        textEl.style.display = 'none'; emptyEl.classList.add('active');
+        currentText = ''; updateNavButtonsState(); updateSpeakerButtonState(); return;
       }
 
-      let pool = [];
-      if (primaryMode === 'words2') {
-        pool = getAvailableWords2();
-      } else if (primaryMode === 'words3') {
-        pool = getAvailableWords3();
-      } else if (primaryMode === 'one_syllable') {
-        pool = getAvailableWordsOneSyllable();
-      } else if (primaryMode === 'syllables') {
-        pool = getAvailableSyllables(syllableModes.open, syllableModes.reverse);
-      }
-
-      const card = document.getElementById('syllable-card');
-      const textEl = document.getElementById('syllable-text');
-      const emptyEl = document.getElementById('empty-warning');
-
-      if (!pool || pool.length === 0) {
-        textEl.style.display = 'none';
-        emptyEl.classList.add('active');
-        currentText = '';
-        updateNavButtonsState();
-        updateSpeakerButtonState();
-        return;
-      }
-
-      textEl.style.display = 'flex';
-      emptyEl.classList.remove('active');
-
+      textEl.style.display = 'flex'; emptyEl.classList.remove('active');
       let next = pool[Math.floor(Math.random() * pool.length)];
       if (pool.length > 1 && next === currentText) {
         const alt = pool.filter(x => x !== currentText);
         next = alt[Math.floor(Math.random() * alt.length)];
       }
-
       currentText = next;
-
-      if (historyIndex < historyStack.length - 1) {
-        historyIndex = historyStack.slice(0, historyIndex + 1);
-      }
+      if (historyIndex < historyStack.length - 1) historyStack = historyStack.slice(0, historyIndex + 1);
       historyStack.push(currentText);
       historyIndex = historyStack.length - 1;
 
       renderFormattedText(currentText);
-      updateNavButtonsState();
-      updateSpeakerButtonState();
-
-      lastCardSwitchTime = Date.now();
-      rapidSpamCount = 0;
-
-      card.classList.remove('card-fade');
-      void card.offsetWidth;
-      card.classList.add('card-fade');
+      updateNavButtonsState(); updateSpeakerButtonState();
+      lastCardSwitchTime = Date.now(); rapidSpamCount = 0;
+      animateCard();
     }
 
-    function prevCard(event) {
-      if (['alphabet', 'matrix'].includes(primaryMode)) return;
-      if (event) event.stopPropagation();
-
-      const now = Date.now();
-      const timeSinceLastPress = now - lastKeyPressTime;
-      // Сдвигаем дебаунс при любом нажатии
+    function prevCard(e) {
+      if (['alphabet','matrix'].includes(primaryMode)) return;
+      if (e) e.stopPropagation();
+      const now = Date.now(), diff = now - lastKeyPressTime;
       lastKeyPressTime = now;
+      if (diff < KEY_DEBOUNCE_INTERVAL_MS || historyIndex <= 0) return handleSpamAttempt();
 
-      // Блокируем, если между кликами прошло менее 0.5 сек
-      if (timeSinceLastPress < KEY_DEBOUNCE_INTERVAL_MS) {
-        handleSpamAttempt();
-        return;
-      }
-
-      if (historyIndex <= 0) {
-        handleSpamAttempt();
-        return;
-      }
-
-      rapidSpamCount = 0;
-      lastCardSwitchTime = now; // Перезапуск таймера на чтение карточки
-      stopSyllableAudio();
-
-      historyIndex--;
-      currentText = historyStack[historyIndex];
-      playSoundEffect();
-      renderFormattedText(currentText);
-      updateNavButtonsState();
-      updateSpeakerButtonState();
-
-      const card = document.getElementById('syllable-card');
-      card.classList.remove('card-fade');
-      void card.offsetWidth;
-      card.classList.add('card-fade');
+      rapidSpamCount = 0; lastCardSwitchTime = now; stopSyllableAudio();
+      currentText = historyStack[--historyIndex];
+      playSoundEffect(); renderFormattedText(currentText);
+      updateNavButtonsState(); updateSpeakerButtonState(); animateCard();
     }
 
-    let confettiParticles = [];
-    let confettiAnimationId = null;
-
-    function initConfettiCanvas() {
-      const canvas = document.getElementById('confetti-canvas');
-      if (!canvas) return null;
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      return canvas;
-    }
-
-    window.addEventListener('resize', () => {
-      const canvas = document.getElementById('confetti-canvas');
-      if (canvas) {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      }
-      syncTabPullVisibility();
-    });
-
-    function launchConfetti(withCheer = false) {
-      if (withCheer) {
-        playRandomCheerAudio();
-      }
-
-      const canvas = initConfettiCanvas();
-      if (!canvas) return;
-      const card = document.getElementById('syllable-card');
-      const rect = card ? card.getBoundingClientRect() : { left: window.innerWidth / 2, top: window.innerHeight / 2, width: 0, height: 0 };
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-
-      const colors = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#fde047'];
-      const count = 50;
-
-      for (let i = 0; i < count; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const speed = 3 + Math.random() * 6;
-        confettiParticles.push({
-          x: centerX,
-          y: centerY,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed - 2,
-          size: 6 + Math.random() * 5,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          rotation: Math.random() * 360,
-          vRot: (Math.random() - 0.5) * 10,
-          alpha: 1,
-          gravity: 0.2,
-          drag: 0.96
-        });
-      }
-
-      if (!confettiAnimationId) {
-        renderConfettiFrame();
-      }
-    }
-
-    function renderConfettiFrame() {
-      const canvas = document.getElementById('confetti-canvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      for (let i = confettiParticles.length - 1; i >= 0; i--) {
-        const p = confettiParticles[i];
-        p.vx *= p.drag;
-        p.vy = p.vy * p.drag + p.gravity;
-        p.x += p.vx;
-        p.y += p.vy;
-        p.rotation += p.vRot;
-        p.alpha -= 0.015;
-
-        if (p.alpha <= 0 || p.y > canvas.height + 15) {
-          confettiParticles.splice(i, 1);
-          continue;
-        }
-
-        ctx.save();
-        ctx.globalAlpha = Math.max(0, p.alpha);
-        ctx.translate(p.x, p.y);
-        ctx.rotate((p.rotation * Math.PI) / 180);
-        ctx.fillStyle = p.color;
-        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.7);
-        ctx.restore();
-      }
-
-      if (confettiParticles.length > 0) {
-        confettiAnimationId = requestAnimationFrame(renderConfettiFrame);
-      } else {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        confettiAnimationId = null;
-      }
-    }
-
-    function openStickerModal() {
-      if (!STICKER_ANIMALS || STICKER_ANIMALS.length === 0) return;
-
-      let randomIndex = Math.floor(Math.random() * STICKER_ANIMALS.length);
-      if (STICKER_ANIMALS.length > 1 && randomIndex === currentAnimalDeckIndex) {
-        randomIndex = (randomIndex + 1 + Math.floor(Math.random() * (STICKER_ANIMALS.length - 1))) % STICKER_ANIMALS.length;
-      }
-      currentAnimalDeckIndex = randomIndex;
-
-      const animal = STICKER_ANIMALS[currentAnimalDeckIndex];
-
-      document.getElementById('sticker-icon').textContent = animal.icon;
-      document.getElementById('sticker-name').textContent = animal.name;
-      document.getElementById('sticker-message').textContent = `Отлично читаешь! Пройдено уже ${readCount} карточек!`;
-      document.getElementById('sticker-modal').classList.add('open');
-      isStickerModalOpen = true;
-      
-      launchConfetti(false);
-
-      if (animal.audio) {
-        playAudioFile(animal.audio);
-      }
-    }
-
-    function closeStickerModal() {
-      document.getElementById('sticker-modal').classList.remove('open');
-      isStickerModalOpen = false;
-      stopExtraAudio();
-      const now = Date.now();
-      lastCardSwitchTime = now;
+    function nextCard(e) {
+      if (['alphabet','matrix'].includes(primaryMode)) return;
+      if (e) e.stopPropagation();
+      const now = Date.now(), sincePress = now - lastKeyPressTime, sinceCard = now - lastCardSwitchTime;
       lastKeyPressTime = now;
-      rapidSpamCount = 0;
-    }
+      if (sinceCard < CARD_MIN_VIEW_TIME_MS || sincePress < KEY_DEBOUNCE_INTERVAL_MS) return handleSpamAttempt();
 
-    function onStickerBackdropClick(e) {
-      if (e.target.id === 'sticker-modal') closeStickerModal();
-    }
+      rapidSpamCount = 0; lastCardSwitchTime = now;
+      stopSyllableAudio(); playSoundEffect();
+      readCount++; cheerStreakCount++; cardTimestamps.push(now);
+      $('star-count').textContent = readCount; updateTimers();
 
-    function nextCard(event) {
-      if (['alphabet', 'matrix'].includes(primaryMode)) return;
-      if (event) event.stopPropagation();
+      const h = $('subtle-cheer-text');
+      if (h && h.textContent !== 'Сначала прочитай вслух!') h.textContent = '';
 
-      const now = Date.now();
-      const timeSinceLastPress = now - lastKeyPressTime;
-      const timeSinceCardShown = now - lastCardSwitchTime;
-
-      // СРАЗУ сдвигаем отметку последнего нажатия!
-      lastKeyPressTime = now;
-
-      // Одновременное выполнение двух условий:
-      // 1. Карточка на экране не менее 1.5 сек
-      // 2. Пауза между нажатиями не менее 0.5 сек
-      if (timeSinceCardShown < CARD_MIN_VIEW_TIME_MS || timeSinceLastPress < KEY_DEBOUNCE_INTERVAL_MS) {
-        handleSpamAttempt();
-        return; // БЛОКИРОВКА!
-      }
-
-      // УСПЕШНЫЙ ПЕРЕХОД
-      rapidSpamCount = 0;
-      lastCardSwitchTime = now; // Засекаем 1.5 секунды для новой карточки
-
-      stopSyllableAudio();
-      playSoundEffect();
-      readCount++;
-      cheerStreakCount++;
-      cardTimestamps.push(now);
-      document.getElementById('star-count').textContent = readCount;
-      updateTimers();
-
-      const hintEl = document.getElementById('subtle-cheer-text');
-      if (hintEl && hintEl.textContent !== 'Сначала прочитай вслух!') {
-        hintEl.textContent = '';
-      }
-
-      // Проверяем текущие настройки частоты подбадривания
-      const currentCheerCfg = CHEER_CONFIG[cheerFrequency] || CHEER_CONFIG.normal;
-
-      if (cheerStreakCount >= currentCheerCfg.sticker) {
-        cheerStreakCount = 0;
-        setTimeout(() => openStickerModal(), 200);
-      } else if (cheerStreakCount === currentCheerCfg.cheer) {
-        setTimeout(() => {
-          launchConfetti(false);
-          playRandomCheerAudio();
-        }, 150);
+      const cfg = CHEER_CONFIG[cheerFrequency] || CHEER_CONFIG.normal;
+      if (cheerStreakCount >= cfg.sticker) {
+        cheerStreakCount = 0; setTimeout(openStickerModal, 200);
+      } else if (cheerStreakCount === cfg.cheer) {
+        setTimeout(() => { launchConfetti(false); playRandomCheerAudio(); }, 150);
       }
 
       if (historyIndex < historyStack.length - 1) {
-        historyIndex++;
-        currentText = historyStack[historyIndex];
-        renderFormattedText(currentText);
-        updateNavButtonsState();
-        updateSpeakerButtonState();
-
-        const card = document.getElementById('syllable-card');
-        card.classList.remove('card-fade');
-        void card.offsetWidth;
-        card.classList.add('card-fade');
+        currentText = historyStack[++historyIndex];
+        renderFormattedText(currentText); updateNavButtonsState(); updateSpeakerButtonState(); animateCard();
       } else {
         generateNext();
       }
     }
-
-    function onCardClick(e) {
-      nextCard(e);
-    }
-
-    function isSoftConsonant(chars, index) {
-      const charUpper = chars[index].toUpperCase();
-      if (VOWELS_SET.has(charUpper) || charUpper === 'Ь' || charUpper === 'Ъ') return false;
-
-      if (ALWAYS_SOFT.has(charUpper)) return true;
-      if (ALWAYS_HARD.has(charUpper)) return false;
-
-      let nextChar = null;
-      for (let j = index + 1; j < chars.length; j++) {
-        if (chars[j] !== '-') {
-          nextChar = chars[j].toUpperCase();
-          break;
-        }
-      }
-
-      if (nextChar && SOFTENING_LETTERS.has(nextChar)) return true;
-      return false;
-    }
+    const onCardClick = e => nextCard(e);
 
     function renderFormattedText(str) {
-      const container = document.getElementById('syllable-text');
-      container.innerHTML = '';
+      const container = $('syllable-text'); container.innerHTML = '';
       if (!str) return;
+      const cased = applyCaseRule(str), len = cased.replace(/-/g, '').length;
+      container.classList.toggle('text-long', len >= 7);
+      container.classList.toggle('text-medium', len >= 5 && len < 7);
 
-      const casedText = applyCaseRule(str);
-
-      container.classList.remove('text-long', 'text-medium');
-      const charLength = casedText.replace(/-/g, '').length;
-      if (charLength >= 7) {
-        container.classList.add('text-long');
-      } else if (charLength >= 5) {
-        container.classList.add('text-medium');
-      }
-
-      const chars = casedText.split('');
-
+      const chars = [...cased];
       chars.forEach((ch, idx) => {
-        const upperCh = ch.toUpperCase();
-        const span = document.createElement('span');
+        const u = ch.toUpperCase(), span = document.createElement('span');
         if (ch === '-') {
-          span.className = 'word-hyphen';
-          span.textContent = '–';
-        } else if (VOWELS_SET.has(upperCh)) {
-          span.className = 'char-vowel';
-          span.textContent = ch;
-        } else if (upperCh === 'Ь' || upperCh === 'Ъ') {
-          span.className = 'char-neutral';
-          span.textContent = ch;
+          span.className = 'word-hyphen'; span.textContent = '–';
+        } else if (VOWELS_SET.has(u)) {
+          span.className = 'char-vowel'; span.textContent = ch;
+        } else if ('ЬЪ'.includes(u)) {
+          span.className = 'char-neutral'; span.textContent = ch;
         } else {
-          const soft = isSoftConsonant(chars, idx);
+          const nextCh = chars.slice(idx + 1).find(x => x !== '-')?.toUpperCase();
+          const soft = ALWAYS_SOFT.has(u) || (!ALWAYS_HARD.has(u) && nextCh && SOFTENING_LETTERS.has(nextCh));
           span.className = soft ? 'char-consonant-soft' : 'char-consonant';
           span.textContent = ch;
         }
@@ -1996,216 +863,154 @@
       });
     }
 
+    // Конфетти и стикеры
+    let confettiParticles = [], confettiAnimationId = null;
+    function launchConfetti(withCheer = false) {
+      if (withCheer) playRandomCheerAudio();
+      const cv = $('confetti-canvas'); if (!cv) return;
+      cv.width = window.innerWidth; cv.height = window.innerHeight;
+      const rect = $('syllable-card')?.getBoundingClientRect() || { left: innerWidth/2, top: innerHeight/2, width: 0, height: 0 };
+      const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2;
+      const cols = ['#ef4444','#f59e0b','#10b981','#3b82f6','#8b5cf6','#ec4899','#fde047'];
+      for (let i = 0; i < 50; i++) {
+        const a = Math.random() * Math.PI * 2, sp = 3 + Math.random() * 6;
+        confettiParticles.push({ x: cx, y: cy, vx: Math.cos(a)*sp, vy: Math.sin(a)*sp - 2, size: 6 + Math.random()*5, color: cols[i % cols.length], rot: Math.random()*360, vRot: (Math.random()-0.5)*10, alpha: 1 });
+      }
+      if (!confettiAnimationId) renderConfettiFrame();
+    }
+
+    function renderConfettiFrame() {
+      const cv = $('confetti-canvas'), ctx = cv.getContext('2d');
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      confettiParticles = confettiParticles.filter(p => {
+        p.vx *= 0.96; p.vy = p.vy * 0.96 + 0.2; p.x += p.vx; p.y += p.vy; p.rot += p.vRot; p.alpha -= 0.015;
+        if (p.alpha <= 0 || p.y > cv.height + 15) return false;
+        ctx.save(); ctx.globalAlpha = Math.max(0, p.alpha); ctx.translate(p.x, p.y); ctx.rotate(p.rot * Math.PI / 180);
+        ctx.fillStyle = p.color; ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size * 0.7); ctx.restore();
+        return true;
+      });
+      confettiAnimationId = confettiParticles.length ? requestAnimationFrame(renderConfettiFrame) : null;
+    }
+
+    function openStickerModal() {
+      if (!STICKER_ANIMALS.length) return;
+      let idx = Math.floor(Math.random() * STICKER_ANIMALS.length);
+      if (STICKER_ANIMALS.length > 1 && idx === currentAnimalDeckIndex) idx = (idx + 1) % STICKER_ANIMALS.length;
+      currentAnimalDeckIndex = idx;
+      const a = STICKER_ANIMALS[idx];
+      $('sticker-icon').textContent = a.icon;
+      $('sticker-name').textContent = a.name;
+      $('sticker-message').textContent = `Отлично читаешь! Пройдено уже ${readCount} карточек!`;
+      $('sticker-modal').classList.add('open');
+      isStickerModalOpen = true;
+      launchConfetti(false);
+      if (a.audio) playAudioFile(a.audio);
+    }
+
+    function closeStickerModal() {
+      $('sticker-modal').classList.remove('open');
+      isStickerModalOpen = false; stopExtraAudio();
+      lastCardSwitchTime = lastKeyPressTime = Date.now(); rapidSpamCount = 0;
+    }
+
     function syncModeUI() {
       stopSyllableAudio();
+      ['alphabet','matrix','one_syllable','words2','words3'].forEach(m => $(`tab-${m}`).classList.toggle('active', primaryMode === m));
+      $('tab-open').classList.toggle('active', primaryMode === 'syllables' && syllableModes.open);$('tab-reverse').classList.toggle('active', primaryMode === 'syllables' && syllableModes.reverse);
 
-      document.getElementById('tab-alphabet').classList.toggle('active', primaryMode === 'alphabet');
-      document.getElementById('tab-matrix').classList.toggle('active', primaryMode === 'matrix');
-      document.getElementById('tab-one_syllable').classList.toggle('active', primaryMode === 'one_syllable');
-      document.getElementById('tab-words2').classList.toggle('active', primaryMode === 'words2');
-      document.getElementById('tab-words3').classList.toggle('active', primaryMode === 'words3');
+      $('alphabet-view-container').style.display = primaryMode === 'alphabet' ? 'flex' : 'none';
+      $('matrix-view-container').style.display = primaryMode === 'matrix' ? 'flex' : 'none';$('card-wrapper').style.display = !['alphabet','matrix'].includes(primaryMode) ? 'flex' : 'none';
 
-      const inSyllables = (primaryMode === 'syllables');
-      document.getElementById('tab-open').classList.toggle('active', inSyllables && syllableModes.open);
-      document.getElementById('tab-reverse').classList.toggle('active', inSyllables && syllableModes.reverse);
-
-      const alphaView = document.getElementById('alphabet-view-container');
-      const matrixView = document.getElementById('matrix-view-container');
-      const cardView = document.getElementById('card-wrapper');
-
-      if (primaryMode === 'alphabet') {
-        cardView.style.display = 'none';
-        matrixView.style.display = 'none';
-        alphaView.style.display = 'flex';
-        renderAlphabetView();
-      } else if (primaryMode === 'matrix') {
-        cardView.style.display = 'none';
-        alphaView.style.display = 'none';
-        matrixView.style.display = 'flex';
-        const orderToolbar = document.getElementById('matrix-order-toolbar');
-        if (orderToolbar) {
-          orderToolbar.style.display = (matrixMode === 'open') ? 'flex' : 'none';
-        }
-        renderMatrix();
-      } else {
-        alphaView.style.display = 'none';
-        matrixView.style.display = 'none';
-        cardView.style.display = 'flex';
-        generateNext(true);
-      }
+      if (primaryMode === 'alphabet') renderAlphabetView();
+      else if (primaryMode === 'matrix') { $('matrix-order-toolbar').style.display = matrixMode === 'open' ? 'flex' : 'none'; renderMatrix(); }
+      else generateNext(true);
       updateTimers();
     }
 
-    function onAlphabetClick() {
-      primaryMode = 'alphabet';
-      syncModeUI();
+    function refreshCurrentMode() {
+      updateCategoryBadges();
+      if (primaryMode === 'alphabet') renderAlphabetView();
+      else if (primaryMode === 'matrix') renderMatrix();
+      else generateNext(true);
     }
 
-    function onWordModeClick(mode) {
-      primaryMode = mode;
-      syncModeUI();
-    }
-
+    function onAlphabetClick() { primaryMode = 'alphabet'; syncModeUI(); }
+    function onMatrixClick() { primaryMode = 'matrix'; syncModeUI(); }
+    function onWordModeClick(m) { primaryMode = m; syncModeUI(); }
     function toggleSyllableSubmode(sub) {
-      if (primaryMode !== 'syllables') {
-        primaryMode = 'syllables';
-        syllableModes[sub] = true;
-      } else {
-        if (syllableModes[sub]) {
-          const other = (sub === 'open') ? 'reverse' : 'open';
-          if (!syllableModes[other]) syllableModes[other] = true;
-          syllableModes[sub] = false;
-        } else {
-          syllableModes[sub] = true;
-        }
+      if (primaryMode !== 'syllables') { primaryMode = 'syllables'; syllableModes[sub] = true; }
+      else {
+        const other = sub === 'open' ? 'reverse' : 'open';
+        if (syllableModes[sub] && !syllableModes[other]) syllableModes[other] = true;
+        syllableModes[sub] = !syllableModes[sub];
       }
       syncModeUI();
     }
 
     function applyPreset(name) {
-      if (name === 'clear') {
-        activeLetters.clear();
-      } else if (name === 'all') {
-        activeLetters = new Set(Object.values(LETTERS).flat());
-      } else if (name === 'step1') {
-        activeLetters = new Set(['А', 'У', 'О', 'М', 'С', 'Х', 'Р', 'Ы', 'Л', 'Н']);
-      } else if (name === 'step2') {
-        activeLetters = new Set(['А', 'У', 'О', 'М', 'С', 'Х', 'Р', 'Ш', 'Ы', 'Л', 'Н', 'К', 'П', 'Т', 'И', 'Б', 'В', 'Г', 'Д']);
-      }
-
-      document.querySelectorAll('.letter-item input').forEach(input => {
-        input.checked = activeLetters.has(input.value);
-      });
-
-      updateCategoryBadges();
-      if (primaryMode === 'alphabet') {
-        renderAlphabetView();
-      } else if (primaryMode === 'matrix') {
-        renderMatrix();
-      } else {
-        generateNext(true);
-      }
+      const sets = {
+        clear: [],
+        all: Object.values(LETTERS).flat(),
+        step1: ['А','У','О','М','С','Х','Р','Ы','Л','Н'],
+        step2: ['А','У','О','М','С','Х','Р','Ш','Ы','Л','Н','К','П','Т','И','Б','В','Г','Д']
+      };
+      activeLetters = new Set(sets[name] || []);
+      document.querySelectorAll('.letter-item input').forEach(i => i.checked = activeLetters.has(i.value));
+      refreshCurrentMode();
     }
 
-    const lettersPanel = document.getElementById('letters-panel');
-    const panelBackdrop = document.getElementById('panel-backdrop');
-    const panelTabPull = document.getElementById('panel-tab-pull');
-
-    function isPanelOpen() {
-      const isMobile = window.innerWidth <= 900;
-      return isMobile ? lettersPanel.classList.contains('open') : !lettersPanel.classList.contains('collapsed');
-    }
-
-    function syncTabPullVisibility() {
-      if (isPanelOpen()) {
-        panelTabPull.classList.add('hidden');
-      } else {
-        panelTabPull.classList.remove('hidden');
-      }
-    }
+    const lettersPanel = $('letters-panel'), panelBackdrop = $('panel-backdrop'), panelTabPull =$('panel-tab-pull');
+    const isPanelOpen = () => window.innerWidth <= 900 ? lettersPanel.classList.contains('open') : !lettersPanel.classList.contains('collapsed');
+    const syncTabPullVisibility = () => panelTabPull.classList.toggle('hidden', isPanelOpen());
 
     function openLettersPanel() {
-      const isMobile = window.innerWidth <= 900;
-      if (isMobile) {
-        lettersPanel.classList.remove('collapsed');
-        lettersPanel.classList.add('open');
-        panelBackdrop.classList.add('active');
-      } else {
-        lettersPanel.classList.remove('collapsed');
-      }
+      lettersPanel.classList.remove('collapsed');
+      if (window.innerWidth <= 900) { lettersPanel.classList.add('open'); panelBackdrop.classList.add('active'); }
       syncTabPullVisibility();
     }
-
     function closeLettersPanel() {
-      const isMobile = window.innerWidth <= 900;
-      if (isMobile) {
-        lettersPanel.classList.remove('open');
-        lettersPanel.classList.add('collapsed');
-        panelBackdrop.classList.remove('active');
-      } else {
-        lettersPanel.classList.add('collapsed');
-      }
+      lettersPanel.classList.remove('open'); lettersPanel.classList.add('collapsed');
+      panelBackdrop.classList.remove('active'); syncTabPullVisibility();
+    }
+    const toggleLettersPanel = () => isPanelOpen() ? closeLettersPanel() : openLettersPanel();
+
+    window.addEventListener('resize', () => {
+      const cv = $('confetti-canvas');
+      if (cv) { cv.width = innerWidth; cv.height = innerHeight; }
       syncTabPullVisibility();
-    }
-
-    function toggleLettersPanel() {
-      if (isPanelOpen()) {
-        closeLettersPanel();
-      } else {
-        openLettersPanel();
-      }
-    }
-
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Control' || e.code === 'ControlLeft' || e.code === 'ControlRight') {
-        e.preventDefault();
-        toggleLettersPanel();
-        return;
-      }
-
-      if (isStickerModalOpen) {
-        if (e.code === 'Space' || e.key === ' ' || e.code === 'Escape') {
-          e.preventDefault();
-          closeStickerModal();
-        }
-        return;
-      }
-
-      if (['alphabet', 'matrix'].includes(primaryMode)) {
-        if (e.code === 'Escape') {
-          closeHelpModal();
-          closeLettersPanel();
-        }
-        return;
-      }
-
-      if (e.code === 'ArrowLeft') {
-        e.preventDefault();
-        if (e.repeat) return;
-        prevCard();
-      } else if (e.code === 'Space' || e.code === 'ArrowRight') {
-        e.preventDefault();
-        if (e.repeat) return;
-        nextCard();
-      } else if (e.code === 'ArrowUp' || e.code === 'ArrowDown') {
-        e.preventDefault();
-        if (e.repeat) return;
-        playSyllableAudio();
-      } else if (e.code === 'Escape') {
-        closeHelpModal();
-        closeStickerModal();
-        closeLettersPanel();
-      }
     });
 
-    let touchStartX = 0;
-    let touchStartY = 0;
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Control' || e.code.startsWith('Control')) { e.preventDefault(); toggleLettersPanel(); return; }
+      if (isStickerModalOpen) { if (['Space','Escape'].includes(e.code)) { e.preventDefault(); closeStickerModal(); } return; }
+      if (e.code === 'Escape') { closeHelpModal(); closeStickerModal(); closeLettersPanel(); return; }
+      if (['alphabet','matrix'].includes(primaryMode) || e.repeat) return;
+      if (e.code === 'ArrowLeft') { e.preventDefault(); prevCard(); }
+      else if (e.code === 'Space' || e.code === 'ArrowRight') { e.preventDefault(); nextCard(); }
+      else if (e.code === 'ArrowUp' || e.code === 'ArrowDown') { e.preventDefault(); playSyllableAudio(); }
+    });
 
-    window.addEventListener('touchstart', (e) => {
+    // Жесты свайпов: для боковой панели И для перелистывания карточек на телефонах/планшетах
+    let touchStartX = 0, touchStartY = 0, touchOnCard = false;
+    window.addEventListener('touchstart', e => {
       touchStartX = e.touches[0].clientX;
       touchStartY = e.touches[0].clientY;
+      touchOnCard = !!e.target.closest('#syllable-card');
     }, { passive: true });
 
-    window.addEventListener('touchend', (e) => {
-      const diffX = e.changedTouches[0].clientX - touchStartX;
-      const diffY = e.changedTouches[0].clientY - touchStartY;
-
-      if (touchStartX < 40 && diffX > 45 && Math.abs(diffY) < 60) {
-        openLettersPanel();
-      }
-      if (isPanelOpen() && diffX < -50 && Math.abs(diffY) < 70) {
-        closeLettersPanel();
+    window.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      if (touchStartX < 36 && dx > 45 && Math.abs(dy) < 60) return openLettersPanel();
+      if (isPanelOpen() && dx < -50 && Math.abs(dy) < 70) return closeLettersPanel();
+      if (touchOnCard && !isPanelOpen() && Math.abs(dx) > 45 && Math.abs(dy) < 60) {
+        dx < 0 ? nextCard() : prevCard();
       }
     }, { passive: true });
 
-    if (window.innerWidth > 900) {
-      lettersPanel.classList.remove('collapsed');
-    } else {
-      lettersPanel.classList.remove('open');
-      lettersPanel.classList.add('collapsed');
-    }
+    if (window.innerWidth > 900) lettersPanel.classList.remove('collapsed');
     syncTabPullVisibility();
-
+    initHelperRibbon();
     renderLetterGrids();
     loadWordsData();
     updateCategoryBadges();
