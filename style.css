@@ -139,13 +139,21 @@ header {
   top: 0;
   z-index: 40;
   flex-shrink: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  scrollbar-width: none;
+}
+header::-webkit-scrollbar {
+  display: none;
 }
 
-.brand { display: flex; align-items: center; gap: 10px; }
+.brand { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .brand-icon { font-size: 24px; }
 .brand-title { font-size: 20px; font-weight: 900; color: #233b66; white-space: nowrap; }
 
-.stats-bar { display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; }
+.stats-bar { display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; flex-shrink: 0; }
 
 /* Переключатель двух профилей в шапке */
 .profile-switcher {
@@ -156,6 +164,7 @@ header {
   border-radius: 999px;
   padding: 2px;
   gap: 2px;
+  flex-shrink: 0;
 }
 .profile-btn {
   border: none;
@@ -208,6 +217,7 @@ header {
   background: #fdfcf9;
   border: 1.5px solid var(--border-color);
   white-space: nowrap;
+  flex-shrink: 0;
 }
 .stat-badge.star { background: #fef7da; border-color: #f1df97; color: #8a6108; }
 .stat-badge.wrong-badge { background: #fae8e8; border-color: #efc1c1; color: #9c2525; }
@@ -224,6 +234,7 @@ header {
 .case-toggle-wrap {
   display: flex; align-items: center; background: #fdfcf9;
   border: 1.5px solid var(--border-color); border-radius: 999px; padding: 4px 8px;
+  flex-shrink: 0;
 }
 .case-toggle-label { font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 4px; cursor: pointer; }
 .switch { position: relative; display: inline-block; width: 34px; height: 19px; }
@@ -240,6 +251,7 @@ input:checked + .slider:before { transform: translateX(15px); }
   text-decoration: none; background: #fdfcf9; border: 1.5px solid var(--border-color);
   height: 34px; padding: 0 10px; border-radius: 11px; font: 800 14px inherit;
   color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 5px;
+  white-space: nowrap; flex-shrink: 0;
 }
 .btn-icon-header:hover, .btn-toggle-panel:hover { background: #f3efe6; }
 .btn-icon-header.active-toggle { background: #fef7da; border-color: #e6c655; box-shadow: inset 0 0 0 1px #e6c655; }
@@ -616,7 +628,7 @@ input:checked + .slider:before { transform: translateX(15px); }
 .ten-dot.base-dot { background: #b82b2b; }
 
 /* ==========================================================================
-   Режим «Вагончики» (Конструктор слогов)
+   Режим «Вагончики» (Конструктор слогов + Перетаскивание)
    ========================================================================== */
 .trains-view-container {
   display: none; flex-direction: column; align-items: center; gap: 12px;
@@ -642,11 +654,20 @@ input:checked + .slider:before { transform: translateX(15px); }
 
 .train-stage-card {
   background: #faf8f4; border: 3px solid var(--border-color); border-radius: 26px;
-  width: 100%; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 12px;
+  width: 100%; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 10px;
 }
 .train-status-hint { font-size: 14px; font-weight: 800; text-align: center; min-height: 22px; }
-.train-track { display: flex; align-items: flex-end; justify-content: center; min-height: 135px; padding-top: 18px; }
-.train-locomotive { position: relative; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
+
+.train-track {
+  display: flex; align-items: flex-end; justify-content: center;
+  min-height: 135px; padding-top: 18px; position: relative; gap: 8px;
+  touch-action: none;
+}
+.train-locomotive {
+  position: relative; cursor: grab; display: flex; flex-direction: column;
+  align-items: center; order: 2; touch-action: none;
+}
+.train-locomotive:active { cursor: grabbing; }
 .loco-smoke { position: absolute; top: -26px; left: 16px; font-size: 22px; animation: smokeFloat 1.6s infinite ease-in-out; }
 @keyframes smokeFloat {
   0%, 100% { transform: translateY(0) scale(0.9); opacity: 0.7; }
@@ -663,20 +684,57 @@ input:checked + .slider:before { transform: translateX(15px); }
 .loco-wheels { display: flex; justify-content: space-around; width: 90%; margin-top: -6px; z-index: 2; }
 .wheel { width: 24px; height: 24px; border-radius: 50%; background: #334155; border: 4px solid #cbd5e1; }
 
-.train-coupled-wagon { display: flex; flex-direction: column; align-items: center; position: relative; cursor: pointer; margin-left: 8px; }
-.train-coupled-wagon.hidden { display: none; }
-.train-coupled-wagon.couple-anim { animation: wagonCouple 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-@keyframes wagonCouple {
-  0% { transform: translateX(45px); opacity: 0.3; }
-  100% { transform: translateX(0); opacity: 1; }
+.train-coupled-wagon {
+  display: flex; flex-direction: column; align-items: center;
+  position: relative; cursor: grab; order: 3; touch-action: none;
 }
-.wagon-coupler { position: absolute; left: -12px; bottom: 32px; width: 14px; height: 10px; background: #475569; }
+.train-coupled-wagon:active { cursor: grabbing; }
+.train-coupled-wagon.hidden { display: none; }
+.train-coupled-wagon.couple-anim { animation: wagonCouple 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+@keyframes wagonCouple {
+  0% { transform: scale(0.88); opacity: 0.4; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.wagon-coupler {
+  position: absolute; left: -12px; right: auto; bottom: 32px;
+  width: 14px; height: 10px; background: #475569; border-radius: 2px;
+}
+
+/* Когда вагончик с гласной стоит ПЕРЕД паровозиком с согласной (обратный слог) */
+.train-track.reverse-order .train-coupled-wagon { order: 1; }
+.train-track.reverse-order .train-locomotive { order: 2; }
+.train-track.reverse-order .wagon-coupler { left: auto; right: -12px; }
+
+.train-drop-indicator {
+  width: 0; height: 90px; border-radius: 14px;
+  border: 0 dashed transparent; opacity: 0;
+  transition: width 0.15s ease, opacity 0.15s ease, margin 0.15s ease;
+  pointer-events: none;
+}
+#train-drop-before { order: 0; }
+#train-drop-after { order: 4; }
+.train-drop-indicator.active {
+  width: 96px; opacity: 1; margin: 0 4px;
+  border: 3px dashed var(--accent-primary);
+  background: rgba(52, 89, 149, 0.1);
+}
+
 .wagon-body {
   width: 112px; height: 90px; border-radius: 16px;
   background: #fae6e6; border: 4px solid #c92a2a; color: var(--vowel-color);
   display: flex; align-items: center; justify-content: center;
 }
 .train-rails { width: 85%; max-width: 420px; height: 8px; background: #94a3b8; border-radius: 4px; border-bottom: 3px dashed #475569; margin-top: -4px; }
+
+.train-swap-bar { min-height: 30px; display: flex; align-items: center; justify-content: center; }
+.train-swap-btn {
+  background: #edf3fb; border: 1.5px solid #9cbfe8; color: #1f4274;
+  border-radius: 99px; padding: 5px 14px; font: 800 12.5px inherit;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+  transition: background 0.15s, transform 0.12s;
+}
+.train-swap-btn:hover { background: #dce8f8; }
+.train-swap-btn:active { transform: scale(0.96); }
 
 .trains-depot {
   background: #faf8f4; border: 2px solid var(--border-color); border-radius: 18px;
@@ -685,20 +743,38 @@ input:checked + .slider:before { transform: translateX(15px); }
 .depot-wagons-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
 .depot-wagon-btn {
   width: 64px; height: 58px; border-radius: 14px; border: 2.5px solid #e58787;
-  background: #fae6e6; color: var(--vowel-color); cursor: pointer;
+  background: #fae6e6; color: var(--vowel-color); cursor: grab;
   display: flex; align-items: center; justify-content: center;
   transition: transform 0.12s, box-shadow 0.12s;
+  touch-action: none;
 }
+.depot-wagon-btn:active { cursor: grabbing; }
 .depot-wagon-btn.softening-vowel { box-shadow: inset 0 4px 0 #48bb78; }
 .depot-wagon-btn.selected {
   background: var(--vowel-color); color: #fff; border-color: #8c1d1d; transform: translateY(-3px);
   box-shadow: 0 5px 12px rgba(203,45,45,0.3);
 }
 .depot-wagon-btn:disabled { opacity: 0.3; cursor: not-allowed; filter: grayscale(1); }
-.dw-letter { font-size: 28px; font-weight: 900; line-height: 1; }
+.dw-letter { font-size: 28px; font-weight: 900; line-height: 1; pointer-events: none; }
+
+.dragging-source { opacity: 0.45 !important; }
+.train-drag-ghost {
+  position: fixed; z-index: 9999; pointer-events: none;
+  width: 84px; height: 74px; border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 46px; font-weight: 900;
+  transform: translate(-50%, -50%) scale(1.08);
+  box-shadow: 0 12px 28px rgba(25, 30, 40, 0.28);
+}
+.train-drag-ghost.ghost-vowel {
+  background: #fae6e6; border: 3.5px solid #c92a2a; color: var(--vowel-color);
+}
+.train-drag-ghost.ghost-cons {
+  background: #e6eef9; border: 3.5px solid #16468f; color: var(--consonant-color);
+}
 
 /* ==========================================================================
-   Режим «Собери слово из слогов» (Слоговой пазл)
+   Режим «Собери слово из слогов» (Слоговой пазл — крупные буквы!)
    ========================================================================== */
 .puzzle-view-container {
   display: none;
@@ -706,7 +782,7 @@ input:checked + .slider:before { transform: translateX(15px); }
   align-items: center;
   gap: 12px;
   width: 100%;
-  max-width: 840px;
+  max-width: 860px;
   margin: auto 0;
 }
 .puzzle-toolbar {
@@ -793,17 +869,18 @@ input:checked + .slider:before { transform: translateX(15px); }
   margin-top: 4px;
 }
 .puzzle-slot {
-  min-width: clamp(86px, 16vw, 130px);
-  height: clamp(62px, 10vh, 82px);
+  min-width: clamp(98px, 19vw, 150px);
+  height: clamp(72px, 12vh, 98px);
   background: #fdfcf9;
   border: 3px dashed #b8b1a3;
-  border-radius: 18px;
+  border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(32px, 6vw, 52px);
+  font-size: clamp(44px, 8.5vw, 72px);
   font-weight: 900;
-  padding: 0 14px;
+  line-height: 1;
+  padding: 0 16px;
   transition: all 0.2s;
 }
 .puzzle-slot.active-target {
@@ -822,11 +899,11 @@ input:checked + .slider:before { transform: translateX(15px); }
 }
 .slot-placeholder {
   color: #cbd5e1;
-  font-size: 24px;
+  font-size: 28px;
   letter-spacing: 2px;
 }
 .puzzle-slot-dash {
-  font-size: clamp(26px, 4vw, 40px);
+  font-size: clamp(30px, 5vw, 48px);
   font-weight: 900;
   color: #9aa3af;
 }
@@ -834,33 +911,38 @@ input:checked + .slider:before { transform: translateX(15px); }
 .puzzle-pool-container {
   background: #faf8f4;
   border: 2px solid var(--border-color);
-  border-radius: 20px;
-  padding: 12px 16px;
+  border-radius: 22px;
+  padding: 14px 16px;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 .puzzle-tiles-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 12px;
   justify-content: center;
+  width: 100%;
 }
 .puzzle-syl-tile {
-  min-width: clamp(82px, 15vw, 118px);
-  height: clamp(58px, 9.5vh, 76px);
+  min-width: clamp(108px, 22vw, 156px);
+  height: clamp(78px, 13vh, 106px);
   background: #fdfcf9;
-  border: 2.5px solid var(--border-color);
-  border-radius: 16px;
-  padding: 0 16px;
-  font: 900 clamp(30px, 5.5vw, 46px) inherit;
+  border: 3px solid var(--border-color);
+  border-radius: 20px;
+  padding: 0 20px;
+  font-family: inherit;
+  font-weight: 900;
+  font-size: clamp(46px, 9vw, 76px);
+  line-height: 1;
+  letter-spacing: 1px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 10px rgba(45, 40, 30, 0.06);
+  box-shadow: 0 5px 14px rgba(45, 40, 30, 0.08);
   transition: transform 0.12s, border-color 0.12s, opacity 0.2s;
 }
 .puzzle-syl-tile:hover:not(:disabled) {
@@ -1182,13 +1264,25 @@ input:checked + .slider:before { transform: translateX(15px); }
 
   .profile-btn { padding: 4px 7px; font-size: 11.5px; }
   .profile-name-text { max-width: 58px; }
+
+  .puzzle-syl-tile {
+    min-width: clamp(98px, 27vw, 136px);
+    height: clamp(72px, 11.5vh, 92px);
+    font-size: clamp(42px, 10.5vw, 62px);
+    padding: 0 14px;
+  }
+  .puzzle-slot {
+    min-width: clamp(90px, 25vw, 130px);
+    height: clamp(66px, 10.5vh, 86px);
+    font-size: clamp(38px, 9.5vw, 58px);
+  }
 }
 
 @media (max-width: 480px) {
   .hide-xs { display: none !important; }
   .letters-panel, .settings-panel { width: 88vw; max-width: 330px; }
-  header { padding: 6px 8px; gap: 4px; }
-  .stats-bar { gap: 4px; }
+  header { padding: 6px 8px; gap: 5px; }
+  .stats-bar { gap: 5px; }
   .stat-badge { padding: 4px 7px; font-size: 12px; }
   .btn-icon-header { height: 32px; padding: 0 8px; font-size: 13px; }
 }
