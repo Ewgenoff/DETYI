@@ -197,6 +197,7 @@ input:checked + .slider:before { transform: translateX(15px); }
   width: 345px; background: #fcfbf8; border-right: 2px solid var(--border-color);
   padding: 14px; overflow-y: auto; transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1);
   display: flex; flex-direction: column; gap: 10px; z-index: 50; flex-shrink: 0;
+  text-align: left;
 }
 .letters-panel.collapsed, .settings-panel.collapsed {
   transform: translateX(-100%); position: absolute; inset: 0 auto 0 0;
@@ -211,8 +212,8 @@ input:checked + .slider:before { transform: translateX(15px); }
 .panel-tab-pull.hidden { display: none !important; }
 
 .panel-header-row { display: flex; justify-content: space-between; align-items: center; }
-.panel-title-wrap { display: flex; align-items: center; gap: 8px; }
-.panel-title { font-size: 16px; font-weight: 900; color: #1a2536; }
+.panel-title-wrap { display: flex; align-items: center; justify-content: flex-start; gap: 8px; text-align: left; }
+.panel-title { font-size: 16px; font-weight: 900; color: #1a2536; text-align: left; }
 
 /* Заметный и гармоничный бейдж «Выбрано букв — ХХ шт.» */
 .panel-active-count-badge {
@@ -235,20 +236,26 @@ input:checked + .slider:before { transform: translateX(15px); }
 .preset-btn-col {
   background: #f7f4ec; border: 1.5px solid var(--border-color); border-radius: 9px;
   padding: 7px 11px; font: 800 12px inherit; cursor: pointer; color: #364152;
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between; text-align: left;
 }
 .preset-btn-col.danger { color: #8a2828; border-color: #dfcec8; background: #f9f2f0; }
 
 .group-box, .clean-box {
   background: #f6f3eb; border: 1.5px solid var(--border-color); border-radius: 11px;
-  padding: 10px; display: flex; flex-direction: column; gap: 6px;
+  padding: 10px; display: flex; flex-direction: column; gap: 6px; text-align: left;
 }
-.group-header, .clean-box-header {
+.group-header {
   font-size: 11px; font-weight: 800; color: var(--text-muted);
-  text-transform: uppercase; display: flex; align-items: center; justify-content: space-between; gap: 5px;
+  text-transform: uppercase; display: flex; align-items: center;
+  justify-content: flex-start; text-align: left; gap: 6px;
 }
-.sub-group-wrap { display: flex; flex-direction: column; gap: 4px; }
-.sub-group-label { font-size: 11px; font-weight: 800; color: #677180; }
+.clean-box-header {
+  font-size: 11px; font-weight: 800; color: var(--text-muted);
+  text-transform: uppercase; display: flex; align-items: center;
+  justify-content: space-between; text-align: left; gap: 5px;
+}
+.sub-group-wrap { display: flex; flex-direction: column; gap: 4px; text-align: left; }
+.sub-group-label { font-size: 11px; font-weight: 800; color: #677180; text-align: left; }
 
 .letters-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
 .paired-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; }
@@ -650,7 +657,7 @@ input:checked + .slider:before { transform: translateX(15px); }
 .quiz-opt-emoji { font-size: 32px; line-height: 1; }
 .quiz-opt-emoji.hidden-emoji { display: none; }
 
-.zoo-modal-card { max-width: 740px; }
+.zoo-modal-card { max-width: 740px !important; }
 .zoo-hint-bar {
   background: #fef7da; border: 1.5px solid #f1df97; color: #785206;
   padding: 10px 14px; border-radius: 12px; font-weight: 800; font-size: 13.5px; text-align: center;
@@ -777,6 +784,105 @@ input:checked + .slider:before { transform: translateX(15px); }
 .dot-cons-hard { background: var(--consonant-color); }
 .dot-cons-soft { background: var(--consonant-soft-color); }
 
-/* Модалки и конфетти */
+/* ==========================================================================
+   Модальные окна (Справка, Зоопарк, Награда) и конфетти
+   ========================================================================== */
 #confetti-canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 999; }
-.subtle-cheer-hint { position: fixed; left: 10px; bottom: 8px; font-size: 11px; color: rgba(80,90,105,0.45); pointer-events:
+.subtle-cheer-hint {
+  position: fixed; left: 10px; bottom: 8px; font-size: 11px;
+  color: rgba(80, 90, 105, 0.45); pointer-events: none; z-index: 30; font-weight: 700;
+}
+
+.panel-backdrop {
+  position: fixed; inset: 0; background: rgba(25, 30, 40, 0.35);
+  backdrop-filter: blur(2px); z-index: 48; display: none;
+}
+.panel-backdrop.active { display: block; }
+
+.sticker-modal-backdrop, .help-modal-backdrop {
+  position: fixed; inset: 0; background: rgba(25, 30, 40, 0.55);
+  backdrop-filter: blur(4px); z-index: 200; display: none;
+  align-items: center; justify-content: center; padding: 16px;
+}
+.sticker-modal-backdrop.open, .help-modal-backdrop.open { display: flex; }
+
+.sticker-card {
+  background: #faf8f4; border: 3px solid #e4c274; border-radius: 28px;
+  padding: 26px 22px; max-width: 400px; width: 100%; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  box-shadow: 0 18px 42px rgba(20, 20, 15, 0.25);
+  animation: calmFade 0.22s ease-out;
+}
+.sticker-badge-title {
+  background: #fef7da; border: 1.5px solid #f1df97; color: #8a6108;
+  font-size: 13px; font-weight: 900; padding: 4px 14px; border-radius: 99px;
+}
+.sticker-animal-icon { font-size: 82px; line-height: 1.05; margin: 4px 0; }
+.sticker-name { font-size: 22px; font-weight: 900; color: #1e2838; }
+.sticker-message { font-size: 14px; font-weight: 700; color: var(--text-muted); line-height: 1.4; }
+.sticker-btn {
+  margin-top: 6px; background: var(--accent-primary); color: #fff; border: none;
+  border-radius: 14px; padding: 12px 24px; font: 900 15px inherit; cursor: pointer;
+  width: 100%; box-shadow: 0 5px 14px rgba(52, 89, 149, 0.28);
+}
+.sticker-btn:hover { background: #264373; }
+.modal-subhint { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+
+.help-modal-card {
+  background: #faf8f4; border: 2.5px solid var(--border-color); border-radius: 24px;
+  max-width: 660px; width: 100%; max-height: 88dvh; display: flex; flex-direction: column;
+  overflow: hidden; box-shadow: 0 18px 42px rgba(20, 20, 15, 0.22);
+  animation: calmFade 0.2s ease-out;
+}
+.help-modal-header {
+  padding: 14px 18px; background: #f3efe6; border-bottom: 2px solid var(--border-color);
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.help-modal-title { font-size: 17px; font-weight: 900; color: #1e2838; display: flex; align-items: center; gap: 8px; }
+.help-modal-close-btn {
+  background: #fdfcf9; border: 1.5px solid var(--border-color); width: 32px; height: 32px;
+  border-radius: 9px; font-size: 15px; font-weight: 900; cursor: pointer; color: var(--text-main);
+  display: flex; align-items: center; justify-content: center;
+}
+.help-modal-close-btn:hover { background: #fae6e6; border-color: #e58787; color: #9c2525; }
+
+.help-modal-body {
+  padding: 16px 18px; overflow-y: auto; display: flex; flex-direction: column;
+  gap: 14px; font-size: 14px; line-height: 1.5; color: var(--text-main); text-align: left;
+}
+.help-section, .help-card-section {
+  background: #fdfcf9; border: 1.5px solid var(--border-color); border-radius: 14px;
+  padding: 12px 14px; display: flex; flex-direction: column; gap: 6px;
+}
+.help-section-title, .help-card-section h3 {
+  font-size: 14.5px; font-weight: 900; color: #233b66; margin-bottom: 2px;
+}
+.help-list, .help-card-section ul { padding-left: 18px; display: flex; flex-direction: column; gap: 5px; }
+
+/* ==========================================================================
+   Адаптивность для планшетов и телефонов
+   ========================================================================== */
+@media (max-width: 900px) {
+  .letters-panel, .settings-panel {
+    position: fixed; top: 0; left: 0; bottom: 0; height: 100dvh; z-index: 60;
+    transform: translateX(-100%); box-shadow: 6px 0 24px rgba(0, 0, 0, 0.15);
+  }
+  .letters-panel.open, .settings-panel.open { transform: translateX(0); }
+  .panel-close-btn { display: flex; }
+}
+
+@media (max-width: 640px) {
+  .hide-sm { display: none !important; }
+  .brand-title { font-size: 17px; }
+  .stage { padding: 8px 10px; }
+  .mode-tab { padding: 6px 8px; font-size: 12px; }
+  .syllable-card, .math-card { min-height: 190px; border-radius: 24px; padding: 14px; }
+  .choice-btn { min-height: 54px; font-size: 26px; }
+  .btn-nav-arrow { min-width: 84px; height: 46px; }
+  .btn-speaker-card { height: 46px; padding: 0 16px; font-size: 14px; }
+}
+
+@media (max-width: 440px) {
+  .hide-xs { display: none !important; }
+  .letters-panel, .settings-panel { width: 88vw; max-width: 330px; }
+}
