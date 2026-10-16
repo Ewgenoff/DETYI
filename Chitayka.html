@@ -485,7 +485,7 @@
       ЗАЯЦ:'🐰', БЕЛКА:'🐿️', ЁЖИК:'🦔', ОЛЕНЬ:'🦌', КАБАН:'🐗', ЗЕБРА:'🦓', ЖИРАФ:'🦒', ПАНДА:'🐼', КОАЛА:'🐨',
       ПЕТУХ:'🐓', ИНДЮК:'🦃', ГУСИ:'🪿', КУРЫ:'🐔', ОВЦА:'🐑', ОСЁЛ:'🫏', ПОНИ:'🐴', ЩЕНОК:'🐶',
       ПИРОГ:'🥧', БАТОН:'🥖', БУЛКА:'🥐', БЛИНЫ:'🥞', САХАР:'🧂', ЛИМОН:'🍋', БАНАН:'🍌', ГРУША:'🍐', СЛИВА:'🫐',
-      АРБУЗ:'🍉', ДЫНЯ:'🍈', КИВИ:'🥝', МАНГО:'🥭', ПЕРСИК:'🍑', ОРЕХ:'🌰', ТЫКВА:'🎃', ОВОЩ:'🥕', ФРУКТ:'🍎',
+      АРБУЗ:'🍉', ДЫНЯ:'🍈', КИВИ:'🥝', МАНГО:'🥭', ПЕРСИК:'🍑', ОРЕХ:'🌰', ТЫКВА:'🎃', ООВОЩ:'🥕', ФРУКТ:'🍎',
       ПОЕЗД:'🚆', ВАГОН:'🚃', ЛОДКА:'🚣', КАТЕР:'🚤', ТРАКТОР:'🚜', АВТО:'🚗', ТАКСИ:'🚕', МЕТРО:'🚇', РАКЕТА:'🚀',
       ЗАМОК:'🏰', ЗАБОР:'🚧', ДВЕРИ:'🚪', КРЫША:'🏠', СВЕЧА:'🕯️', ЛАМПА:'💡', ВЕДРО:'🪣', МЕТЛА:'🧹', ЗОНТИК:'☂️',
       МАШИНА:'🚗', МАЛИНА:'🍓', КАЛИНА:'🍒', РЯБИНА:'🍒', КОРЗИНА:'🧺', КАРТИНА:'🖼️', РАДУГА:'🌈', ЯГОДА:'🍓',
@@ -613,6 +613,7 @@
     function switchProfile(id) {
       if (id === currentProfileId) return;
       saveAppState();
+      cancelTrainDrag();
       currentProfileId = id;
       applyCurrentProfileToMemory();
       updateProfileUI();
@@ -1305,7 +1306,33 @@
       });
     }
 
+    // Безопасная очистка зависших карточек и сброс состояния переноса
+    function cancelTrainDrag() {
+      if (trainDragState) {
+        const st = trainDragState;
+        trainDragState = null;
+        if (st.sourceEl) {
+          st.sourceEl.classList.remove('dragging-source');
+          if (st.pointerId !== undefined) {
+            try { st.sourceEl.releasePointerCapture(st.pointerId); } catch (err) {}
+          }
+        }
+        if (st.ghostEl) {
+          try { st.ghostEl.remove(); } catch (err) {}
+        }
+      }
+      // Гарантированно удаляем любые фантомные карточки-призраки из DOM
+      document.querySelectorAll('.train-drag-ghost').forEach(el => el.remove());
+      $('train-drop-before')?.classList.remove('active');
+      $('train-drop-after')?.classList.remove('active');
+    }
+
     function startTrainPointerDrag(e, sourceType, letter, sourceEl) {
+      // Если уже идёт перетаскивание другой буквы — корректно сбрасываем её
+      if (trainDragState) {
+        cancelTrainDrag();
+      }
+
       e.preventDefault();
       const startX = e.clientX;
       const startY = e.clientY;
@@ -1370,14 +1397,29 @@
     });
 
     function finishTrainPointerDrag(e) {
-      if (!trainDragState || (e && e.pointerId !== trainDragState.pointerId)) return;
+      if (!trainDragState) return;
+      // Если событие пришло от другого пальца, не трогаем активный перенос
+      if (e && e.pointerId !== undefined && e.pointerId !== trainDragState.pointerId) return;
+
       const st = trainDragState;
       trainDragState = null;
 
       $('train-drop-before')?.classList.remove('active');
       $('train-drop-after')?.classList.remove('active');
-      st.sourceEl?.classList.remove('dragging-source');
-      if (st.ghostEl) st.ghostEl.remove();
+      if (st.sourceEl) {
+        st.sourceEl.classList.remove('dragging-source');
+        if (st.pointerId !== undefined) {
+          try { st.sourceEl.releasePointerCapture(st.pointerId); } catch (err) {}
+        }
+      }
+      if (st.ghostEl) {
+        try { st.ghostEl.remove(); } catch (err) {}
+      }
+      // Страховка от любых оставшихся фантомных карточек
+      document.querySelectorAll('.train-drag-ghost').forEach(el => el.remove());
+
+      // Если жест был сброшен системой (pointercancel), действие не применяем
+      if (e && e.type === 'pointercancel') return;
 
       if (!st.isDragging) {
         if (st.sourceType === 'depot') {
@@ -1891,7 +1933,6 @@
         if (isUnlocked) {
           card.onclick = () => {
             const now = Date.now();
-            // 2-секундный интервал между воспроизведением звука в зоопарке наклеек
             if (now - lastZooAudioTime < ZOO_AUDIO_INTERVAL_MS) return;
             lastZooAudioTime = now;
 
@@ -1981,6 +2022,7 @@
 
     function syncModeUI() {
       clearPuzzleTimersAndAudio();
+      cancelTrainDrag();
       ['alphabet','matrix','one_syllable','words2','words3','trains','puzzle','quiz'].forEach(m => {
         const el = $(`tab-${m}`);
         if (el) el.classList.toggle('active', primaryMode === m);
