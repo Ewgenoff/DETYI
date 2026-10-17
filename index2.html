@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Neon Arkanoid: Overload</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: #0a0a14; 
+            overflow: hidden; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            cursor: none;
+        }
+        canvas { display: block; margin: 0 auto; }
+    </style>
+</head>
+<body>
+<canvas id="gameCanvas"></canvas>
+
+<script>
+// ============================================
+// AUDIO ENGINE (Web Audio API)
+// ============================================
+const AudioEngine = (() => {
+    let ctx, masterGain;
+    
+    function init() {
+        if (!ctx) {
+            ctx = new (window.AudioContext || window.webkitAudioContext)();
+            masterGain = ctx.createGain();
+            masterGain.gain.value = 0.3;
+            masterGain.connect(ctx.destination);
+        }
+        if (ctx.state === 'suspended') ctx.resume();
+    }
+
+    function playTone(freq, type, duration, slide = 0) {
+        if (!ctx) init();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        if (slide !== 0) {
+            osc.frequency.exponentialRampToValueAtTime(Math.max(10, freq + slide), ctx.currentTime + duration);
+        }
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
+        osc.connect(gain).connect(masterGain);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+    }
+
+    function playNoise(duration) {
+        if (!ctx) init();
+        const bufferSize = ctx.sampleRate * duration;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+        const noise = ctx.createBufferSource();
+        noise.buffer = buffer;
+        const gain = ctx.createGain();
+        gain.gain.value = 0.4;
+        noise.connect(gain).connect(masterGain);
+        noise.start();
+    }
+
+    return {
+        init,
+        bounce: () => playTone(800, 'square', 0.15),
+        breakBlock: () => {
+            if (!ctx) init();
+            const now = ctx.currentTime;
+            [400, 600, 800].forEach((f, i) => setTimeout(() => playTone(f, 'triangle', 0.1), i * 25));
+        },
+        explode: () => {
+            if (!ctx) init();
+            const now = ctx.currentTime;
+            [150, 100, 80].forEach((f, i) => setTimeout(() => playTone(f, 'sawtooth', 0.3), i * 50));
+        },
+        lifeLost: () => {
+            if (!ctx) init();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.frequency.setValueAtTime(400, ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.8);
+            gain.gain.value = 0.3;
+            osc.connect(gain).connect(masterGain);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.8);
+        },
+        powerup: () => playTone(1200, 'sine', 0.4),
+        laser: () => {
+            if (!ctx) init();
+            const now = ctx.currentTime;
+            [600, 900, 1500].forEach((f, i) => setTimeout(() => playTone(f, 'square', 0.15), i * 80));
+        }
+    };
+})();
+
+// ============================================
+// GAME CONSTANTS & CONFIG
+// ============================================
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+let WIDTH, HEIGHT;
+
+function resize() {
+    WIDTH = Math.min(window.innerWidth, 1024);
+    HEIGHT = Math.min(window.innerHeight, 768);
+    canvas.width = WIDTH;
+    canvas.height = HEIGHT;
+}
+window.addEventListener('resize', resize);
+resize();
+
+const COLORS = {
+    background: '#0a0a14',
+    grid: 'rgba(138, 205, 255, 0.15)',
+    star: 'rgba(255, 255, 255, 0.6)',
+    paddle: '#0ff',
+    ball: '#fff',
+    blockNormal: ['#f06', '#fa6', '#ff6'],
+    blockArmored: ['#94f', '#85f', '#76f'],
+    blockExplosive: ['#f39', '#f69', '#f99'],
+    particle: ['#fff', '#0ff', '#ff0', '#f0f']
+};
+
+// ============================================
+// GAME STATE
+// ============================================
+const state = {
+    score: 0,
+    highScore: localStorage.getItem('neonArkanoidHigh') || 0,
+    lives: 3,
+    level: 1,
+    paused: false,
+    gameOver: false,
+    gameWon: false
+};
+
+// ============================================
+// ENTITIES
+// ============================================
+const paddle = {
+    x: WIDTH / 2 - 60, y: HEIGHT - 40, w: 120, h: 18, speed: 8,
+    targetX: WIDTH / 2, isWide: false, laserActive: false, laserTimer: 0
+};
+
+const ball = {
+    x: WIDTH / 2, y: HEIGHT - 70, r: 9, vx: 4.5, vy: -4.5, speed: 6, maxSpeed: 12, active: true
+};
+
+let balls = [ball];
+
+const blocks = [];
+function createBlocks() {
+    blocks.length = 0;
+    const rows = Math.min(12 + state.level * 2, 18);
+    const cols = Math.min(Math.floor(WIDTH / 45), 16);
+    const padding = 15;
+    const blockW = (WIDTH - padding * 2) / cols;
+    const blockH = 20 + state.level * 3;
+
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+            let type = 'normal';
+            if (Math.random() < 0.15) type = 'armored';
+            else if (Math.random() < 0.08 && state.level > 1) type = 'explosive';
+
+            blocks.push({
+                x: padding + c * blockW, y: 40 + r * blockH,
+                w: blockW - 2, h: blockH - 2,
+                type, hp: type === 'armored' ? 2 : 1, maxHp: type === 'armored' ? 2 : 1,
+                color: type === 'normal' ? COLORS.blockNormal[Math.floor(Math.random() * 3)] :
+                       type === 'armored' ? COLORS.blockArmored[Math.floor(Math.random() * 3)] :
+                                          COLORS.blockExplosive[Math.floor(Math.random() * 3)],
+                cracked: false, destroyed: false
+            });
+        }
+    }
+}
+
+const particles = [];
+function createParticles(x, y, count = 10) {
+    for (let i = 0; i < count; i++) {
+        particles.push({
+            x, y,
+            vx: (Math.random() - 0.5) * 8, vy: (Math.random() - 0.5) * 8,
+            life: 1, maxLife: 1 + Math.random() * 0.5, size: 2 + Math.random() * 3,
+            color: COLORS.particle[Math.floor(Math.random() * 4)]
+        });
+    }
+}
+
+const powerups = [];
+function createPowerup(x, y) {
+    const types = [
+        { name: 'multi', icon: '✕', color: '#ff0' },
+        { name: 'wide', icon: '◈', color: '#0ff' },
+        { name: 'laser', icon: '⚡', color: '#f0f' }
+    ];
+    const type = types[Math.floor(Math.random() * 3)];
+    powerups.push({ x, y, ...type, vy: 2.5, active: true });
+}
+
+// ============================================
+// INPUT HANDLING
+// ============================================
+window.addEventListener('mousemove', e => {
+    if (state.gameOver || state.gameWon) return;
+    paddle.targetX = Math.max(paddle.w / 2, Math.min(WIDTH - paddle.w / 2, e.clientX));
+});
+
+document.addEventListener('keydown', e => {
+    if (state.gameOver || state.gameWon) return;
+    const step = 80;
+    let newX = paddle.x;
+    if (e.key === 'ArrowLeft') newX -= step;
+    else if (e.key === 'ArrowRight') newX += step;
+    if (newX >= paddle.w / 2 && newX <= WIDTH - paddle.w / 2) paddle.x = newX;
+
+    if (e.code === 'Space' && paddle.laserActive) {
+        AudioEngine.laser();
+        for (let i = 0; i < 5; i++) {
+            const angle = Math.PI / 4 + i * 0.3;
+            balls.push({ x: paddle.x + paddle.w / 2, y: paddle.y - 10, r: 6, vx: Math.cos(angle) * 8, vy: Math.sin(angle) * 8, speed: 9, maxSpeed: 14, active: true });
+        }
+    }
+});
+
+// ============================================
+// RENDER FUNCTIONS
+// ============================================
+function drawNeonRect(ctx, x, y, w, h, color, glow = 20) {
+    ctx.save();
+    ctx.shadowColor = color;
+    ctx.shadowBlur = glow;
+    ctx.fillStyle = color;
+    ctx.globalAlpha = 0.95;
+    ctx.fillRect(x, y, w, h);
+    ctx.restore();
+}
+
+function drawNeonCircle(ctx, x, y, r, color) {
+    ctx.save();
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 18;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+}
+
+function drawPaddle() {
+    if (paddle.isWide) {
+        paddle.w *= 1.8;
+        paddle.h = 24;
+    } else {
+        paddle.w = 120;
+        paddle.h = 18;
+    }
+    drawNeonRect(ctx, paddle.x - paddle.w / 2, paddle.y, paddle.w, paddle.h, COLORS.paddle);
+
+    // Laser effect
+    if (paddle.laserActive) {
+        ctx.save();
+        ctx.strokeStyle = '#f0f';
+        ctx.shadowColor = '#f0f';
+        ctx.shadowBlur = 15;
+        ctx.lineWidth = 3;
+        for (let i = 0; i < 8; i++) {
+            const angle = Math.PI / 4 + i * Math.PI / 4;
+            ctx.beginPath();
+            ctx.moveTo(paddle.x + paddle.w / 2, paddle.y);
+            ctx.lineTo(paddle.x + paddle.w / 2 + Math.cos(angle) * 60, paddle.y - Math.sin(angle) * 60);
+            ctx.stroke();
+        }
+        ctx.restore();
+    }
+
+    // Paddle glow outline
+    ctx.save();
+    ctx.strokeStyle = COLORS.paddle;
+    ctx.lineWidth = 2;
+    ctx.shadowBlur = 8;
+    ctx.strokeRect(paddle.x - paddle.w / 2, paddle.y, paddle.w, paddle.h);
+    ctx.restore();
+}
+
+function drawBlocks() {
+    blocks.forEach(b => {
+        if (b.destroyed) return;
+        
+        // Cracked visual for armored
+        if (b.type === 'armored' && b.hp < b.maxHp) {
+            ctx.save();
+            ctx.strokeStyle = b.color;
+            ctx.lineWidth = 2;
+            ctx.shadowBlur = 5;
+            const offset = Math.random() > 0.5 ? 4 : -4;
+            ctx.beginPath();
+            ctx.moveTo(b.x + 6, b.y + offset);
+            ctx.lineTo(b.x + b.w - 6, b.y + offset + 3);
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        drawNeonRect(ctx, b.x, b.y, b.w, b.h, b.color, b.type === 'armored' ? 12 : 8);
+        
+        // Block highlight
+        ctx.save();
+        ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        ctx.fillRect(b.x + 4, b.y + 4, b.w - 8, b.h - 8);
+        ctx.restore();
+    });
+}
+
+function drawPowerups() {
+    powerups.forEach(p => {
+        if (!p.active) return;
+        
+        // Trail effect
+        ctx.save();
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = 0.4;
+        for (let i = 1; i < 5; i++) {
+            ctx.beginPath();
+            ctx.arc(p.x - p.vy * i, p.y + p.vy * i, 6 - i / 2, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        ctx.restore();
+
+        // Main powerup
+        drawNeonCircle(ctx, p.x, p.y, 14, p.color);
+        
+        // Icon text
+        ctx.save();
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 12px Arial';
+        ctx.textAlign = 'center';
+        ctx.shadowBlur = 0;
+        ctx.fillText(p.icon, p.x, p.y - 4);
+        ctx.restore();
+
+        // Pulsing effect
+        const pulse = Math.sin(Date.now() / 200) * 3 + 15;
+        ctx.save();
+        ctx.strokeStyle = p.color;
+        ctx.lineWidth = 2;
+        ctx.shadowBlur = pulse;
+        ctx.strokeCircle(p.x, p.y, 16);
+        ctx.restore();
+    });
+}
+
+function drawParticles() {
+    for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.025;
+        
+        if (p.life <= 0) {
+            particles.splice(i, 1);
+            continue;
+        }
+
+        ctx.save();
+        const alpha = Math.max(0, p.life / p.maxLife);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = alpha * 0.8;
+        ctx.shadowBlur = 6 * alpha;
+        
+        // Spark shape
+        const size = p.size * (p.life / p.maxLife);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+    }
+}
+
+function drawStars() {
+    // Create star field if needed
+    let stars = window.stars;
+    if (!stars) {
+        stars = [];
+        for (let i = 0; i < 150; i++) {
+            stars.push({
+                x: Math.random() * WIDTH,
+                y: Math.random() * HEIGHT,
+                size: 0.5 + Math.random(),
+                alpha: 0.3 + Math.random() * 0.7,
+                twinkleSpeed: 2 + Math.random() * 3
+            });
+        }
+        window.stars = stars;
+    }
+
+    const time = Date.now() / 1000;
+    ctx.save();
+    stars.forEach(s => {
+        const alpha = s.alpha + Math.sin(time * 2 + s.twinkleSpeed) * 0.2;
+        if (alpha > 0) {
+            ctx.fillStyle = `rgba(255,255,255,${Math.max
