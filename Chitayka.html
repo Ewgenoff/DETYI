@@ -68,7 +68,7 @@
           <div class="help-section-title">🧩 Режимы тренировки и игры</div>
           <ul class="help-list">
             <li><b>Алфавит и Слоги (Матрица):</b> обзор всех букв, «Лента букв» и интерактивная таблица слогов с озвучкой.</li>
-            <li><b>Прямые / Обратные / Слова (1–3 слога):</b> карточки для чтения. В режимах слов работает <b>🎁 Картинка-сюрприз</b>: первый клик по прочитанному слову открывает картинку-подсказку и озвучивает слово, второй клик — листает дальше!</li>
+            <li><b>Прямые / Обратные / Слова (1–3 слога):</b> карточки для чтения. В режимах слов работает <b>🎁 Картинка-сюрприз</b>: первый клик открывает иллюстрацию-подсказку, второй клик — листает дальше!</li>
             <li><b>🚂 Вагончики (Конструктор):</b> паровозик везёт согласную букву, а вагончик — гласную. Перетаскивай вагончики мышкой или пальцем <b>перед</b> согласной или <b>после</b> неё, чтобы получать прямые (МА) и обратные (АМ) слоги!</li>
             <li><b>🧩 Собери слово (Слоговой пазл):</b> посмотри на картинку и собери слово по слогам в правильном порядке. Тренирует слоговой анализ и синтез!</li>
             <li><b>🎧 На слух (Аудио-викторина):</b> слушай диктора и находи правильный слог или слово среди 4 карточек.</li>
@@ -538,6 +538,7 @@
     // Состояние игры «Вагончики»
     let trainSelectedCons = 'М', trainSelectedVowel = null, trainIsReverse = false;
     let quizSourceMode = 'syllables', quizTarget = '', quizOptions = [], quizSolved = false;
+    let quizReplayTimer = null;
 
     // Состояние игры «Собери слово из слогов»
     let puzzleWordLengthMode = '2'; // '2' | '3' | 'all'
@@ -752,11 +753,19 @@
       }
     }
 
-    function getAudioVariants(text, folder) {
+    function getAudioVariants(text, folders = 'audio') {
       const t = text.trim();
       if (!t) return [];
+      const folderList = Array.isArray(folders) ? folders : [folders];
       const u = t.toUpperCase(), l = t.toLowerCase(), c = u[0] + l.slice(1);
-      return [...new Set([u, l, c, t])].map(v => `${folder}/${encodeURIComponent(v)}.wav`);
+      const names = [...new Set([u, l, c, t])];
+      const urls = [];
+      for (const folder of folderList) {
+        for (const name of names) {
+          urls.push(`${folder}/${encodeURIComponent(name)}.wav`);
+        }
+      }
+      return urls;
     }
 
     function playCandidateList(urls, onAudioCreated, onDone) {
@@ -773,12 +782,15 @@
       tryNext();
     }
 
-    function playAudioFile(path) {
-      if (isSoundMuted || !path) return;
+    function playAudioFile(path, onDone) {
+      if (isSoundMuted || !path) { if (onDone) onDone(); return; }
       stopExtraAudio();
       const cl = path.replace(/\\/g, '/');
       const urls = [...new Set([encodeURI(cl), cl, encodeURI(cl.replace(/^super\//i, 'Super/')), encodeURI(cl.replace(/^super\//i, 'super/'))])];
-      playCandidateList(urls, a => currentExtraAudio = a, () => currentExtraAudio = null);
+      playCandidateList(urls, a => currentExtraAudio = a, () => {
+        currentExtraAudio = null;
+        if (onDone) onDone();
+      });
     }
 
     function playRandomCheerAudio() {
@@ -807,16 +819,19 @@
       }
     }
 
-    function getFolderForSyllable(s) {
-      if (!s) return 'audio';
+    function getFoldersForSyllable(s) {
+      if (!s) return ['audio'];
       const cl = s.trim().toUpperCase();
-      if (cl.length === 1 && VOWELS_SET.has(cl)) return 'audioletters';
+      if (cl.length === 1 && VOWELS_SET.has(cl)) {
+        return ['audioletters', 'audio', 'audio_slogi'];
+      }
       if (cl.length === 2) {
         const v0 = VOWELS_SET.has(cl[0]), v1 = VOWELS_SET.has(cl[1]);
         const c0 = !v0 && !'ЬЪ'.includes(cl[0]), c1 = !v1 && !'ЬЪ'.includes(cl[1]);
-        if ((c0 && v1) || (v0 && c1)) return 'audio';
+        if (c0 && v1) return ['audio', 'audio_slogi'];
+        if (v0 && c1) return ['audio', 'audio_slogi'];
       }
-      return 'audio_slogi';
+      return ['audio_slogi', 'audio1slog', 'audio'];
     }
 
     async function checkCurrentCardAudioAvailable(text) {
@@ -824,8 +839,8 @@
       if (window.location.protocol === 'file:') return true;
       const firstPart = primaryMode === 'one_syllable' ? text : text.split(/[-–]/).map(s => s.trim()).filter(Boolean)[0];
       if (!firstPart) return false;
-      const folder = primaryMode === 'one_syllable' ? 'audio1slog' : getFolderForSyllable(firstPart);
-      for (const url of getAudioVariants(firstPart, folder)) {
+      const folders = primaryMode === 'one_syllable' ? ['audio1slog'] : getFoldersForSyllable(firstPart);
+      for (const url of getAudioVariants(firstPart, folders)) {
         if (await checkFileExists(url)) return true;
       }
       return false;
@@ -845,10 +860,10 @@
       if (btn && !btn.classList.contains('disabled')) playSyllableAudio();
     }
 
-    function playSingleSyllable(syl, seqId, folder = 'audio') {
+    function playSingleSyllable(syl, seqId, folders = 'audio') {
       return new Promise(resolve => {
         if (isSoundMuted || (seqId !== null && seqId !== currentSequenceId)) return resolve();
-        const urls = getAudioVariants(syl, folder);
+        const urls = getAudioVariants(syl, folders);
         if (!urls.length) return resolve();
         let done = false;
         const finish = () => {
@@ -874,15 +889,15 @@
       const seqId = currentSequenceId;
       const cleanNoHyphen = text.replace(/[-–]/g, '');
       if (forceOneSyllableFolder || (!text.includes('-') && cleanNoHyphen.length >= 3)) {
-        await playSingleSyllable(cleanNoHyphen, seqId, 'audio1slog');
+        await playSingleSyllable(cleanNoHyphen, seqId, ['audio1slog', 'audio_slogi', 'audio']);
         return;
       }
       const parts = text.split(/[-–]/).map(s => s.trim()).filter(Boolean);
       for (let i = 0; i < parts.length; i++) {
         if (seqId !== currentSequenceId) break;
-        await playSingleSyllable(parts[i], seqId, getFolderForSyllable(parts[i]));
+        await playSingleSyllable(parts[i], seqId, getFoldersForSyllable(parts[i]));
         if (seqId !== currentSequenceId) break;
-        if (i < parts.length - 1) await new Promise(r => setTimeout(r, 70));
+        if (i < parts.length - 1) await new Promise(r => setTimeout(r, 280));
       }
     }
 
@@ -1068,7 +1083,7 @@
         cell.classList.add('playing');
         setTimeout(() => cell.classList.remove('playing'), 300);
       }
-      playCandidateList(getAudioVariants(syl, getFolderForSyllable(syl)), a => matrixAudio = a);
+      playCandidateList(getAudioVariants(syl, getFoldersForSyllable(syl)), a => matrixAudio = a);
     }
 
     function renderMatrix() {
@@ -1122,7 +1137,7 @@
     }
 
     // =========================================================================
-    // КОНСТРУКТОР СЛОГОВ «ВАГОНЧИКИ» С ПЕРЕТАСКИВАНИЕМ (ПРЯМЫЕ И ОБРАТНЫЕ СЛОГИ)
+    // КОНСТРУКТОР СЛОГОВ «ВАГОНЧИКИ» С ПЕРЕТАСКИВАНИЕМ
     // =========================================================================
     function checkTrainAntiCheat() {
       const now = Date.now();
@@ -1279,7 +1294,6 @@
       }
     }
 
-    // Перетаскивание вагончиков и паровозика мышкой или пальцем (Pointer Events)
     let trainDragState = null;
 
     function setupDepotWagonInteractions(btn, vowelChar) {
@@ -1306,7 +1320,6 @@
       });
     }
 
-    // Безопасная очистка зависших карточек и сброс состояния переноса
     function cancelTrainDrag() {
       if (trainDragState) {
         const st = trainDragState;
@@ -1321,14 +1334,12 @@
           try { st.ghostEl.remove(); } catch (err) {}
         }
       }
-      // Гарантированно удаляем любые фантомные карточки-призраки из DOM
       document.querySelectorAll('.train-drag-ghost').forEach(el => el.remove());
       $('train-drop-before')?.classList.remove('active');
       $('train-drop-after')?.classList.remove('active');
     }
 
     function startTrainPointerDrag(e, sourceType, letter, sourceEl) {
-      // Если уже идёт перетаскивание другой буквы — корректно сбрасываем её
       if (trainDragState) {
         cancelTrainDrag();
       }
@@ -1338,14 +1349,14 @@
       const startY = e.clientY;
       trainDragState = {
         pointerId: e.pointerId,
-        sourceType, // 'depot' | 'wagon' | 'loco'
+        sourceType,
         letter,
         sourceEl,
         startX,
         startY,
         isDragging: false,
         ghostEl: null,
-        dropSide: null // 'before' | 'after'
+        dropSide: null
       };
       try { sourceEl.setPointerCapture(e.pointerId); } catch (err) {}
     }
@@ -1398,7 +1409,6 @@
 
     function finishTrainPointerDrag(e) {
       if (!trainDragState) return;
-      // Если событие пришло от другого пальца, не трогаем активный перенос
       if (e && e.pointerId !== undefined && e.pointerId !== trainDragState.pointerId) return;
 
       const st = trainDragState;
@@ -1415,10 +1425,8 @@
       if (st.ghostEl) {
         try { st.ghostEl.remove(); } catch (err) {}
       }
-      // Страховка от любых оставшихся фантомных карточек
       document.querySelectorAll('.train-drag-ghost').forEach(el => el.remove());
 
-      // Если жест был сброшен системой (pointercancel), действие не применяем
       if (e && e.type === 'pointercancel') return;
 
       if (!st.isDragging) {
@@ -1536,7 +1544,6 @@
 
       renderPuzzleSlotsAndTiles();
 
-      // Озвучиваем голосовую подсказку «Собери слово!» каждую третью карточку (1-я, 4-я, 7-я...)
       puzzleRoundCounter++;
       if ((puzzleRoundCounter - 1) % 3 === 0 && roundId === currentPuzzleRoundId) {
         playAudioFile('Super/СОБЕРИ_СЛОВО.wav');
@@ -1602,13 +1609,11 @@
         const clickedSyl = tileObj.syl;
         const wordSnapshot = puzzleTargetWord;
 
-        // Ставим озвучку слогов в последовательную очередь, чтобы при быстром нажатии
-        // слоги не прерывали друг друга, а после них целиком звучало собранное слово
         puzzleAudioChain = puzzleAudioChain.then(async () => {
           if (roundId !== currentPuzzleRoundId || primaryMode !== 'puzzle') return;
           stopExtraAudio();
           const seqId = ++currentSequenceId;
-          await playSingleSyllable(clickedSyl, seqId, getFolderForSyllable(clickedSyl));
+          await playSingleSyllable(clickedSyl, seqId, getFoldersForSyllable(clickedSyl));
 
           if (isCompletedNow) {
             if (roundId !== currentPuzzleRoundId || primaryMode !== 'puzzle') return;
@@ -1648,6 +1653,13 @@
     // =========================================================================
     // АУДИО-ВИКТОРИНА «НАЙДИ СЛОГ / СЛОВО НА СЛУХ»
     // =========================================================================
+    function clearQuizTimers() {
+      if (quizReplayTimer) {
+        clearTimeout(quizReplayTimer);
+        quizReplayTimer = null;
+      }
+    }
+
     function setQuizSource(src) {
       quizSourceMode = src;
       $('btn-quiz-syl').classList.toggle('active', src === 'syllables');
@@ -1663,6 +1675,9 @@
     }
 
     function startNewQuizRound() {
+      clearQuizTimers();
+      stopSyllableAudio();
+      stopExtraAudio();
       const pool = getQuizPool();
       const grid = $('quiz-options-grid'), fb = $('quiz-feedback-label');
       grid.innerHTML = '';
@@ -1716,6 +1731,8 @@
       const fb = $('quiz-feedback-label');
       if (selected === quizTarget) {
         quizSolved = true;
+        clearQuizTimers();
+        stopSyllableAudio();
         cardEl.classList.add('correct');
         cardEl.querySelector('.quiz-opt-emoji')?.classList.remove('hidden-emoji');
         fb.textContent = '🌟 Молодец! Правильно!';
@@ -1729,8 +1746,20 @@
         cardEl.classList.add('wrong');
         fb.textContent = 'Попробуй ещё раз! Послушай внимательно 🔊';
         fb.className = 'quiz-feedback-label error';
-        playAudioFile('Super/ПОПРОБУЙ_ЕЩЁ.wav');
-        setTimeout(() => playQuizPromptAudio(), 900);
+        
+        // Предотвращаем одновременное звучание фразы и слога
+        clearQuizTimers();
+        stopSyllableAudio();
+        stopExtraAudio();
+
+        playAudioFile('Super/ПОПРОБУЙ_ЕЩЁ.wav', () => {
+          quizReplayTimer = setTimeout(() => {
+            quizReplayTimer = null;
+            if (primaryMode === 'quiz' && !quizSolved && !isStickerModalOpen) {
+              playQuizPromptAudio();
+            }
+          }, 350);
+        });
       }
     }
 
@@ -1889,7 +1918,7 @@
         isSurpriseRevealed = true;
         rapidSpamCount = 0;
         renderFormattedText(currentText);
-        playSyllableAudio();
+        playSoundEffect(); // Картинка появляется без озвучивания слова
         return;
       }
 
@@ -2022,6 +2051,7 @@
 
     function syncModeUI() {
       clearPuzzleTimersAndAudio();
+      clearQuizTimers();
       cancelTrainDrag();
       ['alphabet','matrix','one_syllable','words2','words3','trains','puzzle','quiz'].forEach(m => {
         const el = $(`tab-${m}`);
@@ -2096,7 +2126,6 @@
     }
     const toggleLettersPanel = () => isPanelOpen() ? closeLettersPanel() : openLettersPanel();
 
-    // Закрытие боковой панели при клике/тапе вне её области на планшетах и телефонах
     document.addEventListener('pointerdown', e => {
       if (!isPanelOpen()) return;
       if (isOverlayPanelViewport()) {
